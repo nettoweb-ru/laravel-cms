@@ -32,7 +32,14 @@ class InstallCommand extends Command
 
         (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/css', resource_path('css/netto'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/js', resource_path('js/netto'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/views', resource_path('views'));
+
+        if (!(new Filesystem())->exists(resource_path('views/components/layout/default.blade.php'))) {
+            (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/views/components/layout/default.blade.php', resource_path('views/components/layout'));
+        }
+
+        if (!(new Filesystem())->exists(resource_path('views/auth'))) {
+            (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/views/auth', resource_path('views/auth'));
+        }
 
         (new Filesystem)->copy(__DIR__.'/../../resources/js/styles.js', resource_path('js'));
 
