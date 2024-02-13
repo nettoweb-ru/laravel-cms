@@ -2,7 +2,6 @@
   "name": "nettoweb/laravel-cms",
   "description": "Nettoweb content management system for Laravel-based project",
   "type": "library",
-  "version": "1.0.0",
   "license": "MIT",
   "autoload": {
     "psr-4": {
@@ -22,7 +21,7 @@
       "php": "^8.1",
       "ext-intl": "*",
       "ext-simplexml": "*",
-      "intervention/image": "*"
+      "intervention/image": "^3.3.3"
   },
   "require-dev": {
     "orchestra/testbench": "^8.0",
