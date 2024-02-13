@@ -1,0 +1,38 @@
+{
+  "name": "nettoweb/laravel-cms",
+  "description": "Nettoweb content management system for Laravel-based project",
+  "type": "library",
+  "version": "1.0.0",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Netto\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Alexander Sidorenkov",
+      "email": "contact@nettoweb.ru"
+    }
+  ],
+  "require": {
+      "php": "^8.1",
+      "ext-intl": "*",
+      "ext-simplexml": "*",
+      "intervention/image": "*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.5"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+          "Netto\\CmsServiceProvider"
+      ]
+    }
+  }
+}

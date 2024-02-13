@@ -1,0 +1,272 @@
+.form{
+    width:100%;
+}
+
+.form .form-block{
+    width: inherit;
+}
+
+.form .form-block.form-sheets .form-sheet{
+    width:inherit;
+    background-color:#fff;
+    display: none;
+}
+
+.form .form-block.form-sheets .form-sheet .table.sheet-padding{
+    width:inherit;
+}
+
+.form .form-block.form-sheets .form-sheet .table.sheet-padding .cell.sheet-padding{
+    width:inherit;
+    padding:10px;
+    border-color:#ddd;
+    border-style: solid;
+    border-width: 1px 1px 0;
+}
+
+.form .form-block.form-sheets .form-sheet.single .table.sheet-padding .cell.sheet-padding{
+    padding:0 0 10px;
+    border:none;
+}
+
+.form .form-grid{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    column-gap: 15px;
+    row-gap: 10px;
+}
+
+.form .form-grid .grid-cols-1{
+    grid-column: span 1;
+}
+
+.form .form-grid .grid-cols-2{
+    grid-column: span 2;
+}
+
+.form .form-grid .grid-cols-3{
+    grid-column: span 3;
+}
+
+.form .form-grid .grid-cols-4{
+    grid-column: span 4;
+}
+
+.form .form-grid .grid-cols-5{
+    grid-column: span 5;
+}
+
+.form .form-grid .grid-cols-6{
+    grid-column: span 6;
+}
+
+.form .form-grid .grid-cols-7{
+    grid-column: span 7;
+}
+
+.form .form-grid .grid-cols-8{
+    grid-column: span 8;
+}
+
+.form .form-grid .grid-cols-9{
+    grid-column: span 9;
+}
+
+.form .form-grid .grid-cols-10{
+    grid-column: span 10;
+}
+
+.form .form-grid .grid-cols-11{
+    grid-column: span 11;
+}
+
+.form .form-grid .grid-cols-12{
+    grid-column: span 12;
+}
+
+.form .form-grid .grid-item{
+    width: 100%;
+}
+
+.form .form-grid .grid-item.label{
+    margin-bottom:2px;
+    color:#444;
+    height: 15px;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+.form .form-grid .grid-item.label .required{
+    color:#ff0000;
+}
+
+.form .form-grid .grid-item.value .grid-value-file{
+    width:inherit;
+    display:table;
+    height:10px;
+}
+
+.form .form-grid .grid-item.value .grid-value-file .cell{
+    vertical-align: middle;
+}
+
+.form .form-grid .grid-item.value .grid-value-file .cell.filename{
+    width:99%;
+}
+
+body.ltr .form .form-grid .grid-item.value .grid-value-file .cell.filename{
+    padding-right: 8px;
+}
+
+body.rtl .form .form-grid .grid-item.value .grid-value-file .cell.filename{
+    padding-left: 8px;
+}
+
+.form .form-grid .grid-item.value .grid-value-file .cell.icons{
+    width: 1%;
+    white-space: nowrap;
+}
+
+.form .form-grid .grid-item.value .grid-value-option{
+    display:inline-block;
+    margin: 6px 0;
+}
+
+.form .form-grid .grid-item.value .grid-value-option:hover{
+    cursor:pointer;
+    color:#2A3582;
+}
+
+.form .form-grid .grid-item.value .grid-value-option .table.value-option .cell{
+    vertical-align: middle;
+}
+
+.form .form-grid .grid-item.value .grid-value-option .table.value-option .cell.label label{
+    cursor: inherit;
+}
+
+.form .form-grid .grid-item.value .grid-value-option .table.value-option .cell.label span{
+    line-height: 100%;
+}
+
+.form .form-grid .grid-item.errors .grid-error{
+    width:100%;
+    background-color:#ffdbdb;
+    color:#a80000;
+}
+
+.form .form-grid .grid-item.errors .grid-error .table{
+    width: inherit;
+}
+
+.form .form-grid .grid-item.errors .grid-error .table .cell{
+    vertical-align: middle;
+    padding:3px;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav{
+    width: inherit;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell{
+    vertical-align: middle;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt{
+    cursor: pointer;
+    padding:5px 0 6px;
+    border-style: solid;
+    border-color:#ddd;
+    border-width: 0 1px 1px;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.label{
+    color:#fff;
+    background-color:#2A3582;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang{
+    color:#2A3582;
+    background-color:#e2e4ff;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
+    display:none;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt span{
+    line-height: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    margin:0 12px;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.active{
+    cursor: default;
+    color:#2A3582;
+    background-color:#fff;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.wide{
+    width:100%;
+    min-width: 20px;
+    border-top:1px solid #ddd;
+}
+
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.space{
+    min-width:8px;
+    border-top:1px solid #ddd;
+}
+
+.form .form-block.form-buttons{
+    margin-top:20px;
+}
+
+body.ltr .form .form-grid .grid-item.value .grid-value-option{
+    margin-right: 12px;
+}
+
+body.ltr .form .form-grid .grid-item.value .grid-value-option:last-child{
+    margin-right: 0;
+}
+
+body.ltr .form .form-grid .grid-item.value .grid-value-option .table.value-option .cell.label{
+    padding-left:5px;
+}
+
+body.ltr .form .form-grid .grid-item.label .required{
+    padding-left:2px;
+}
+
+body.rtl .form .form-grid .grid-item.value .grid-value-option{
+    margin-left: 12px;
+}
+
+body.rtl .form .form-grid .grid-item.value .grid-value-option:last-child{
+    margin-left:0;
+}
+
+body.rtl .form .form-grid .grid-item.value .grid-value-option .table.value-option .cell.label{
+    padding-right:5px;
+}
+
+body.rtl .form .form-grid .grid-item.label .required{
+    padding-right:2px;
+}
+
+@media screen and (min-width: 1024px) {
+    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .default{
+        display:none;
+    }
+
+    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
+        display:block;
+    }
+}

@@ -1,0 +1,216 @@
+.list{
+    width:inherit;
+    margin-top: 30px;
+}
+
+.list:first-child{
+    margin-top: 0;
+}
+
+.list .list-block{
+    width:inherit;
+}
+
+.list .list-block.top .table.list-top{
+    width:inherit;
+    min-height: 25px;
+}
+
+.list .list-block.top .table.list-top .cell.list-top{
+    vertical-align: top;
+}
+
+.list .list-block.top .table.list-top .cell.list-top.title{
+    width:99%;
+}
+
+.list .list-block.top .table.list-top .cell.list-top.actions{
+    width:1%;
+    white-space: nowrap;
+}
+
+.list .list-block.content{
+    position: relative;
+    margin-top:20px;
+}
+
+.list .list-block.content .list-content-layer{
+    width:inherit;
+}
+
+.list .list-block.content .list-content-layer.animation{
+    background-color:#eee;
+    z-index: 5100;
+    min-height:200px;
+}
+
+.list .list-block.content .list-content-layer.animation .table{
+    height: inherit;
+    width: 100%;
+}
+
+.list .list-block.content .list-content-layer.animation .table .cell{
+    vertical-align: middle;
+    text-align: center;
+}
+
+.list .list-block.content .list-content-layer.results{
+    z-index: 5000;
+    display: none;
+}
+
+.list .list-block.content .list-content-layer.results .list-results{
+    width: inherit;
+    display: none;
+    position: relative;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-data{
+    width: inherit;
+}
+
+.list .list-block.content table{
+    width:100%;
+    border-collapse: collapse;
+}
+
+.list .list-block.content table thead{
+    background-color: #e2e4ff;
+}
+
+.list .list-block.content table thead th{
+    font-weight: 400;
+    padding:3px 6px;
+    border-style: solid;
+    border-color: #d0d2ff;
+    border-width: 0 1px;
+    color:#777;
+    white-space: nowrap;
+}
+
+.list .list-block.content table thead th.sortable:hover{
+    cursor:pointer;
+}
+
+.list .list-block.content table thead th.sortable:hover span{
+    color:#2A3582;
+}
+
+body.ltr .list .list-block.content table thead th:first-child{
+    border-left-width: 0;
+}
+
+body.ltr .list .list-block.content table thead th:last-child{
+    border-right-width: 0;
+}
+
+body.rtl .list .list-block.content table thead th:first-child{
+    border-right-width: 0;
+}
+
+body.rtl .list .list-block.content table thead th:last-child{
+    border-left-width: 0;
+}
+
+.list .list-block.content table thead th.sort.asc span:after{
+    content: '↑';
+}
+
+.list .list-block.content table thead th.sort.desc span:after{
+    content: '↓';
+}
+
+body.ltr .list .list-block.content table thead th.sort span:after{
+    padding-left:3px;
+}
+
+body.rtl .list .list-block.content table thead th.sort span:after{
+    padding-right:3px;
+}
+
+.list .list-block.content table tbody tr{
+    border-bottom: 1px solid #e2e4ff;
+}
+
+.list .list-block.content table tbody tr:last-child{
+    border-bottom: none;
+}
+
+.list .list-block.content table tbody tr:hover{
+    background-color:#f0f0f0 !important;
+    cursor: pointer !important;
+    color:#2A3582;
+}
+
+.list .list-block.content table tbody tr.selected{
+    background-color:#2A3582 !important;
+    color:#fff !important;
+}
+
+.list .list-block.content table tbody tr.inactive{
+    background-color:#eee;
+    color:#aaa;
+}
+
+.list .list-block.content table tbody tr.selected:hover{
+    color:#ddd !important;
+}
+
+.list .list-block.content table tbody td{
+    padding: 6px;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom{
+    width: inherit;
+    border-top:1px solid #d0d2ff;
+    color:#777;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom{
+    width:inherit;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom{
+    vertical-align: middle;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom select.narrow{
+    width:60px;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total{
+    white-space: nowrap;
+    padding:0 20px;
+    width:100%;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block{
+    display: inline-block;
+}
+
+body.ltr .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block:first-child{
+    margin-right: 5px;
+}
+
+body.rtl .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block:first-child{
+    margin-left: 5px;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation{
+    width:100%;
+    position: relative;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation .list-nav .table.list-nav .cell{
+    vertical-align: middle;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation .list-nav .table.list-nav .cell.padding{
+    padding:0 5px;
+}
+
+@media screen and (min-width: 1024px) {
+    .list .list-block.content{
+        margin-top:10px;
+    }
+}

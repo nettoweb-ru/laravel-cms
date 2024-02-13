@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    private const TABLE = 'cms__images_lang';
+
+    /**
+     * @return void
+     */
+    public function up(): void
+    {
+        Schema::create(self::TABLE, function (Blueprint $table) {
+            $table->unsignedBigInteger('image_id');
+            $table->unsignedBigInteger('lang_id');
+            $table->string('caption')->nullable()->default(null);
+            $table->unique(['image_id', 'lang_id']);
+            $table->foreign('image_id')->references('id')->on('cms__images')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('lang_id')->references('id')->on('cms__languages')->onDelete('cascade')->onUpdate('cascade');
+        });
+    }
+
+    /**
+     * @return void
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(self::TABLE);
+    }
+};

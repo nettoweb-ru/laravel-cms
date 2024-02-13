@@ -1,0 +1,148 @@
+.btn{
+    border-style:solid;
+    border-width:1px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    padding:0;
+    min-height: 26px;
+    min-width: 26px;
+}
+
+.btn.disabled{
+    border-color:#bbb;
+    background-color:#eee;
+    color:#bbb;
+}
+
+.btn.disabled:hover{
+    cursor: not-allowed;
+}
+
+.btn:not(.disabled):hover{
+    cursor: pointer;
+}
+
+.btn{
+    line-height: 0;
+}
+
+body.ltr .btn.btn-icon{
+    margin-right: 8px;
+}
+
+body.ltr .btn.btn-icon:last-child{
+    margin-right: 0;
+}
+
+body.rtl .btn.btn-icon{
+    margin-left: 8px;
+}
+
+body.rtl .btn.btn-icon:last-child{
+    margin-left: 0;
+}
+
+.btn.btn-form{
+    width:150px;
+    margin-bottom:10px;
+}
+
+body.ltr .btn.btn-form{
+    margin-right: 10px;
+}
+
+body.ltr .btn.btn-form:last-child{
+    margin-right:0;
+}
+
+body.rtl .btn.btn-form{
+    margin-left: 10px;
+}
+
+body.rtl .btn.btn-form:last-child{
+    margin-left:0;
+}
+
+.btn.btn-success:not(.disabled){
+    border-color:#008000;
+    background-color:#b3ffa7;
+    color:#008000;
+}
+
+.btn.btn-success:not(.disabled):hover{
+    background-color:#008000;
+    color:#b3ffa7;
+}
+
+.btn.btn-normal:not(.disabled){
+    border-color:#2A3582;
+    background-color:#e2e4ff;
+    color:#2A3582;
+}
+
+.btn.btn-normal:not(.disabled):hover{
+    background-color:#2A3582;
+    color:#e2e4ff;
+}
+
+.btn.btn-warning:not(.disabled){
+    border-color:#a80000;
+    background-color:#ffdbdb;
+    color:#a80000;
+}
+
+.btn.btn-warning:not(.disabled):hover, .btn.on{
+    background-color:#a80000;
+    color:#ffdbdb;
+}
+
+.btn .table-btn{
+    width:100%;
+}
+
+.btn .table-btn .cell-btn{
+    vertical-align: middle;
+}
+
+.btn .table-btn .cell-btn.bg{
+    text-align:center;
+    width:25%;
+}
+
+body.ltr .btn .table-btn .cell-btn.bg.align{
+    text-align:right;
+}
+
+body.rtl .btn .table-btn .cell-btn.bg.align{
+    text-align:left;
+}
+
+.btn.btn-form .table-btn .cell-btn.bg svg{
+    width:24px;
+    height:24px;
+}
+
+.btn.btn-icon .table-btn .cell-btn.bg svg{
+    width:20px;
+    height:20px;
+}
+
+.btn .table-btn .cell-btn.text{
+    text-align: center;
+}
+
+body.ltr .btn .table-btn .cell-btn.text.padding{
+    padding-right: 5px;
+}
+
+body.rtl .btn .table-btn .cell-btn.text.padding{
+    padding-left: 5px;
+}
+
+@media screen and (min-width: 1024px) {
+    .btn.btn-form{
+        width:130px;
+        margin-bottom:0;
+    }
+}

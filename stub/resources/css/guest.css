@@ -1,0 +1,97 @@
+html {
+    background-color:#fff;
+    color:#000;
+    width:100%;
+    max-width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: 'Play', sans-serif;
+    height:inherit;
+    max-width:inherit;
+    width:inherit;
+    font-size:0;
+    letter-spacing:0;
+    word-spacing:0;
+}
+
+a{
+    color:#2A3582;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+.text{
+    font-size:16px;
+}
+
+.text-small{
+    font-size:13px;
+}
+
+.text-big{
+    font-size:22px;
+    font-weight: 700;
+}
+
+input.input,
+textarea.textarea{
+    border:0;
+    outline:0;
+    text-align: inherit;
+    width:100%;
+    background-color:#e2e4ff;
+}
+
+select.select{
+    border:0;
+    outline:0;
+    width:100%;
+    background-color:#e2e4ff;
+    padding:4px;
+    cursor: pointer;
+}
+
+input.input{
+    text-indent: 5px;
+    padding:5px 0;
+}
+
+input.input:focus,
+select.select:focus,
+textarea.textarea:focus{
+    color:#2A3582;
+    background-color:#faffbd;
+}
+
+select.select:not(.disabled):hover{
+    cursor: pointer;
+}
+
+select.disabled{
+    cursor: not-allowed;
+}
+
+textarea.textarea{
+    resize: none;
+    width:calc(100% - 10px);
+    padding:5px;
+}
+
+@media screen and (min-width: 1024px) {
+    .text-big{
+        font-size:18px;
+    }
+
+    .text{
+        font-size:14px;
+    }
+
+    .text-small{
+        font-size:11px;
+    }
+}
