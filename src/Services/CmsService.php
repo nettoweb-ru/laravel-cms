@@ -89,8 +89,9 @@ abstract class CmsService
             if (str_contains($key, '.')) {
                 $tmp = explode('.', $key);
                 $builder->whereHas($tmp[0], function($builder) use ($tmp, $value) {
+                    unset($tmp[0]);
                     self::setBuilderFilter($builder, [
-                        $tmp[1] => $value,
+                        implode('.', $tmp) => $value,
                     ]);
                 });
             } else {

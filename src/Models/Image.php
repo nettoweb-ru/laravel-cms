@@ -77,4 +77,24 @@ class Image extends Model
     {
         return $this->belongsTo(Album::class);
     }
+
+    /**
+     * @return string
+     */
+    public function getPreview(): string
+    {
+        return $this->exists
+            ? '/storage/auto/'.basename($this->thumb)
+            : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->exists
+            ? '/storage/auto/'.basename($this->filename)
+            : '';
+    }
 }

@@ -105,7 +105,7 @@ class ImageController extends Abstract\AdminCrudController
     protected function getItem($object): array
     {
         return [
-            'thumb' => '/storage/auto/'.basename($object->thumb),
+            'thumb' => $object->getPreview(),
         ];
     }
 }
