@@ -21,10 +21,6 @@ abstract class MenuService
             $structure = self::getStructure();
         }
 
-//        if (is_null($language)) {
-//            $language = LanguageService::getDefaultCode();
-//        }
-
         foreach ($structure as $item) {
             if (($item['slug'] == $code) && ($item['language'] == $language)) {
                 return $item;
@@ -128,6 +124,7 @@ abstract class MenuService
                 'is_blank' => $item->is_blank,
                 'dropdown' => null,
                 'roles_id' => $item->roles->pluck('id')->all(),
+                'highlight' => $item->highlight,
             ];
         }
 
@@ -207,7 +204,7 @@ abstract class MenuService
             }
 
             $kid['target'] = $kid['is_blank'] ? '_blank' : '_self';
-            $kid['is_current'] = request()->routeIs($kid['link']);
+            $kid['is_current'] = request()->routeIs($kid['link']) || ($kid['highlight'] && request()->routeIs(...$kid['highlight']));
             $kid['link'] = route($kid['link'], [], false);
 
             $return[] = $kid;
