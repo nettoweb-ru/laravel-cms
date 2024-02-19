@@ -7,6 +7,7 @@
             <x-cms::form.string name="link" type="text" width="6" maxlength="255" :label="__('cms::main.attr_link')" :value="old('link', $object->link)" :messages="$errors->get('link')" />
             <x-cms::form.checkbox name="is_active" width="3" type="radio" :label="__('cms::main.attr_is_active')" :value="old('is_active', $object->is_active)" :messages="$errors->get('is_active')" :options="$reference['boolean']" />
             <x-cms::form.checkbox name="is_blank" width="3" type="radio" :label="__('cms::main.attr_is_blank')" :value="old('is_blank', $object->is_blank)" :messages="$errors->get('is_blank')" :options="$reference['boolean']" />
+            <x-cms::form.json name="highlight" :label="__('cms::main.attr_highlight')" :value="old('highlight', $object->highlight)" :messages="$errors->get('highlight')" />
             @permission('manage-access')
             <x-cms::form.checkbox name="roles" :label="__('cms::main.list_role')" :value="old('roles', $object->roles->pluck('id')->all())" :options="$reference['role']" :messages="$errors->get('roles')" multiple />
             @endpermission

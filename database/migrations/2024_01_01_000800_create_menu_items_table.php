@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('link')->nullable()->default(null);
             $table->enum('is_active', ['0', '1'])->default('0');
             $table->enum('is_blank', ['0', '1'])->default('0');
+            $table->json('highlight')->nullable()->default(null);
             $table->foreign('menu_id')->references('id')->on('cms__menus')->onDelete('cascade')->onUpdate('cascade');
         });
 

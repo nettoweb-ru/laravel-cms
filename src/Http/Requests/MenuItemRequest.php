@@ -17,6 +17,7 @@ class MenuItemRequest extends FormRequest
             'is_active' => ['in:1,0'],
             'is_blank' => ['in:1,0'],
             'sort' => ['integer', 'min:0', 'max:16777215'],
+            'highlight' => ['nullable', 'array'],
         ];
     }
 }

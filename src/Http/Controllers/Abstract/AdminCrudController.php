@@ -99,7 +99,7 @@ abstract class AdminCrudController extends AdminController
             $route = route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $object->id]));
         }
 
-        return Redirect::intended($route)->with('status', $status);
+        return Redirect::to($route)->with('status', $status);
     }
 
     /**
@@ -408,10 +408,10 @@ abstract class AdminCrudController extends AdminController
         $status = __('cms::main.general_status_saved');
 
         if ($save) {
-            return Redirect::intended(route(...$this->route['index']))->with('status', $status);
+            return Redirect::to(route(...$this->route['index']))->with('status', $status);
         }
 
-        return Redirect::intended(route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $id])))->with('status', $status);
+        return Redirect::to(route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $id])))->with('status', $status);
     }
 
     /**

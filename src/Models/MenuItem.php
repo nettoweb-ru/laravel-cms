@@ -20,12 +20,14 @@ class MenuItem extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'is_blank' => 'boolean',
+        'highlight' => 'array',
     ];
 
     protected $attributes = [
         'sort' => 0,
         'is_active' => false,
         'is_blank' => false,
+        'highlight' => null,
     ];
 
     /**

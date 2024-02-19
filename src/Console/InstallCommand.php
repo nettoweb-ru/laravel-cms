@@ -41,7 +41,9 @@ class InstallCommand extends Command
             (new Filesystem)->copyDirectory(__DIR__.'/../../stub/resources/views/auth', resource_path('views/auth'));
         }
 
-        (new Filesystem)->copy(__DIR__.'/../../resources/js/styles.js', resource_path('js/styles.js'));
+        if (!(new Filesystem())->exists(resource_path('js/styles.js'))) {
+            (new Filesystem)->copy(__DIR__.'/../../resources/js/styles.js', resource_path('js/styles.js'));
+        }
 
         (new Filesystem)->ensureDirectoryExists(storage_path('app/public/files'));
         (new Filesystem)->ensureDirectoryExists(storage_path('app/public/images'));
