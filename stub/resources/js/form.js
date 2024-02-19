@@ -26,6 +26,7 @@ class Form {
         this.initEditors(object)
         this.initFileFields(object)
         this.initAnimation(object)
+        this.initJsonFields(object)
 
         this.initObjects(object)
         this.sheetsActive = (this.sheetCount > 1)
@@ -49,7 +50,7 @@ class Form {
             this.showSheet(object.data('sheet'))
         }
 
-        this.initFocus();
+        this.initFocus()
     }
 
     checkErrors() {
@@ -116,7 +117,7 @@ class Form {
             })
 
             download.click(function() {
-                App.downloadFile($(this).data('filename'));
+                App.downloadFile($(this).data('filename'))
             })
 
             parent.find('.js-file-delete').click(function() {
@@ -154,6 +155,43 @@ class Form {
 
             setTimeout(function() {focused.focus()})
         }
+    }
+
+    initJsonFields(object) {
+        let self = this
+        object.find('.js-json').each(function() {
+            let parent = $(this)
+
+            parent.find('.js-json-add').click(function() {
+                let input = $('<input />', {
+                    'type': 'text',
+                    'class': 'input text js-json-value',
+                    'name': parent.data('name') + '[]'
+                })
+
+                parent.find('.js-json-values').append($('<div />', {
+                    'class': 'json-value-item'
+                }).append(input))
+            })
+
+            parent.on('blur change', '.js-json-value', function() {
+                self.initJsonFieldWidth($(this))
+            })
+
+            parent.find('.js-json-value').each(function() {
+                self.initJsonFieldWidth($(this))
+            })
+        })
+    }
+
+    initJsonFieldWidth(object) {
+        let length = object.val().length
+        if (length) {
+            object.css('width', (length + 2) + 'ch')
+            return
+        }
+
+        object.parent().remove()
     }
 
     initLanguageSwitch() {
@@ -230,7 +268,7 @@ class Form {
         if (this.language) {
             this.objects.langSwitch[this.language].removeClass('active')
             for (key in this.objects.langInputs[this.language]) {
-                this.objects.langInputs[this.language][key].hide();
+                this.objects.langInputs[this.language][key].hide()
             }
         }
 
@@ -241,7 +279,7 @@ class Form {
         }
 
         for (key in this.objects.langInputs[this.language]) {
-            this.objects.langInputs[this.language][key].show();
+            this.objects.langInputs[this.language][key].show()
         }
     }
 

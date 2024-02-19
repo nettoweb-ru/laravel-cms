@@ -128,6 +128,49 @@ body.rtl .form .form-grid .grid-item.value .grid-value-file .cell.filename{
     white-space: nowrap;
 }
 
+.form .form-grid .grid-item.value .json-value-table{
+    width:100%;
+}
+
+.form .form-grid .grid-item.value .json-value-table .json-value-cell{
+    vertical-align: top;
+}
+
+.form .form-grid .grid-item.value .json-value-table .json-value-cell.control .btn{
+    margin-bottom:6px;
+}
+
+body.ltr .form .form-grid .grid-item.value .json-value-table .json-value-cell.control{
+    padding-right: 10px;
+}
+
+body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.control{
+    padding-left: 10px;
+}
+
+.form .form-grid .grid-item.value .json-value-table .json-value-cell.items{
+    width:100%;
+}
+
+.form .form-grid .grid-item.value .json-value-table .json-value-cell.items .json-value-item{
+    display:inline-block;
+    margin-bottom:6px;
+}
+
+body.ltr .form .form-grid .grid-item.value .json-value-table .json-value-cell.items .json-value-item{
+    margin-right: 6px;
+}
+
+body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.items .json-value-item{
+    margin-left: 6px;
+}
+
+.form .form-grid .grid-item.value .json-value-item .input{
+    min-width:20px;
+    text-align: center;
+    text-indent: 0;
+}
+
 .form .form-grid .grid-item.value .grid-value-option{
     display:inline-block;
     margin: 6px 0;
