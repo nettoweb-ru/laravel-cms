@@ -55,7 +55,7 @@ return [
     "error_saving_model" => "Ошибка при сохранении модели",
     "general_access" => "Доступ",
     "general_balance_history" => "История баланса",
-    "general_browser" => "Обозреватель файлов",
+    "general_browser" => "Файлы",
     "general_browser_date" => "Дата изменения",
     "general_browser_dir_prompt" => "Укажите имя новой директории",
     "general_browser_empty_dir" => "Эта директория пуста",

@@ -17,7 +17,7 @@
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <input name="{{ $name }}[{{ $langCode }}]" value="{{ $langValue }}" type="date" id="{{ $id }}_{{ $langCode }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
+                    <input name="{{ $name }}|{{ $langCode }}" value="{{ $langValue }}" type="date" id="{{ $id }}_{{ $langCode }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
                 </div>
             @endforeach
         @else

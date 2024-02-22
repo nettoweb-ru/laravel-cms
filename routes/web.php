@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Netto\Http\Controllers\AlbumController;
-use Netto\Http\Controllers\AlbumFrameController;
 use Netto\Http\Controllers\AuthenticatedSessionController;
 use Netto\Http\Controllers\BrowserController;
 use Netto\Http\Controllers\ConfirmablePasswordController;
@@ -27,31 +26,31 @@ use Netto\Http\Controllers\VerifyEmailController;
 
 Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
     Route::middleware('admin.guest')->group(function() {
-        Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-        Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+        Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+        Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 
-        Route::get('/profile/password/forgot', [PasswordResetLinkController::class, 'create'])->name('password.request');
-        Route::post('/profile/password/forgot', [PasswordResetLinkController::class, 'store'])->name('password.email');
+        Route::get('profile/password/forgot', [PasswordResetLinkController::class, 'create'])->name('password.request');
+        Route::post('profile/password/forgot', [PasswordResetLinkController::class, 'store'])->name('password.email');
 
-        Route::get('/profile/password/reset/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-        Route::post('/profile/password/reset', [NewPasswordController::class, 'store'])->name('password.store');
+        Route::get('profile/password/reset/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+        Route::post('profile/password/reset', [NewPasswordController::class, 'store'])->name('password.store');
     });
 
     Route::middleware('admin')->group(function() {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
 
-        Route::put('/profile/password', [PasswordController::class, 'update'])->name('profile.password.update');
+        Route::put('profile/password', [PasswordController::class, 'update'])->name('profile.password.update');
 
-        Route::get('/profile/verify', EmailVerificationPromptController::class)->name('verification.notice');
-        Route::post('/profile/verify/send', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
-        Route::get('/profile/verify/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+        Route::get('profile/verify', EmailVerificationPromptController::class)->name('verification.notice');
+        Route::post('profile/verify/send', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
+        Route::get('profile/verify/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
 
-        Route::get('/profile/password/confirm', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
-        Route::post('/profile/password/confirm', [ConfirmablePasswordController::class, 'store'])->name('password.store');
+        Route::get('profile/password/confirm', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
+        Route::post('profile/password/confirm', [ConfirmablePasswordController::class, 'store'])->name('password.store');
 
-        Route::post('/setCookie', [CookieController::class, 'set'])->name('cookie.set');
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+        Route::post('setCookie', [CookieController::class, 'set'])->name('cookie.set');
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
         Route::middleware('verified')->group(function() {
             Route::get('/', [PublicationController::class, 'index'])->name('home');

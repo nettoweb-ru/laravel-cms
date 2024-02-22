@@ -55,7 +55,7 @@ return [
     "error_saving_model" => "Failed to save model",
     "general_access" => "Access",
     "general_balance_history" => "Balance history",
-    "general_browser" => "File browser",
+    "general_browser" => "Files",
     "general_browser_date" => "Date modified",
     "general_browser_dir_prompt" => "Specify name for new directory",
     "general_browser_empty_dir" => "This directory is empty",

@@ -4,11 +4,7 @@ namespace Netto\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
+use Netto\Services\CmsService;
 use Netto\Traits\HasMultiLangAttributes;
 use Netto\Traits\HasUploadedFiles;
 
@@ -42,23 +38,7 @@ class Image extends Model
         parent::boot();
 
         self::saving(function($model) {
-            if (empty($model->original['filename']) || ($model->filename != $model->original['filename'])) {
-                $manager = new ImageManager(Driver::class);
-                $object = new self();
-
-                $tmp = tempnam('/tmp', 'thumb');
-                $basePath = base_path().DIRECTORY_SEPARATOR;
-
-                $image = $manager->read($basePath.$model->filename);
-                $image->cover(config('cms.album_max_width'), config('cms.album_max_height'))->save($tmp);
-
-                $disk = Storage::disk($object->files['thumb']);
-                $file = new UploadedFile($tmp, basename($tmp));
-                $path = $file->store('auto', $object->files['thumb']);
-
-                $model->thumb = str_replace($basePath, '', $disk->path('').$path);
-                File::delete($tmp);
-            }
+            $model->setAttribute('thumb', CmsService::imageResize($model->filename, $model->files['thumb']));
         });
 
         self::updated(function($model) {

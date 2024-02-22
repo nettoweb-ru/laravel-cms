@@ -3,6 +3,7 @@
     'value' => '',
     'width' => 12,
     'height' => 400,
+    'required' => false,
     'id' => $name,
     'multilang' => false,
     'label' => '',
@@ -22,12 +23,12 @@
 @endpushonce
 
 <div class="grid-cols-{{ $width }}">
-    <x-cms::form.partials.label :id="$id" :text="$label" />
+    <x-cms::form.partials.label :id="$id" :text="$label" :required="$required" />
     <x-cms::form.partials.value>
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <x-cms::form.partials.editor :language="$langCode" :height="$height" :id="$id.'_'.$langCode" :name="$name.'_'.$langCode" :value="$langValue"  />
+                    <x-cms::form.partials.editor :language="$langCode" :height="$height" :id="$id.'_'.$langCode" :name="$name.'|'.$langCode" :value="$langValue"  />
                 </div>
             @endforeach
         @else

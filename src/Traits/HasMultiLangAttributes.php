@@ -174,7 +174,7 @@ trait HasMultiLangAttributes
                 /** @var Model $model */
                 $model = new $this->multiLangClass();
                 $model->setAttribute('lang_id', $language['id']);
-                $model->setAttribute($model::PIVOT_KEY, $this->id);
+                $model->setAttribute('object_id', $this->id);
 
                 $models[$code] = $model;
             }
@@ -198,7 +198,7 @@ trait HasMultiLangAttributes
      */
     public function translated(): BelongsToMany
     {
-        return $this->belongsToMany(Language::class, $this->multiLangClass, $this->multiLangClass::PIVOT_KEY, 'lang_id')->withPivot($this->multiLang)->using($this->multiLangClass);
+        return $this->belongsToMany(Language::class, $this->multiLangClass, 'object_id', 'lang_id')->withPivot($this->multiLang)->using($this->multiLangClass);
     }
 
     /**

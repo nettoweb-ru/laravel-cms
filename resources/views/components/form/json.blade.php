@@ -15,8 +15,8 @@
     <x-cms::form.partials.value>
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
-                <div class="js-multilang hidden" data-name="{{ $name.'['.$langCode.']' }}" data-code="{{ $langCode }}">
-                    <x-cms::form.partials.json :name="$name.'['.$langCode.']'" :disabled="$disabled" :value="$langValue" :id="$id.'_'.$langCode" />
+                <div class="js-multilang hidden" data-name="{{ $name.'|'.$langCode }}" data-code="{{ $langCode }}">
+                    <x-cms::form.partials.json :name="$name.'|'.$langCode" :disabled="$disabled" :value="$langValue" :id="$id.'_'.$langCode" />
                 </div>
             @endforeach
         @else

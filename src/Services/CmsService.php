@@ -4,7 +4,11 @@ namespace Netto\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 abstract class CmsService
 {
@@ -62,6 +66,43 @@ abstract class CmsService
 
         $return += 10;
         return $return;
+    }
+
+    /**
+     * @param string $path
+     * @param string $storage
+     * @param int|null $width
+     * @param int|null $height
+     * @return string
+     */
+    public static function imageResize(string $path, string $storage, ?int $width = null, ?int $height = null): string
+    {
+        if (is_null($width)) {
+            $width = config('cms.album_max_width');
+        }
+
+        if (is_null($height)) {
+            $height = config('cms.album_max_height');
+        }
+
+        $basePath = base_path().DIRECTORY_SEPARATOR;
+        $manager = new ImageManager(Driver::class);
+
+        $image = $manager->read($basePath.$path);
+        $exif = $image->exif()->get('COMPUTED');
+
+        if (($exif['Width'] <= $width) && ($exif['Height'] <= $height)) {
+            return $path;
+        }
+
+        $tmp = tempnam('/tmp', 'resize');
+        $image->cover($width, $height)->save($tmp, 95);
+        $file = new UploadedFile($tmp, basename($tmp));
+
+        $resized = $file->store('auto', $storage);
+        $disk = Storage::disk($storage);
+
+        return str_replace($basePath, '', $disk->path('').$resized);
     }
 
     /**
