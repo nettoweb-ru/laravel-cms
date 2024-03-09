@@ -7,6 +7,14 @@ use Netto\Models\Language;
 abstract class LanguageService
 {
     /**
+     * @return int
+     */
+    public static function getCurrentId(): int
+    {
+        return self::getList()[app()->getLocale()]['id'];
+    }
+
+    /**
      * @return string
      */
     public static function getDefaultCode(): string

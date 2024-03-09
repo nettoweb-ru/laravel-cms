@@ -21,6 +21,8 @@ class InstallCommand extends Command
             'controllers' => app_path('Http/Controllers'),
             'requests' => app_path('Http/Requests'),
             'models' => app_path('Models'),
+            'middleware' => app_path('Http/Middleware'),
+            'services' => app_path('Services'),
             'defaultTpl' => resource_path('views/components/layout'),
             'auth' => resource_path('views/auth'),
             'js' => resource_path('js/styles.js'),
@@ -38,17 +40,22 @@ class InstallCommand extends Command
         $fileSystem->ensureDirectoryExists($path['requests']);
         $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Http/Requests', $path['requests']);
 
+        $fileSystem->ensureDirectoryExists($path['middleware']);
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Http/Middleware', $path['middleware']);
+
         $fileSystem->ensureDirectoryExists($path['models']);
         $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Models', $path['models']);
+
+        $fileSystem->ensureDirectoryExists($path['services']);
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Services', $path['services']);
 
         $fileSystem->copy(__DIR__.'/../../stub/config/cms.php', config_path('cms.php'));
 
         $fileSystem->copyDirectory(__DIR__.'/../../stub/lang', lang_path());
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/assets', public_path('assets'));
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/icons', public_path('icons'));
 
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/css', resource_path('css/netto'));
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/js', resource_path('js/netto'));
+        foreach ($path['storage'] as $item) {
+            $fileSystem->ensureDirectoryExists($item);
+        }
 
         $fileSystem->ensureDirectoryExists($path['defaultTpl']);
 
@@ -63,10 +70,6 @@ class InstallCommand extends Command
 
         if (!$fileSystem->exists($path['js'])) {
             $fileSystem->copy(__DIR__.'/../../resources/js/styles.js', $path['js']);
-        }
-
-        foreach ($path['storage'] as $item) {
-            $fileSystem->ensureDirectoryExists($item);
         }
 
         $this->components->info('Nettoweb CMS was successfully installed');

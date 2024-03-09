@@ -38,6 +38,6 @@ class Album extends Model
      */
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class)->orderBy('sort')->with('translated');;
     }
 }

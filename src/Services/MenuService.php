@@ -69,15 +69,15 @@ abstract class MenuService
 
     /**
      * @param string $code
-     * @return array|null
+     * @return array
      */
-    public static function getPublic(string $code): ?array
+    public static function getPublic(string $code): array
     {
         if ($menu = self::getByCode($code, app()->getLocale())) {
             return self::pullKidsPublic($menu['kids'], ($user = Auth::user()) ? $user->roles->pluck('id')->all() : []);
         }
 
-        return null;
+        return [];
     }
 
     /**

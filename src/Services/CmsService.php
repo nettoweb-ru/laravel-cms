@@ -89,10 +89,11 @@ abstract class CmsService
         $manager = new ImageManager(Driver::class);
 
         $image = $manager->read($basePath.$path);
-        $exif = $image->exif()->get('COMPUTED');
 
-        if (($exif['Width'] <= $width) && ($exif['Height'] <= $height)) {
-            return $path;
+        if ($imageSize = getimagesize($basePath.$path)) {
+            if (($imageSize[0] <= $width) && ($imageSize[1] <= $height)) {
+                return $path;
+            }
         }
 
         $tmp = tempnam('/tmp', 'resize');

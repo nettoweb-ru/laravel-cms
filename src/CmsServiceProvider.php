@@ -2,6 +2,7 @@
 
 namespace Netto;
 
+use App\Http\Middleware\UserLocale;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -53,7 +54,16 @@ class CmsServiceProvider extends ServiceProvider
             $this->commands([
                 Console\InstallCommand::class,
                 Console\ImportCommand::class,
+                Console\RefreshSitemapCommand::class,
+                Console\RefreshSearchDatabase::class,
             ]);
+
+            $this->publishes([
+                __DIR__.'/../stub/resources/assets/css' => public_path('assets/css'),
+                __DIR__.'/../stub/resources/icons' => public_path('icons'),
+                __DIR__.'/../stub/resources/css' => resource_path('css/netto'),
+                __DIR__.'/../stub/resources/js' => resource_path('js/netto'),
+            ], 'assets');
         }
 
         /** @var Router $router */
@@ -64,6 +74,7 @@ class CmsServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('locale.admin', AdminLocale::class);
         $router->aliasMiddleware('locale.guest', GuestLocale::class);
+        $router->aliasMiddleware('locale.public', UserLocale::class);
 
         $router->aliasMiddleware('guest.admin', RedirectIfAuthenticated::class);
         $router->aliasMiddleware('auth.admin', Authenticate::class);

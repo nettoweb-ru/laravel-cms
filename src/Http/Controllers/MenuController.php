@@ -3,10 +3,12 @@
 namespace Netto\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Netto\Http\Requests\MenuRequest as WorkRequest;
 use Netto\Models\Language;
 use Netto\Models\Menu as WorkModel;
 use Netto\Services\CmsService;
+use Netto\Services\LanguageService;
 use Netto\Services\MenuService;
 use Netto\Traits\CrudControllerActions;
 
@@ -76,6 +78,20 @@ class MenuController extends Abstract\AdminCrudController
         'index' => 'cms::menu.index',
         'edit' => 'cms::menu.menu'
     ];
+
+    /**
+     * @return View
+     */
+    public function create(): View
+    {
+        $this->setRouteParams();
+        $this->addCrumbIndex();
+
+        $object = $this->getObject($this->class);
+        $object->setAttribute('lang_id', LanguageService::getDefaultId());
+
+        return $this->_edit($object);
+    }
 
     /**
      * @param WorkRequest $request

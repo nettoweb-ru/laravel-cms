@@ -49,6 +49,17 @@ if (!function_exists('format_file_size')) {
     }
 }
 
+if (!function_exists('get_auto_upload_path')) {
+    /**
+     * @param string $filename
+     * @return string
+     */
+    function get_auto_upload_path(string $filename = ''): string
+    {
+        return '/storage/auto'.($filename ? '/'.basename($filename) : '');
+    }
+}
+
 if (!function_exists('get_storage_path')) {
     /**
      * @param string $storage

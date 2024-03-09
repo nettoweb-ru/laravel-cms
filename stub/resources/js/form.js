@@ -181,6 +181,21 @@ class Form {
             parent.find('.js-json-value').each(function() {
                 self.initJsonFieldWidth($(this))
             })
+
+            parent.find('.js-json-values').change(function() {
+                let object = $(this)
+                setTimeout(function() {
+                    if (object.find('.js-json-value').length === 0) {
+                        object.append($('<input />', {
+                            'type': 'hidden',
+                            'name': parent.data('name'),
+                            'value': '',
+                        }))
+                    } else {
+                        object.find('input[type="hidden"]').remove()
+                    }
+                }, 1);
+            })
         })
     }
 

@@ -18,7 +18,7 @@ export default class Editor {
                     'bulletedList', 'numberedList', '|',
                     'alignment', '|',
                     'indent', 'outdent', '|',
-                    'link', /*'uploadImage',*/ 'insertTable', 'specialCharacters', 'mediaEmbed', '|',
+                    'link', 'insertTable', 'specialCharacters', 'mediaEmbed', 'horizontalLine', '|',
                     'findAndReplace', 'selectAll', '|',
                     'sourceEditing'
                 ],
@@ -57,7 +57,6 @@ export default class Editor {
             },
             removePlugins: [
                 'TextPartLanguage',
-                'HorizontalLine',
                 'PageBreak',
                 'HtmlEmbed',
                 'CodeBlock',
