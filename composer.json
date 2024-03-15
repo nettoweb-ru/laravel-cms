@@ -19,13 +19,22 @@
   ],
   "require": {
       "php": "^8.1",
+      "laravel/framework": "^10.10",
+      "laravel/sanctum": "^3.3",
+      "laravel/tinker": "^2.8",
       "ext-intl": "*",
       "ext-simplexml": "*",
       "intervention/image": "^3.3.3"
   },
   "require-dev": {
-    "orchestra/testbench": "^8.0",
-    "phpunit/phpunit": "^10.5"
+      "barryvdh/laravel-debugbar": "^3.9",
+      "fakerphp/faker": "^1.9.1",
+      "laravel/breeze": "^1.28",
+      "laravel/pint": "^1.0",
+      "laravel/sail": "^1.18",
+      "mockery/mockery": "^1.4.4",
+      "nunomaduro/collision": "^7.0",
+      "spatie/laravel-ignition": "^2.0"
   },
   "minimum-stability": "stable",
   "extra": {
