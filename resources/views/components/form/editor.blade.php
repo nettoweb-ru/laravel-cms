@@ -13,13 +13,13 @@
 
 @pushonce('head')
     @vite([
+        'resources/css/styles.css',
         'resources/js/styles.js',
     ])
     <link rel="preconnect" href="https://cdn.ckeditor.com">
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/translations/{{ app()->getLocale() }}.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/editor.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
 @endpushonce
 
 <div class="grid-cols-{{ $width }}">

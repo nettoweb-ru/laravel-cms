@@ -205,7 +205,7 @@ abstract class MenuService
 
             $kid['target'] = $kid['is_blank'] ? '_blank' : '_self';
             $kid['is_current'] = request()->routeIs($kid['link']) || ($kid['highlight'] && request()->routeIs(...$kid['highlight']));
-            $kid['link'] = route($kid['link'], [], false);
+            $kid['link'] = $kid['link'] ? route($kid['link'], [], false) : '';
 
             $return[] = $kid;
         }

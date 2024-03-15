@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('lang_id');
             $table->string('name', 2048);
             $table->string('url', 2048);
-            $table->longText('content');
+            $table->longText('content')->nullable()->default(null);;
             $table->dateTime('updated_at')->nullable()->default(null);
             $table->foreign('lang_id')->references('id')->on('cms__languages')->onDelete('cascade')->onUpdate('cascade');
         });

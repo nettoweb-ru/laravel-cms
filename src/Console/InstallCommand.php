@@ -17,60 +17,23 @@ class InstallCommand extends Command
     {
         $fileSystem = new Filesystem();
 
-        $path = [
-            'controllers' => app_path('Http/Controllers'),
-            'requests' => app_path('Http/Requests'),
-            'models' => app_path('Models'),
-            'middleware' => app_path('Http/Middleware'),
-            'services' => app_path('Services'),
-            'defaultTpl' => resource_path('views/components/layout'),
-            'auth' => resource_path('views/auth'),
-            'js' => resource_path('js/styles.js'),
-            'storage' => [
-                storage_path('app/public/files'),
-                storage_path('app/public/images'),
-                storage_path('app/public/auto'),
-                storage_path('app/auto'),
-            ],
-        ];
-
-        $fileSystem->ensureDirectoryExists($path['controllers']);
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Http/Controllers', $path['controllers']);
-
-        $fileSystem->ensureDirectoryExists($path['requests']);
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Http/Requests', $path['requests']);
-
-        $fileSystem->ensureDirectoryExists($path['middleware']);
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Http/Middleware', $path['middleware']);
-
-        $fileSystem->ensureDirectoryExists($path['models']);
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Models', $path['models']);
-
-        $fileSystem->ensureDirectoryExists($path['services']);
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/app/Services', $path['services']);
-
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/app', app_path());
         $fileSystem->copy(__DIR__.'/../../stub/config/cms.php', config_path('cms.php'));
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/auth', resource_path('views/auth'));
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/components/layout', resource_path('views/components/layout'));
 
-        $fileSystem->copyDirectory(__DIR__.'/../../stub/lang', lang_path());
+        $fileSystem->ensureDirectoryExists(resource_path('css'));
+        $fileSystem->copy(__DIR__.'/../../stub/resources/css/styles.css', resource_path('css/styles.css'));
 
-        foreach ($path['storage'] as $item) {
-            $fileSystem->ensureDirectoryExists($item);
-        }
+        $fileSystem->ensureDirectoryExists(resource_path('js'));
+        $fileSystem->copy(__DIR__.'/../../stub/resources/js/styles.js', resource_path('js/styles.js'));
 
-        $fileSystem->ensureDirectoryExists($path['defaultTpl']);
+        $fileSystem->copy(__DIR__.'/../../stub/vite.config.js', base_path('vite.config.js'));
 
-        $defaultTpl = $path['defaultTpl'].'/default.blade.php';
-        if (!$fileSystem->exists($defaultTpl)) {
-            $fileSystem->copy(__DIR__.'/../../stub/resources/views/components/layout/default.blade.php', $defaultTpl);
-        }
-
-        if (!$fileSystem->exists($path['auth'])) {
-            $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/auth', $path['auth']);
-        }
-
-        if (!$fileSystem->exists($path['js'])) {
-            $fileSystem->copy(__DIR__.'/../../resources/js/styles.js', $path['js']);
-        }
+        $fileSystem->ensureDirectoryExists(storage_path('app/public/files'));
+        $fileSystem->ensureDirectoryExists(storage_path('app/public/images'));
+        $fileSystem->ensureDirectoryExists(storage_path('app/public/auto'));
+        $fileSystem->ensureDirectoryExists(storage_path('app/auto'));
 
         $this->components->info('Nettoweb CMS was successfully installed');
     }

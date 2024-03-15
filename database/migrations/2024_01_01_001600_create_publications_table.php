@@ -19,12 +19,12 @@ return new class extends Migration
             $table->unsignedBigInteger('lang_id');
             $table->unsignedBigInteger('album_id')->nullable()->default(null);
             $table->string('slug');
-            $table->longText('content');
+            $table->longText('content')->nullable()->default(null);
             $table->string('meta_title')->nullable()->default(null);
-            $table->text('meta_description');
-            $table->text('meta_keywords');
+            $table->text('meta_description')->nullable()->default(null);
+            $table->text('meta_keywords')->nullable()->default(null);
             $table->string('og_title')->nullable()->default(null);
-            $table->text('og_description');
+            $table->text('og_description')->nullable()->default(null);
             $table->foreign('lang_id')->references('id')->on('cms__languages')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('album_id')->references('id')->on('cms__albums')->onDelete('set null')->onUpdate('cascade');
             $table->unique(['lang_id', 'slug']);

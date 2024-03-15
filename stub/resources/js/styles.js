@@ -7,8 +7,8 @@ App.editor.headings = [
 
 App.editor.styles = [
     {
-        name: 'Style 1',
+        name: 'Class 1',
         element: 'p',
-        classes: ['style1']
+        classes: ['class1']
     }
 ]
