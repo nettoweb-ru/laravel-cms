@@ -60,13 +60,10 @@ class CmsServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../stub/lang' => lang_path(),
-            ], 'translations');
-
-            $this->publishes([
                 __DIR__.'/../stub/public' => public_path(),
                 __DIR__.'/../stub/resources/css/netto' => resource_path('css/netto'),
                 __DIR__.'/../stub/resources/js/netto' => resource_path('js/netto'),
-            ], 'assets');
+            ], 'laravel-assets');
         }
 
         /** @var Router $router */
