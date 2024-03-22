@@ -25,6 +25,7 @@ class Gallery extends ListWidget {
         this.objects.icons.create = object.find('.js-icon-create')
         this.objects.countItems = object.find('.js-counter-items')
         this.objects.body = object.find('.js-images')
+        this.objects.title = object.find('.js-title')
     }
 
     lockBulkActionButtons() {
@@ -36,6 +37,8 @@ class Gallery extends ListWidget {
             this.id = data.id
             this.objects.icons.create.data('url', data.url.create)
             this.url.delete = data.url.delete
+            this.objects.title.html(data.title)
+
             this.init = true
         }
 
