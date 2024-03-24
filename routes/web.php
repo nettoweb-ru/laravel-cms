@@ -47,7 +47,7 @@ Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
         Route::get('profile/verify/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
 
         Route::get('profile/password/confirm', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
-        Route::post('profile/password/confirm', [ConfirmablePasswordController::class, 'store'])->name('password.store');
+        Route::post('profile/password/confirm', [ConfirmablePasswordController::class, 'store']);
 
         Route::post('setCookie', [CookieController::class, 'set'])->name('cookie.set');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
