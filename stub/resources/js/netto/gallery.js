@@ -6,7 +6,8 @@ class Gallery extends ListWidget {
     init = false
     url = {
         list: '',
-        delete: ''
+        delete: '',
+        toggle: ''
     }
 
     constructor(object) {
@@ -17,15 +18,27 @@ class Gallery extends ListWidget {
 
     initActions(object) {
         super.initActions(object)
+        this.initIconToggle()
     }
 
     initObjects(object) {
         super.initObjects(object)
 
         this.objects.icons.create = object.find('.js-icon-create')
+        this.objects.icons.toggle = object.find('.js-icon-toggle')
+
         this.objects.countItems = object.find('.js-counter-items')
         this.objects.body = object.find('.js-images')
         this.objects.title = object.find('.js-title')
+    }
+
+    initIconToggle() {
+        let self = this
+        this.objects.icons.toggle.click(async function() {
+            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
+                self.toggle()
+            }
+        })
     }
 
     lockBulkActionButtons() {
@@ -37,6 +50,14 @@ class Gallery extends ListWidget {
             this.id = data.id
             this.objects.icons.create.data('url', data.url.create)
             this.url.delete = data.url.delete
+
+            if (typeof data.url.toggle === 'string') {
+                this.url.toggle = data.url.toggle
+                this.objectEnable(this.objects.icons.toggle)
+                this.objects.icons.toggle.show()
+            }
+
+
             this.objects.title.html(data.title)
 
             this.init = true
@@ -52,10 +73,16 @@ class Gallery extends ListWidget {
 
         this.objects.countItems.html(data.nav.total)
 
-        let tr, k1
+        let tr, k1, className
         for (k1 in data.items) {
+            className = 'gallery-item'
+
+            if ((typeof data.items[k1].is_active === 'boolean') && !data.items[k1].is_active) {
+                className += ' inactive'
+            }
+
             tr = $('<div />', {
-                'class': 'gallery-item',
+                'class': className,
                 'data-id': data.items[k1].id,
                 'data-url': data.items[k1].url
             }).append($('<img />', {'alt': '', 'src': data.items[k1].thumb}))

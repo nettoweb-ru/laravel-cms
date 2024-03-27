@@ -77,6 +77,15 @@
     border:1px solid #e2e4ff;
 }
 
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item.inactive{
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    opacity: 40%;
+}
+
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item:hover{
     cursor: pointer;
     border-color: #d0d2ff;

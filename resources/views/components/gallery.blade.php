@@ -16,6 +16,7 @@
             <div class="cell list-top actions">
                 <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal js-icon-create js-link disabled" disabled data-url="" title="{{ __('cms::main.title_create') }}" />
                 <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal js-icon-invert disabled" disabled title="{{ __('cms::main.title_invert') }}" />
+                <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal js-icon-toggle hidden disabled" disabled title="{{ __('cms::main.title_toggle') }}" />
                 <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning js-icon-delete disabled" disabled title="{{ __('cms::main.title_delete') }}" />
             </div>
         </div>

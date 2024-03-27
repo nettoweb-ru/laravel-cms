@@ -187,6 +187,21 @@ export default class ListWidget {
         })
     }
 
+    toggle() {
+        this.lock()
+        let self = this
+
+        Ajax.post(this.url.toggle, {id: this.selected}, function(data) {
+            if (data.status) {
+                Overlay.showMessage(data.status)
+            }
+
+            self.load()
+        }, function() {
+            self.unlock()
+        })
+    }
+
     unlock() {
         if (!this.locked) {
             return

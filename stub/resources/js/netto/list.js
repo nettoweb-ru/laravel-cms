@@ -211,21 +211,6 @@ class List extends ListWidget {
         this.objectDisable(this.objects.page)
     }
 
-    toggle() {
-        this.lock()
-        let self = this
-
-        Ajax.post(this.url.toggle, {id: this.selected}, function(data) {
-            if (data.status) {
-                Overlay.showMessage(data.status)
-            }
-
-            self.load()
-        }, function() {
-            self.unlock()
-        })
-    }
-
     unlockBulkActionButtons() {
         this.objectEnable(this.objects.icons.delete)
         this.objectEnable(this.objects.icons.toggle)
