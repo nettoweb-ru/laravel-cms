@@ -1,6 +1,6 @@
 <?php
 
-namespace Netto\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use App\Models\User as WorkModel;
+use Netto\Http\Controllers\Abstract;
 use Netto\Models\Permission;
 use Netto\Models\Role;
 use Netto\Services\CmsService;

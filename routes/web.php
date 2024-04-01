@@ -21,7 +21,7 @@ use Netto\Http\Controllers\ProfileController;
 use Netto\Http\Controllers\PublicationController;
 use Netto\Http\Controllers\RoleController;
 use Netto\Http\Controllers\UserBalanceController;
-use Netto\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\UserController;
 use Netto\Http\Controllers\VerifyEmailController;
 
 Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
