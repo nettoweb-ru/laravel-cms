@@ -19,6 +19,7 @@ class InstallCommand extends Command
 
         $fileSystem->copyDirectory(__DIR__.'/../../stub/app', app_path());
         $fileSystem->copy(__DIR__.'/../../stub/config/cms.php', config_path('cms.php'));
+        $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/admin', resource_path('views/admin'));
         $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/auth', resource_path('views/auth'));
         $fileSystem->copyDirectory(__DIR__.'/../../stub/resources/views/components/layout', resource_path('views/components/layout'));
 

@@ -5,7 +5,7 @@ namespace Netto\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\UserRequest as WorkRequest;
+use App\Http\Requests\Admin\UserRequest as WorkRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -83,7 +83,7 @@ class UserController extends Abstract\AdminCrudController
 
     protected array $view = [
         'index' => 'cms::user.index',
-        'edit' => 'cms::user.user'
+        'edit' => 'admin.user.user'
     ];
 
     /**
