@@ -79,7 +79,7 @@
 }
 
 .overlay-hold .block.info{
-    background-color:#fff;
+    background-color:var(--color-reset);
     padding:20px 25px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -118,7 +118,7 @@ body.rtl .overlay-hold .block.info .block-info.buttons .button:last-child{
 @-webkit-keyframes load-anim { 0% { opacity: 1} 100% {opacity: 0} }
 @keyframes load-anim { 0% { opacity: 1} 100% {opacity: 0} }
 .loading{position:relative;background:none;width:200px;height:200px;transform:scale(0.6);display:inline-block;}
-.loading div{top:80px;left:92px;width:16px;height:40px;background:#e0e0e0;border-radius:10px;position:absolute;-webkit-animation:load-anim 1s linear infinite;animation:load-anim 1s linear infinite;}
+.loading div{top:80px;left:92px;width:16px;height:40px;background:var(--color-border);border-radius:10px;position:absolute;-webkit-animation:load-anim 1s linear infinite;animation:load-anim 1s linear infinite;}
 .loading > div:nth-of-type(1){-webkit-animation-delay:-0.5s;animation-delay:-0.5s;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);}
 .loading > div:nth-of-type(2){-webkit-animation-delay:-0.4166666666666667s;animation-delay:-0.4166666666666667s;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);}
 .loading > div:nth-of-type(3){-webkit-animation-delay:-0.33333333333333337s;animation-delay:-0.33333333333333337s;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);}

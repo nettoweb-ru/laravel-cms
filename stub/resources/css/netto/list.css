@@ -39,7 +39,7 @@
 }
 
 .list .list-block.content .list-content-layer.animation{
-    background-color:#eee;
+    background-color:var(--color-light-gray-2);
     z-index: 5100;
     min-height:200px;
 }
@@ -75,16 +75,16 @@
 }
 
 .list .list-block.content table thead{
-    background-color: #e2e4ff;
+    background-color: var(--color-background);
 }
 
 .list .list-block.content table thead th{
     font-weight: 400;
     padding:3px 6px;
     border-style: solid;
-    border-color: #d0d2ff;
+    border-color: var(--color-background-dark);
     border-width: 0 1px;
-    color:#777;
+    color:var(--color-gray);
     white-space: nowrap;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .list .list-block.content table thead th.sortable:hover span{
-    color:#2A3582;
+    color:var(--color-main);
 }
 
 body.ltr .list .list-block.content table thead th:first-child{
@@ -129,7 +129,7 @@ body.rtl .list .list-block.content table thead th.sort span:after{
 }
 
 .list .list-block.content table tbody tr{
-    border-bottom: 1px solid #e2e4ff;
+    border-bottom: 1px solid var(--color-background);
 }
 
 .list .list-block.content table tbody tr:last-child{
@@ -137,23 +137,23 @@ body.rtl .list .list-block.content table thead th.sort span:after{
 }
 
 .list .list-block.content table tbody tr:hover{
-    background-color:#f0f0f0 !important;
+    background-color:var(--color-light-gray-1) !important;
     cursor: pointer !important;
-    color:#2A3582;
+    color:var(--color-main);
 }
 
 .list .list-block.content table tbody tr.selected{
-    background-color:#2A3582 !important;
-    color:#fff !important;
+    background-color:var(--color-main) !important;
+    color:var(--color-reset) !important;
 }
 
 .list .list-block.content table tbody tr.inactive{
-    background-color:#eee;
-    color:#aaa;
+    background-color:var(--color-light-gray-2);
+    color:var(--color-gray);
 }
 
 .list .list-block.content table tbody tr.selected:hover{
-    color:#ddd !important;
+    color:var(--color-border) !important;
 }
 
 .list .list-block.content table tbody td{
@@ -162,8 +162,8 @@ body.rtl .list .list-block.content table thead th.sort span:after{
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom{
     width: inherit;
-    border-top:1px solid #d0d2ff;
-    color:#777;
+    border-top:1px solid var(--color-background-dark);
+    color:var(--color-gray);
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom{

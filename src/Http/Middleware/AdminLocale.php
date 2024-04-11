@@ -12,13 +12,28 @@ class AdminLocale
 {
     public const DEFAULT = 'ru';
     public const SUPPORTED = [
-        'ru' => 'Русский',
         'en' => 'English',
+        'fr' => 'Français',
+        'es' => 'Español',
+        'de' => 'Deutsch',
+        'pt' => 'Portuguesa',
+        'ru' => 'Русский',
+        /*'tr' => 'Türkçe',
+        'ar' => 'عربي',
+        'fa' => 'فارسی',
+        'zh' => '中文',
+        'ja' => '日本語',
+        'hi' => 'हिन्दी',
+        'he' => 'עִבְרִית',*/
     ];
 
     public const LOCALES = [
-        'ru' => 'ru_RU',
         'en' => 'en_US',
+        'fr' => 'fr_FR',
+        'es' => 'es_ES',
+        'de' => 'de_DE',
+        'pt' => 'pt_PT',
+        'ru' => 'ru_RU',
     ];
 
     /**

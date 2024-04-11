@@ -9,6 +9,7 @@
     'label' => '',
     'messages' => [],
     'autocomplete' => 'off',
+    'transliterate' => false,
 ])
 
 <div class="grid-cols-{{ $width }}">
@@ -17,11 +18,11 @@
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <input name="{{ $name }}|{{ $langCode }}" value="{{ $langValue }}" id="{{ $id }}_{{ $langCode }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
+                    <input name="{{ $name }}|{{ $langCode }}" value="{{ $langValue }}" id="{{ $id }}_{{ $langCode }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '').($transliterate ? ' js-transliterate' : '')]) !!} autocomplete="{{ $autocomplete }}" @if ($transliterate) data-transliterate-code="{{ $transliterate }}" @endif />
                 </div>
             @endforeach
         @else
-            <input name="{{ $name }}" value="{{ $value }}" id="{{ $id }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
+            <input name="{{ $name }}" value="{{ $value }}" id="{{ $id }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '').($transliterate ? ' js-transliterate' : '')]) !!} autocomplete="{{ $autocomplete }}" @if ($transliterate) data-transliterate-code="{{ $transliterate }}" @endif />
         @endif
     </x-cms::form.partials.value>
     <x-cms::form.partials.errors :messages="$messages" :multilang="$multilang" />

@@ -39,7 +39,7 @@
 }
 
 .list .list-block.content .list-content-layer.animation{
-    background-color:#eee;
+    background-color:var(--color-light-gray-2);
     z-index: 5100;
     min-height:200px;
 }
@@ -72,9 +72,9 @@
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item{
     display:inline-block;
     margin:0 10px 10px 0;
-    background-color: #eee;
+    background-color: var(--color-light-gray-2);
     padding:10px;
-    border:1px solid #e2e4ff;
+    border:1px solid var(--color-background);
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item.inactive{
@@ -88,11 +88,11 @@
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item:hover{
     cursor: pointer;
-    border-color: #d0d2ff;
+    border-color: var(--color-background-dark);
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item.selected{
-    background-color: #2A3582;
+    background-color: var(--color-main);
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data .gallery-item.selected img{
@@ -105,8 +105,8 @@
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom{
     width: inherit;
-    border-top:1px solid #d0d2ff;
-    color:#777;
+    border-top:1px solid var(--color-background-dark);
+    color:var(--color-gray);
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom{

@@ -5,7 +5,6 @@ use Netto\Http\Controllers\AlbumController;
 use Netto\Http\Controllers\AuthenticatedSessionController;
 use Netto\Http\Controllers\BrowserController;
 use Netto\Http\Controllers\ConfirmablePasswordController;
-use Netto\Http\Controllers\CookieController;
 use Netto\Http\Controllers\DownloadController;
 use Netto\Http\Controllers\EmailVerificationNotificationController;
 use Netto\Http\Controllers\EmailVerificationPromptController;
@@ -20,6 +19,7 @@ use Netto\Http\Controllers\PermissionController;
 use Netto\Http\Controllers\ProfileController;
 use Netto\Http\Controllers\PublicationController;
 use Netto\Http\Controllers\RoleController;
+use Netto\Http\Controllers\ServiceController;
 use Netto\Http\Controllers\UserBalanceController;
 use App\Http\Controllers\Admin\UserController;
 use Netto\Http\Controllers\VerifyEmailController;
@@ -49,7 +49,7 @@ Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
         Route::get('profile/password/confirm', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
         Route::post('profile/password/confirm', [ConfirmablePasswordController::class, 'store']);
 
-        Route::post('setCookie', [CookieController::class, 'set'])->name('cookie.set');
+        Route::post('setCookie', [ServiceController::class, 'setCookie'])->name('cookie.set');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
         Route::middleware('verified')->group(function() {
@@ -82,6 +82,8 @@ Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
 
             Route::resource('album', AlbumController::class)->except('toggle');
             Route::resource('album.image', ImageController::class)->except(['index', 'toggle']);
+
+            Route::get('transliterate', [ServiceController::class, 'transliterate']);
         });
     });
 });

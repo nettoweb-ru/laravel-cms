@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 class ImportCommand extends Command
 {
     protected $signature = 'cms:import {filename : Path to CSV file} {model : Database model name}';
-    protected $description = 'Import CSV file entries into database models';
+    protected $description = 'Import CSV file entries into simple database models';
 
     /**
      * @return int|null

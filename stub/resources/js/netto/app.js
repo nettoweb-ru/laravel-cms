@@ -13,6 +13,10 @@ window.App = {
         labels: {
             delete: '',
         },
+        errors: {
+            uploadMaxFileSize: '',
+            postMaxSize: '',
+        },
     },
     url: {
         setCookie: '/admin/setCookie'

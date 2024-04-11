@@ -1,4 +1,7 @@
 <x-cms::layout.guest :title="$title">
+    <div class="guest-logo">
+        @include('cms::components.icons.logo')
+    </div>
     <x-cms-form :url="['save' => route('admin.register')]" method="post" :apply="false" :save="false">
         <x-slot name="sheet1">
             <x-cms::form.string name="name" type="text" width="6" maxlength="255" :label="__('cms::auth.name')" :value="old('name')" :messages="$errors->get('name')" required autofocus />

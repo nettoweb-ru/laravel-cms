@@ -21,15 +21,18 @@
         'resources/js/netto/ajax.js',
         'resources/js/netto/app.js',
     ])
-    @stack('head')
     <script>
+        let autocomplete = {}
         $(document).ready(function () {
             App.lang = '{{ app()->getLocale() }}'
             App.messages.confirm.toggle = '{{ __('cms::main.confirmation_toggle') }}'
             App.messages.confirm.logout = '{{ __('cms::main.confirmation_logout') }}'
             App.messages.labels.delete = '{{ __('cms::main.action_delete') }}'
+            App.messages.errors.uploadMaxFileSize = '{{ __('cms::main.error_upload_max_size_exceeded') }}'
+            App.messages.errors.postMaxSize = '{{ __('cms::main.error_post_max_size_exceeded') }}'
         })
     </script>
+    @stack('head')
 </head>
 <body class="{{ config('text_dir') }}">
 <div class="wrapper">

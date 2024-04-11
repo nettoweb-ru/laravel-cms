@@ -76,15 +76,15 @@ body.rtl .browser .block.header .table-header .cell.cell-path{
 }
 
 .browser .block.main .browser-layer.content .results.data table.info tbody tr.selected{
-    background-color:#2A3582 !important;
+    background-color:var(--color-main) !important;
 }
 
 .browser .block.main .browser-layer.content .results.data table.info tbody tr.selected td span{
-    color:#fff;
+    color:var(--color-reset);
 }
 
 .browser .block.main .browser-layer.content .results.data table.info tbody tr.selected:hover td span{
-    color:#ddd;
+    color:var(--color-border);
 }
 
 .browser .block.main .browser-layer.content .results.data table.info tbody tr.dir td.name span{
@@ -101,7 +101,7 @@ body.rtl .browser .block.header .table-header .cell.cell-path{
 }
 
 .browser .block.main .browser-layer.animation{
-    background-color: #eee;
+    background-color: var(--color-light-gray-2);
     position: absolute;
     top:0;
     left:0;

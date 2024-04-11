@@ -1,4 +1,7 @@
 <x-cms::layout.guest :title="$title">
+    <div class="guest-logo">
+        @include('cms::components.icons.logo')
+    </div>
     <x-cms-form :url="['save' => route('admin.password.confirm')]" method="post" :apply="false" :save="false">
         <x-slot name="sheet1">
             <x-cms::form.string name="password" type="password" width="6" :label="__('cms::auth.password_confirmation')" :messages="$errors->get('password')" autocomplete="current-password" required />

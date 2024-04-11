@@ -1,4 +1,7 @@
 <x-cms::layout.guest :title="$title">
+    <div class="guest-logo">
+        @include('cms::components.icons.logo')
+    </div>
     <x-cms-form :url="['save' => route('admin.password.store')]" method="post" :apply="false" :save="false">
         <x-slot name="sheet1">
             <input type="hidden" name="token" value="{{ $request->route('token') }}">

@@ -9,4 +9,5 @@ return [
     'title_separator' => ' | ',
     'album_max_width' => 150,
     'album_max_height' => 150,
+    'default_email' => '',
 ];

@@ -1,5 +1,6 @@
 @props([
     'name',
+    'value',
     'multilang' => false,
     'class' => '',
     'width' => 12,
@@ -10,7 +11,7 @@
     'label' => '',
     'messages' => [],
     'options' => [],
-    'value' => [],
+    'dynamic' => false,
 ])
 
 <div class="grid-cols-{{ $width }}">
@@ -19,11 +20,11 @@
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <x-cms::form.partials.select :class="$class" :name="$name.'|'.$langCode" :multiple="$multiple" :disabled="$disabled" :options="$options[$langCode]" :value="$langValue" :id="$id.'_'.$langCode" />
+                    <x-cms::form.partials.select :dynamic="$dynamic" :class="$class" :name="$name.'|'.$langCode" :multiple="$multiple" :disabled="$disabled" :options="$options[$langCode]" :value="$langValue" :id="$id.'_'.$langCode" />
                 </div>
             @endforeach
         @else
-            <x-cms::form.partials.select :class="$class" :name="$name" :multiple="$multiple" :disabled="$disabled" :options="$options" :value="$value" :id="$id" />
+            <x-cms::form.partials.select :dynamic="$dynamic" :class="$class" :name="$name" :multiple="$multiple" :disabled="$disabled" :options="$options" :value="$value" :id="$id" />
         @endif
     </x-cms::form.partials.value>
     <x-cms::form.partials.errors :messages="$messages" />

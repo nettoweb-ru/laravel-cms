@@ -13,6 +13,9 @@ class Form {
     sheet = null
     sheetCount = 0
     sheetsActive = false
+    transliterateTimeout = null
+    uploadMaxFileSize = 0
+    postMaxSize = 0
 
     constructor(object) {
         let id = object.data('id')
@@ -22,11 +25,16 @@ class Form {
 
         this.multiLang = (parseInt(object.data('multilang')) === 1)
 
+        this.uploadMaxFileSize = parseInt(object.data('upload-max-filesize'))
+        this.postMaxSize = parseInt(object.data('post-max-size'))
+
         this.initDelete(object)
         this.initEditors(object)
         this.initFileFields(object)
         this.initAnimation(object)
         this.initJsonFields(object)
+        this.initTransliterateFields(object)
+        this.initAutocompleteFields(object)
 
         this.initObjects(object)
         this.sheetsActive = (this.sheetCount > 1)
@@ -53,6 +61,36 @@ class Form {
         this.initFocus()
     }
 
+    addMultipleValue(parent, object) {
+        let current = Array(),
+            value = parseInt(object.value)
+
+        parent.find('.js-autocomplete-multiple').each(function() {
+            current[current.length] = parseInt($(this).data('id'))
+        })
+
+        if ($.inArray(value, current) > -1) {
+            return
+        }
+
+        parent.find('.js-autocomplete-multiple-hold').append($('<div />', {
+            'class': 'value-item js-autocomplete-multiple',
+            'data-id': object.value
+        }).append($('<div />', {
+            'class': 'value-item-table'
+        }).append($('<div />', {
+            'class': 'value-item-cell'
+        }).append($('<span />', {
+            'class': 'text-small'
+        }).html(object.label)).append($('<input />', {
+            'type': 'hidden',
+            'name': parent.data('name') + '[]',
+            'value': object.value
+        })))))
+
+        this.checkMultipleValue(parent)
+    }
+
     checkErrors() {
         let key, error, lang
         for (key in this.objects.sheets) {
@@ -68,9 +106,72 @@ class Form {
         }
     }
 
+    checkMultipleValue(parent) {
+        if (parent.find('.js-autocomplete-multiple').length) {
+            parent.find('.js-autocomplete-multiple-hidden').remove()
+        } else {
+            parent.find('.js-autocomplete-multiple-hold').append($('<input />', {
+                'type': 'hidden',
+                'class': 'js-autocomplete-multiple-hidden',
+                'name': parent.data('name') + '[]',
+                'value': '',
+            }))
+        }
+    }
+
     initAnimation(object) {
         object.find('form').submit(function() {
             Overlay.showAnimation()
+        })
+    }
+
+    initAutocompleteFields(object) {
+        let self = this
+
+        object.find('.js-autocomplete').each(function() {
+            let parent = $(this),
+                name = parent.data('name'),
+                multiple = (parseInt(parent.data('multiple')) === 1),
+                options = autocomplete[name]
+
+            parent.find('.js-autocomplete-input').autocomplete({
+                source: function(request, response) {
+                    response($.ui.autocomplete.filter(options, request.term).slice(0, 3))
+                },
+                focus(event, ui) {
+                    event.target.value = ui.item.label
+                    return false
+                },
+                change: function(event, ui) {
+                    if (multiple) {
+
+                    } else {
+                        let hidden = parent.find('.js-autocomplete-single')
+                        if (ui.item === null) {
+                            hidden.val('')
+                            event.target.value = ''
+                        } else {
+                            hidden.val(ui.item.value)
+                            event.target.value = ui.item.label
+                        }
+                    }
+                },
+                select: function(event, ui) {
+                    if (multiple) {
+                        self.addMultipleValue(parent, ui.item)
+                        event.target.value = ''
+                    } else {
+                        parent.find('.js-autocomplete-single').val(ui.item.value)
+                        event.target.value = ui.item.label
+                    }
+
+                    return false
+                }
+            })
+
+            parent.on('click', '.js-autocomplete-multiple', function() {
+                self.removeMultipleValue(parent, $(this))
+            })
         })
     }
 
@@ -93,6 +194,7 @@ class Form {
     }
 
     initFileFields(object) {
+        let self = this
         object.find('.js-file-attr').each(function() {
             let parent = $(this),
                 node = parent.find('.js-file-value'),
@@ -107,6 +209,37 @@ class Form {
             })
 
             file.change(function() {
+                let uploadMaxFileSizeError = false,
+                    postSize = 0
+
+                object.find('.js-file-input').each(function() {
+                    if (this.files.length) {
+                        for (let key in this.files) {
+                            if (typeof this.files[key] === 'object') {
+                                postSize += this.files[key].size
+                                if (this.files[key].size > self.uploadMaxFileSize) {
+                                    uploadMaxFileSizeError = true
+                                    break
+                                }
+                            }
+                        }
+
+                        if (uploadMaxFileSizeError) {
+                            Overlay.showMessage(App.messages.errors.uploadMaxFileSize)
+                            this.value = ''
+                            this.files.value = null
+                            return false
+                        }
+
+                        if (postSize > self.postMaxSize) {
+                            Overlay.showMessage(App.messages.errors.postMaxSize)
+                            this.value = ''
+                            this.files.value = null
+                            return false
+                        }
+                    }
+                })
+
                 let value = $(this).val()
                 if (!value.length) {
                     value = current
@@ -155,6 +288,20 @@ class Form {
 
             setTimeout(function() {focused.focus()})
         }
+    }
+
+    initTransliterateFields(object) {
+        let self = this
+        object.find('.js-transliterate').each(function() {
+            let target = $('#' + $(this).data('transliterate-code'))
+            $(this).on('change', function() {
+                let source = $(this)
+                clearTimeout(self.transliterateTimeout)
+                self.transliterateTimeout = setTimeout(function() {
+                    self.transliterate(source, target)
+                }, 1000)
+            })
+        })
     }
 
     initJsonFields(object) {
@@ -278,6 +425,11 @@ class Form {
         }
     }
 
+    removeMultipleValue(parent, item) {
+        item.remove()
+        this.checkMultipleValue(parent)
+    }
+
     showLanguage(id) {
         let key
         if (this.language) {
@@ -314,6 +466,16 @@ class Form {
         }
 
         this.objects.sheets[this.sheet].show()
+    }
+
+    transliterate(source, target) {
+        Overlay.showAnimation()
+        Ajax.get('/admin/transliterate', {
+            string: source.val()
+        }, function(data) {
+            Overlay.hideAnimation()
+            target.val(data.string)
+        })
     }
 }
 
