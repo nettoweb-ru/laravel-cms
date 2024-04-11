@@ -108,13 +108,13 @@
 
 .form .form-grid .grid-item.value .autocomplete-value{
     width:100%;
-    padding-top: 5px;
+    padding-top: 10px;
 }
 
 .form .form-grid .grid-item.value .autocomplete-value .value-item{
     display: inline-block;
-    background-color:var(--color-background);
-    border:1px solid var(--color-background-dark);
+    background-color:var(--color-light-gray-2);
+    border:1px solid var(--color-gray);
     margin: 0 5px 5px 0;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -125,6 +125,7 @@
 .form .form-grid .grid-item.value .autocomplete-value .value-item:hover{
     cursor: pointer;
     background-color: var(--color-main);
+    border-color: var(--color-main);
     color:#fff;
 }
 

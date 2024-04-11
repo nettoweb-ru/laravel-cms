@@ -17,7 +17,7 @@
     --color-light-green:#b3ffa7;
 }
 
-html {
+html{
     background-color:var(--color-reset);
     color:#000;
     width:100%;
@@ -25,7 +25,11 @@ html {
     height: 100%;
 }
 
-body {
+html.overflow{
+    overflow: hidden;
+}
+
+body{
     font-family: 'Play', sans-serif;
     height:inherit;
     max-width:inherit;
@@ -176,7 +180,7 @@ textarea.h400{
 }
 
 .inline .mobile-dropdown.menu{
-    position: absolute;
+    position: fixed;
     top:55px;
     width:inherit;
     min-height: calc(100vh - 56px);
@@ -184,6 +188,11 @@ textarea.h400{
     border-top: 1px solid var(--color-background-dark);
     background-color: var(--color-reset);
     z-index: 8090;
+}
+
+.inline .mobile-dropdown.menu.scrollable{
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
 .inline .mobile-dropdown.menu .menu{

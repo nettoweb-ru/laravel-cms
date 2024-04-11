@@ -143,13 +143,12 @@ class Form {
                     return false
                 },
                 change: function(event, ui) {
-                    if (multiple) {
+                    event.target.value = ''
 
-                    } else {
+                    if (!multiple) {
                         let hidden = parent.find('.js-autocomplete-single')
                         if (ui.item === null) {
                             hidden.val('')
-                            event.target.value = ''
                         } else {
                             hidden.val(ui.item.value)
                             event.target.value = ui.item.label

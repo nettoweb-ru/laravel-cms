@@ -270,7 +270,7 @@ abstract class AdminCrudController extends AdminController
         }
 
         foreach ($this->sync as $item) {
-            $model->{$item}()->sync($request->get($item, []));
+            $model->{$item}()->sync(array_filter($request->get($item, [])));
         }
 
         $model->refresh();

@@ -23,7 +23,8 @@ window.App = {
     },
     objects: {
         menu: null,
-        languages: null
+        languages: null,
+        html: null
     },
     timeout: null,
 
@@ -97,6 +98,7 @@ window.App = {
     initObjects: function() {
         this.objects.menu = $('#js-mobile-menu')
         this.objects.languages = $('#js-mobile-lang')
+        this.objects.html = $('html')
     },
 
     initResize: function() {
@@ -109,7 +111,8 @@ window.App = {
     },
 
     hideDropdown: function() {
-        this.objects.menu.hide()
+        this.objects.html.removeClass('overflow')
+        this.objects.menu.removeClass('scrollable').hide()
         this.objects.languages.hide()
 
         $(document).off('click.netto')
@@ -119,6 +122,7 @@ window.App = {
 
     setDropdownClose: function() {
         let self = this
+
         $(document).one('click.netto', function() {
             self.hideDropdown()
         })
@@ -127,17 +131,20 @@ window.App = {
     showMenu: function() {
         this.hideDropdown()
 
-        window.scrollTo({top: 0, behavior: 'smooth'})
+        this.objects.html.addClass('overflow')
         this.objects.menu.show()
+        let hold = this.objects.menu.find('.js-menu-hold')
+        if (parseInt(hold.css('height')) > (window.innerHeight - 55)) {
+            this.objects.menu.addClass('scrollable')
+        }
 
+        this.objects.menu.scrollTop(0)
         this.timeout = setTimeout('App.setDropdownClose()', 1)
     },
 
     showLang: function() {
         this.hideDropdown()
-
         this.objects.languages.show()
-
         this.timeout = setTimeout('App.setDropdownClose()', 1)
     }
 }

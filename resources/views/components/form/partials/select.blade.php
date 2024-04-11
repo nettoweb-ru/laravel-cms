@@ -13,20 +13,24 @@
 @if ($dynamic)
     @pushonce('head')
         <script src="//code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    @endpushonce
+
+    @push('head')
         <script>
             autocomplete['{{ $name }}'] = [
-                @foreach ($options as $k => $v)
+                    @foreach ($options as $k => $v)
                     @if (is_array($v))
-                        @foreach ($v as $k2 => $v2)
-                        {label: '{{ $v2 }}', value: '{{ $k2 }}'},
-                        @endforeach
+                    @foreach ($v as $k2 => $v2)
+                {label: '{{ $v2 }}', value: '{{ $k2 }}'},
+                    @endforeach
                     @else
-                        {label: '{{ $v }}', value: '{{ $k }}'},
-                    @endif
+                {label: '{{ $v }}', value: '{{ $k }}'},
+                @endif
                 @endforeach
             ]
         </script>
-    @endpushonce
+    @endpush
+
     <div class="grid-item-autocomplete js-autocomplete" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}">
         <div class="autocomplete-input">
             <label for="{{ $name }}-autocomplete">

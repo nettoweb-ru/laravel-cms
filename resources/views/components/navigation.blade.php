@@ -1,4 +1,4 @@
-<div class="menu">
+<div class="menu js-menu-hold">
     @foreach ($items as $item)
         <div class="menu-item @if ($item['current']) active @endif">
             <div class="menu-item-block title">
