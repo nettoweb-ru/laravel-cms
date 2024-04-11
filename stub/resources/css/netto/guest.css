@@ -4,6 +4,25 @@
     --text-size-large:22px;
     --color-main:#2a3582;
     --color-background:#e2e4ff;
+    --color-background-dark:#d0d2ff;
+    --color-highlight:#faffbd;
+    --color-gray:#777;
+    --color-light-gray-1:#f0f0f0;
+    --color-light-gray-2:#eee;
+    --color-reset:#fff;
+    --color-border:#ddd;
+    --color-red:#a80000;
+    --color-light-red:#ffdbdb;
+    --color-green:#008000;
+    --color-light-green:#b3ffa7;
+}
+
+:root{
+    --text-size-small:13px;
+    --text-size-normal:16px;
+    --text-size-large:22px;
+    --color-main:#2a3582;
+    --color-background:#e2e4ff;
     --color-highlight:#faffbd;
     --color-reset:#fff;
 }
@@ -90,6 +109,19 @@ textarea.textarea{
     resize: none;
     width:calc(100% - 10px);
     padding:5px;
+}
+
+.inline{
+    min-width: 300px;
+}
+
+.inline .guest-logo{
+    margin-bottom: 25px;
+}
+
+.inline .guest-logo svg{
+    width:120px;
+    color:var(--color-main);
 }
 
 @media screen and (min-width: 1024px) {

@@ -101,6 +101,42 @@
     color:var(--color-red);
 }
 
+.form .form-grid .grid-item.value .autocomplete-input{
+    width:100%;
+    background-color: yellow;
+}
+
+.form .form-grid .grid-item.value .autocomplete-value{
+    width:100%;
+    padding-top: 5px;
+}
+
+.form .form-grid .grid-item.value .autocomplete-value .value-item{
+    display: inline-block;
+    background-color:var(--color-background);
+    border:1px solid var(--color-background-dark);
+    margin: 0 5px 5px 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    cursor: default;
+}
+
+.form .form-grid .grid-item.value .autocomplete-value .value-item:hover{
+    cursor: pointer;
+    background-color: var(--color-main);
+    color:#fff;
+}
+
+.form .form-grid .grid-item.value .autocomplete-value .value-item .value-item-table{
+    display: table;
+}
+
+.form .form-grid .grid-item.value .autocomplete-value .value-item .value-item-table .value-item-cell{
+    display: table-cell;
+    padding: 3px 8px;
+}
+
 .form .form-grid .grid-item.value .grid-value-file{
     width:inherit;
     display:table;
@@ -312,4 +348,69 @@ body.rtl .form .form-grid .grid-item.label .required{
     .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
         display:block;
     }
+}
+
+.ui-autocomplete{
+    position:absolute;
+    top:0;
+    left:0;
+    cursor:default;
+    background-color:var(--color-background);
+    z-index:200;
+    display:block;
+    border-top:1px solid var(--color-background-dark);
+    padding:0;
+}
+
+.ui-autocomplete .ui-menu-item{
+    width:100%;
+    display:table;
+}
+
+.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper{
+    display:table-cell;
+    vertical-align:middle;
+    background-color:var(--color-background);
+    padding:5px;
+    font-size:var(--text-size-normal);
+    width:inherit;
+    line-height:120%;
+}
+
+.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper:hover{
+    background-color:var(--color-highlight);
+    cursor:pointer;
+}
+
+.ui-helper-hidden-accessible,
+.ui-resizable-handle{
+    display:none;
+}
+
+.ui-resizable{
+    position:relative;
+}
+
+.ui-resizable-handle{
+    position:absolute;
+    font-size:.1px;
+    display:block;
+    -ms-touch-action:none;
+    touch-action:none;
+}
+
+.ui-resizable-e{
+    cursor:e-resize;
+    width:7px;
+    right:-5px;
+    top:0;
+    height:100%;
+}
+
+body.ltr .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper{
+    text-align:left;
+}
+
+body.rtl .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper{
+    text-align:right;
 }
