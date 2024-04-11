@@ -38,15 +38,14 @@
 <div class="wrapper">
     <div class="layer content">
         <div class="inline">
-            <div class="mobile-dropdown menu" id="js-mobile-menu"></div>
-            <div class="mobile-dropdown languages" id="js-mobile-lang">
-                <x-cms-languages />
-            </div>
-            <div class="content-block mobile" id="js-block-mobile">
-                <div class="table mobile-header">
-                    <div class="cell icon">
-                        <div class="mobile-btn menu" id="js-mobile-menu-icon">
+            <div class="block mobile">
+                <div class="table">
+                    <div class="cell left">
+                        <div class="mobile-icon menu-open" id="js-icon-menu-open">
                             @include('cms::components.icons.menu')
+                        </div>
+                        <div class="mobile-icon menu-close" id="js-icon-menu-close">
+                            @include('cms::components.icons.close')
                         </div>
                     </div>
                     <div class="cell center">
@@ -54,54 +53,64 @@
                             <x-cms::navchain :items="$chain"/>
                         @endif
                     </div>
-                    <div class="cell icon">
-                        <div class="mobile-btn lang" id="js-mobile-lang-icon">
+                    <div class="cell right">
+                        <div class="mobile-icon languages" id="js-icon-languages">
                             @include('cms::components.icons.hiragana-ma')
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="content-block desktop" id="js-block-desktop">
-                <div class="desktop-menu-hold">
-                    <div class="table desktop-menu">
-                        <div class="cell menu" id="js-desktop-menu">
-                            <x-cms-navigation />
-                        </div>
-                        <div class="cell lang">
-                            <div class="menu">
-                                <div class="menu-item">
-                                    <div class="menu-item-block title">
-                                        <div class="icon-language">
-                                            @include('cms::components.icons.hiragana-ma')
+            <div class="block dropdown menu" id="js-mobile-menu">
+                <x-cms-navigation />
+            </div>
+            <div class="block dropdown languages" id="js-mobile-languages">
+                <x-cms-languages />
+            </div>
+            <div class="block content">
+                <div class="block desktop">
+                    <div class="block menu">
+                        <div class="table desktop-menu-table">
+                            <div class="cell desktop-menu-cell left">
+                                <x-cms-navigation />
+                            </div>
+                            <div class="cell desktop-menu-cell right">
+
+                                <div class="menu">
+                                    <div class="menu-item">
+                                        <div class="menu-item-block title">
+                                            <div class="icon">
+                                                @include('cms::components.icons.hiragana-ma')
+                                            </div>
+                                        </div>
+                                        <div class="menu-item-block dropdown">
+                                            <x-cms-languages />
                                         </div>
                                     </div>
-                                    <div class="menu-item-block dropdown">
-                                        <x-cms-languages />
-                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    @if (!empty($chain))
+                        <div class="block chain">
+                            <div class="table desktop-chain-table">
+                                <div class="cell desktop-chain-cell">
+                                    <x-cms::navchain :items="$chain"/>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
-                @if (!empty($chain))
-                    <div class="desktop-chain-hold">
-                        <div class="table chain-table">
-                            <div class="cell chain-table">
-                                <x-cms::navchain :items="$chain"/>
-                            </div>
+                <div class="block main">
+                    <div class="table main-padding-table">
+                        <div class="cell main-padding-cell">
+                            @if (!empty($header))
+                                <p class="header text-big">
+                                    {{ $header }}
+                                </p>
+                            @endif
+                            {{ $slot }}
                         </div>
-                    </div>
-                @endif
-            </div>
-            <div class="content-block main">
-                <div class="table main-padding">
-                    <div class="cell main-padding">
-                        @if (!empty($header))
-                            <p class="header text-big">
-                                {{ $header }}
-                            </p>
-                        @endif
-                        {{ $slot }}
                     </div>
                 </div>
             </div>

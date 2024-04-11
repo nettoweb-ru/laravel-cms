@@ -13,54 +13,62 @@ class Navigation extends Component
 
     public function __construct()
     {
-        $items = [];
-        foreach (Model::orderBy('group_id', 'asc')->orderBy('sort', 'asc')->with('permissions')->get() as $model) {
-            $allowed = true;
-            if ($model->permissions) {
-                foreach ($model->permissions->all() as $permission) {
-                    if (!Gate::allows($permission->slug)) {
-                        $allowed = false;
-                        break;
+        static $return;
+
+        if (is_null($return)) {
+            $return = [];
+            $items = [];
+
+            foreach (Model::orderBy('group_id', 'asc')->orderBy('sort', 'asc')->with('permissions')->get() as $model) {
+                $allowed = true;
+                if ($model->permissions) {
+                    foreach ($model->permissions->all() as $permission) {
+                        if (!Gate::allows($permission->slug)) {
+                            $allowed = false;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (!$allowed) {
-                continue;
-            }
-
-            $items[$model->group_id][$model->id] = [
-                'name' => $model->name,
-                'url' => $model->url,
-                'highlight' => $model->highlight,
-                'access' => $model->access,
-            ];
-        }
-
-        foreach ($items as $groupId => $groupKids) {
-            $currentGroup = false;
-            $kids = [];
-
-            foreach ($groupKids as $item) {
-                $currentItem = $item['highlight'] && request()->routeIs(...$item['highlight']);
-
-                if (!$currentGroup && $currentItem) {
-                    $currentGroup = true;
+                if (!$allowed) {
+                    continue;
                 }
 
-                $kids[] = [
-                    'name' => __($item['name']),
-                    'url' => route($item['url']),
-                    'current' => $currentItem,
+                $items[$model->group_id][$model->id] = [
+                    'name' => $model->name,
+                    'url' => $model->url,
+                    'highlight' => $model->highlight,
+                    'access' => $model->access,
                 ];
             }
 
-            $this->items[$groupId] = [
-                'name' => __('cms::main.navigation_'.$groupId),
-                'current' => $currentGroup,
-                'items' => $kids,
-            ];
+            foreach ($items as $groupId => $groupKids) {
+                $currentGroup = false;
+                $kids = [];
+
+                foreach ($groupKids as $item) {
+                    $currentItem = $item['highlight'] && request()->routeIs(...$item['highlight']);
+
+                    if (!$currentGroup && $currentItem) {
+                        $currentGroup = true;
+                    }
+
+                    $kids[] = [
+                        'name' => __($item['name']),
+                        'url' => route($item['url']),
+                        'current' => $currentItem,
+                    ];
+                }
+
+                $return[$groupId] = [
+                    'name' => __('cms::main.navigation_'.$groupId),
+                    'current' => $currentGroup,
+                    'items' => $kids,
+                ];
+            }
         }
+
+        $this->items = $return;
     }
 
     /**

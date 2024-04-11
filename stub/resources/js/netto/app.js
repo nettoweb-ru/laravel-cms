@@ -22,9 +22,11 @@ window.App = {
         setCookie: '/admin/setCookie'
     },
     objects: {
-        menu: null,
-        languages: null,
-        html: null
+        iconMenuOpen: null,
+        iconMenuClose: null,
+        iconLanguages: null,
+        blockMenu: null,
+        blockLanguages: null,
     },
     timeout: null,
 
@@ -32,11 +34,20 @@ window.App = {
         window.open('/admin/download/?filename=' + filename)
     },
 
+    hideLanguages: function() {
+        this.objects.blockLanguages.hide()
+    },
+
+    hideMobileMenu: function() {
+        this.objects.iconMenuClose.hide()
+        this.objects.iconMenuOpen.show()
+
+        this.objects.blockMenu.hide()
+    },
+
     init: function() {
         this.initObjects()
-        this.initMobileMenu()
-
-        this.initDropdownLinks()
+        this.initDropdowns()
         this.initResize()
 
         this.initLogoutLinks()
@@ -44,14 +55,19 @@ window.App = {
         this.initLinks()
     },
 
-    initDropdownLinks: function() {
+    initDropdowns: function() {
         let self = this
-        $('#js-mobile-menu-icon').click(function() {
-            self.showMenu()
+
+        this.objects.iconMenuOpen.click(function() {
+            self.showMobileMenu()
         })
 
-        $('#js-mobile-lang-icon').click(function() {
-            self.showLang()
+        this.objects.iconMenuClose.click(function() {
+            self.hideMobileMenu()
+        })
+
+        this.objects.iconLanguages.click(function() {
+            self.showLanguages()
         })
     },
 
@@ -90,63 +106,52 @@ window.App = {
         })
     },
 
-    initMobileMenu: function() {
-        let menu = $('#js-desktop-menu .menu').clone()
-        $('#js-mobile-menu').append(menu)
-    },
-
     initObjects: function() {
-        this.objects.menu = $('#js-mobile-menu')
-        this.objects.languages = $('#js-mobile-lang')
-        this.objects.html = $('html')
+        this.objects.iconMenuOpen = $('#js-icon-menu-open')
+        this.objects.iconMenuClose = $('#js-icon-menu-close')
+        this.objects.iconLanguages = $('#js-icon-languages')
+
+        this.objects.blockMenu = $('#js-mobile-menu')
+        this.objects.blockLanguages = $('#js-mobile-languages')
     },
 
     initResize: function() {
         let self = this
         $(window).on('resize.netto', function() {
             if (window.innerWidth > 1023) {
-                self.hideDropdown()
+                self.hideLanguages()
+                self.hideMobileMenu()
+
+                $(document).off('click.netto')
+                clearTimeout(self.timeout)
             }
         })
     },
 
-    hideDropdown: function() {
-        this.objects.html.removeClass('overflow')
-        this.objects.menu.removeClass('scrollable').hide()
-        this.objects.languages.hide()
+    showLanguages: function() {
+        this.objects.blockLanguages.show()
 
-        $(document).off('click.netto')
-
-        clearTimeout(this.timeout)
-    },
-
-    setDropdownClose: function() {
         let self = this
-
-        $(document).one('click.netto', function() {
-            self.hideDropdown()
-        })
+        this.timeout = setTimeout(function() {
+            $(document).one('click.netto', function() {
+                self.hideLanguages()
+            })
+        }, 1)
     },
 
-    showMenu: function() {
-        this.hideDropdown()
+    showMobileMenu: function() {
+        this.objects.iconMenuOpen.hide()
+        this.objects.iconMenuClose.show()
 
-        this.objects.html.addClass('overflow')
-        this.objects.menu.show()
-        let hold = this.objects.menu.find('.js-menu-hold')
-        if (parseInt(hold.css('height')) > (window.innerHeight - 55)) {
-            this.objects.menu.addClass('scrollable')
-        }
+        this.objects.blockMenu.show().scrollTop(0)
 
-        this.objects.menu.scrollTop(0)
-        this.timeout = setTimeout('App.setDropdownClose()', 1)
+        let self = this
+        this.timeout = setTimeout(function() {
+            $(document).one('click.netto', function() {
+                self.hideMobileMenu()
+            })
+        }, 1)
     },
-
-    showLang: function() {
-        this.hideDropdown()
-        this.objects.languages.show()
-        this.timeout = setTimeout('App.setDropdownClose()', 1)
-    }
 }
 
 $(document).ready(function() {
