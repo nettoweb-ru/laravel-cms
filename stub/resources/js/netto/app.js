@@ -28,7 +28,6 @@ window.App = {
         blockMenu: null,
         blockLanguages: null,
     },
-    timeout: null,
 
     downloadFile: function(filename) {
         window.open('/admin/download/?filename=' + filename)
@@ -123,7 +122,6 @@ window.App = {
                 self.hideMobileMenu()
 
                 $(document).off('click.netto')
-                clearTimeout(self.timeout)
             }
         })
     },
@@ -132,7 +130,7 @@ window.App = {
         this.objects.blockLanguages.show()
 
         let self = this
-        this.timeout = setTimeout(function() {
+        setTimeout(function() {
             $(document).one('click.netto', function() {
                 self.hideLanguages()
             })
@@ -146,7 +144,7 @@ window.App = {
         this.objects.blockMenu.show().scrollTop(0)
 
         let self = this
-        this.timeout = setTimeout(function() {
+        setTimeout(function() {
             $(document).one('click.netto', function() {
                 self.hideMobileMenu()
             })

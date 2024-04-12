@@ -8,6 +8,7 @@ html{
 body{
     width: inherit;
     max-width: inherit;
+    -webkit-font-smoothing: antialiased;
 }
 
 .wrapper{

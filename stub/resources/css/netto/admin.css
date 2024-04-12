@@ -270,10 +270,7 @@ body.rtl .block.dropdown.languages{
         overflow: visible;
     }
 
-    .block.mobile{
-        display: none;
-    }
-
+    .block.mobile,
     .block.dropdown{
         display: none;
     }
