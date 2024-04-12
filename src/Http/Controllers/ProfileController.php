@@ -3,7 +3,7 @@
 namespace Netto\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\Admin\ProfileUpdateRequest as WorkRequest;
+use Netto\Http\Requests\ProfileUpdateRequest as WorkRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
