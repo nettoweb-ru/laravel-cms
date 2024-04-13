@@ -323,6 +323,10 @@ body.rtl .block.dropdown.languages{
         vertical-align: middle;
     }
 
+    .block.desktop .block.menu .desktop-menu-table .desktop-menu-cell .menu .menu-item:last-child:hover .menu-item-block.title{
+        cursor: pointer;
+    }
+
     .block.desktop .block.menu .desktop-menu-table .desktop-menu-cell .menu .menu-item .menu-item-block.title span{
         line-height: 100%;
         display: inline-block;

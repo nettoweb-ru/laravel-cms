@@ -124,6 +124,10 @@ textarea.textarea{
     color:var(--color-main);
 }
 
+button .text{
+    line-height: 120%;
+}
+
 @media screen and (min-width: 1024px) {
     :root{
         --text-size-small:11px;
