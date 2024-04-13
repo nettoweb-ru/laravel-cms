@@ -76,6 +76,15 @@ export default class ListWidget {
         })
     }
 
+    initIconToggle() {
+        let self = this
+        this.objects.icons.toggle.click(async function() {
+            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
+                self.toggle()
+            }
+        })
+    }
+
     initObjects(object) {
         this.objects.body = object.find('.js-body')
         this.objects.head = object.find('.js-head')

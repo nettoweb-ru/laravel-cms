@@ -32,17 +32,9 @@ class Gallery extends ListWidget {
         this.objects.title = object.find('.js-title')
     }
 
-    initIconToggle() {
-        let self = this
-        this.objects.icons.toggle.click(async function() {
-            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
-                self.toggle()
-            }
-        })
-    }
-
     lockBulkActionButtons() {
         this.objectDisable(this.objects.icons.delete)
+        this.objectDisable(this.objects.icons.toggle)
     }
 
     onAfterLoad(data) {
@@ -53,24 +45,21 @@ class Gallery extends ListWidget {
 
             if (typeof data.url.toggle === 'string') {
                 this.url.toggle = data.url.toggle
-                this.objectEnable(this.objects.icons.toggle)
                 this.objects.icons.toggle.show()
             }
 
-
             this.objects.title.html(data.title)
-
             this.init = true
         }
 
         this.objectEnable(this.objects.icons.create)
-        this.objectEnable(this.objects.icons.invert)
 
         if (data.nav.total === 0) {
             this.objects.layers.empty.show()
             return
         }
 
+        this.objectEnable(this.objects.icons.invert)
         this.objects.countItems.html(data.nav.total)
 
         let tr, k1, className
@@ -109,6 +98,7 @@ class Gallery extends ListWidget {
 
     unlockBulkActionButtons() {
         this.objectEnable(this.objects.icons.delete)
+        this.objectEnable(this.objects.icons.toggle)
     }
 }
 

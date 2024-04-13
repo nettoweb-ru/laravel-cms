@@ -4,8 +4,8 @@ class Browser extends ListWidget {
     control = {
         parent: '/',
         path: '',
-        /*storage: '',
-        func: ''*/
+        storage: '',
+        func: ''
     }
     filter = {
         dir: ''

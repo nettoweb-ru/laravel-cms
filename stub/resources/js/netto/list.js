@@ -38,15 +38,6 @@ class List extends ListWidget {
 
     }
 
-    initIconToggle() {
-        let self = this
-        this.objects.icons.toggle.click(async function() {
-            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
-                self.toggle()
-            }
-        })
-    }
-
     initObjects(object) {
         super.initObjects(object)
 
