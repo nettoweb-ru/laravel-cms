@@ -1,16 +1,16 @@
 @props(['bg' => ''])
 
 <button {{ $attributes->merge(['type' => 'submit', 'class' => 'btn']) }}>
-    <div class="table table-btn">
+    <span class="table table-btn">
         @if ($bg)
-        <div class="cell cell-btn bg @if (!$slot->isEmpty()) align @endif">
+        <span class="cell cell-btn bg @if (!$slot->isEmpty()) align @endif">
             @include('cms::components.'.$bg)
-        </div>
+        </span>
         @endif
         @if (!$slot->isEmpty())
-            <div class="cell cell-btn text @if ($bg) padding @endif">
+            <span class="cell cell-btn text @if ($bg) padding @endif">
                 <span class="text">{{ $slot }}</span>
-            </div>
+            </span>
         @endif
-    </div>
+    </span>
 </button>

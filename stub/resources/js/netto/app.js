@@ -28,6 +28,7 @@ window.App = {
         blockMenu: null,
         blockLanguages: null,
     },
+    langOpen: false,
 
     downloadFile: function(filename) {
         window.open('/admin/download/?filename=' + filename)
@@ -35,6 +36,7 @@ window.App = {
 
     hideLanguages: function() {
         this.objects.blockLanguages.hide()
+        this.langOpen = false
     },
 
     hideMobileMenu: function() {
@@ -66,7 +68,7 @@ window.App = {
         })
 
         this.objects.iconLanguages.click(function() {
-            self.showLanguages()
+            self.toggleLanguages()
         })
     },
 
@@ -126,17 +128,6 @@ window.App = {
         })
     },
 
-    showLanguages: function() {
-        this.objects.blockLanguages.show()
-
-        let self = this
-        setTimeout(function() {
-            $(document).one('click.netto', function() {
-                self.hideLanguages()
-            })
-        }, 1)
-    },
-
     showMobileMenu: function() {
         this.objects.iconMenuOpen.hide()
         this.objects.iconMenuClose.show()
@@ -149,6 +140,22 @@ window.App = {
                 self.hideMobileMenu()
             })
         }, 1)
+    },
+
+    toggleLanguages: function() {
+        if (this.langOpen) {
+            this.hideLanguages()
+        } else {
+            this.objects.blockLanguages.show()
+            this.langOpen = true
+
+            let self = this
+            setTimeout(function() {
+                $(document).one('click.netto', function() {
+                    self.hideLanguages()
+                })
+            }, 1)
+        }
     },
 }
 
