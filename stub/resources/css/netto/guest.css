@@ -17,41 +17,8 @@
     --color-light-green:#b3ffa7;
 }
 
-:root{
-    --text-size-small:13px;
-    --text-size-normal:16px;
-    --text-size-large:22px;
-    --color-main:#2a3582;
-    --color-background:#e2e4ff;
-    --color-highlight:#faffbd;
-    --color-reset:#fff;
-}
-
-html {
-    background-color:var(--color-reset);
-    color:#000;
-    width:100%;
-    max-width: 100%;
-    height: 100%;
-}
-
-body {
+body{
     font-family: 'Play', sans-serif;
-    height:inherit;
-    max-width:inherit;
-    width:inherit;
-    font-size:0;
-    letter-spacing:0;
-    word-spacing:0;
-}
-
-a{
-    color:var(--color-main);
-    text-decoration: none;
-}
-
-a:hover{
-    text-decoration: underline;
 }
 
 .text{
@@ -65,6 +32,15 @@ a:hover{
 .text-big{
     font-size:var(--text-size-large);
     font-weight: 700;
+}
+
+a, span.link{
+    color:var(--color-main);
+    text-decoration: none;
+}
+
+a:hover, span.link:hover{
+    text-decoration: underline;
 }
 
 input.input,
@@ -112,11 +88,13 @@ textarea.textarea{
 }
 
 .inline{
-    min-width: 300px;
+    display: inline-block;
+    min-width: 280px;
 }
 
 .inline .guest-logo{
     margin-bottom: 25px;
+    text-align: center;
 }
 
 .inline .guest-logo svg{
@@ -124,11 +102,22 @@ textarea.textarea{
     color:var(--color-main);
 }
 
+.layer.content .table.container-table{
+    width: inherit;
+    height: inherit;
+    min-height: inherit;
+}
+
+.layer.content .table.container-table .cell.container-cell{
+    vertical-align: middle;
+    text-align: center;
+}
+
 button .text{
     line-height: 120%;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1024px){
     :root{
         --text-size-small:11px;
         --text-size-normal:14px;

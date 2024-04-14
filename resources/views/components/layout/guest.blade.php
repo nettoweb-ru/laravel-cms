@@ -24,8 +24,8 @@
 <body class="{{ config('text_dir') }}">
 <div class="wrapper">
     <div class="layer content">
-        <div class="table container">
-            <div class="cell">
+        <div class="table container-table">
+            <div class="cell container-cell">
                 <div class="inline">
                     {{ $slot }}
                 </div>
