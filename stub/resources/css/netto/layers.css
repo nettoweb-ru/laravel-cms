@@ -1,3 +1,9 @@
+netto-skip-reindex{
+    min-height:inherit;
+    width:inherit;
+    max-width:inherit;
+}
+
 html{
     background-color: #fff;
     color: #000;
