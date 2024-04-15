@@ -1,6 +1,5 @@
 netto-skip-reindex{
     min-height:inherit;
-    width:inherit;
     max-width:inherit;
 }
 
@@ -44,7 +43,7 @@ body{
     left:0;
     height:inherit;
     min-height:inherit;
-    width:inherit;
+    width:100%;
     max-width:inherit;
     position:absolute;
     min-width: 280px;
@@ -53,7 +52,6 @@ body{
 
 .layer.content{
     z-index:0;
-    width:100%;
 }
 
 .layer.overlay{
