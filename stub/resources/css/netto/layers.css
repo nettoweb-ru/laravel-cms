@@ -53,6 +53,7 @@ body{
 
 .layer.content{
     z-index:0;
+    width:100%;
 }
 
 .layer.overlay{
