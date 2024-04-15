@@ -35,6 +35,12 @@ body{
     font-weight: 700;
 }
 
+.layer.overlay .overlay-block.info .overlay-block-item.text-msg .text,
+.layer.overlay .overlay-block.info .overlay-block-item.text-input input,
+.layer.overlay .overlay-block.info .overlay-block-item.buttons .text{
+    font-size:var(--text-size-normal);
+}
+
 .chain{
     display: inline-block;
 }
