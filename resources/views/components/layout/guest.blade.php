@@ -1,6 +1,6 @@
 @props(['title' => config('app.name') ])
 <!DOCTYPE html>
-<html lang="{{ config('locale') }}" xml:lang="{{ config('locale') }}" dir="{{ config('text_dir') }}" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="{{ app()->getLocale() }}" xml:lang="{{ app()->getLocale() }}" dir="{{ config('text_dir') }}" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>{{ $title }}</title>
     <meta charset="utf-8">
