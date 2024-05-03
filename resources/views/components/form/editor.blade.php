@@ -9,6 +9,7 @@
     'label' => '',
     'messages' => [],
     'lang' => '',
+    'interface' => app()->getLocale(),
 ])
 
 @pushonce('head')
@@ -16,9 +17,10 @@
         'resources/css/styles.css',
         'resources/js/styles.js',
     ])
-    <link rel="preconnect" href="https://cdn.ckeditor.com">
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/translations/{{ app()->getLocale() }}.js"></script>
+    <script src="//cdn.nettoweb.ru/js/ckeditor/ckeditor.js"></script>
+    @if ($interface != 'en')
+        <script src="//cdn.nettoweb.ru/js/ckeditor/translations/{{ $interface }}.js"></script>
+    @endif
     <link rel="stylesheet" href="{{ asset('assets/css/editor.css') }}">
 @endpushonce
 
