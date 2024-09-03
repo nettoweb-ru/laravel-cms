@@ -124,7 +124,7 @@ trait HasUploadedFiles
     {
         $delete = [];
         foreach ($this->files as $attribute => $storage) {
-            if (array_key_exists($attribute, $this->changes) && $this->original[$attribute]) {
+            if (array_key_exists($attribute, $this->changes) && !empty($this->original[$attribute])) {
                 $delete[] = base_path().DIRECTORY_SEPARATOR.$this->original[$attribute];
             }
         }

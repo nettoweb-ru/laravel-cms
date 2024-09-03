@@ -11,10 +11,6 @@
 ])
 
 @if ($dynamic)
-    @pushonce('head')
-        <script src="//code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    @endpushonce
-
     @push('head')
         <script>
             autocomplete['{{ $name }}'] = [
@@ -38,6 +34,9 @@
             </label>
         </div>
         @if ($multiple)
+            <?php
+            $value = array_filter((array) $value);
+            ?>
             <div class="autocomplete-value js-autocomplete-multiple-hold">
                 @if ($value)
                     @foreach ($value as $item)
