@@ -10,6 +10,7 @@
     <link href="//cdn.nettoweb.ru/css/normalize/normalize.css" rel="stylesheet" type="text/css">
     <link href="//cdn.nettoweb.ru/css/fonts/play.css" rel="stylesheet" type="text/css">
     <script src="//cdn.nettoweb.ru/js/jquery/3.7.1.min.js"></script>
+    <script src="//cdn.nettoweb.ru/js/jquery.longpress/0.1.2.js"></script>
     @include('cms::components.favicons')
     @vite([
         'resources/css/netto/layers.css',

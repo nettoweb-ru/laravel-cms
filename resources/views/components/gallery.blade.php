@@ -3,11 +3,10 @@
         'resources/css/netto/gallery.css',
         'resources/js/netto/list.widget.js',
         'resources/js/netto/gallery.js',
-        'resources/js/netto/jquery.longpress.js',
     ])
 @endpushonce
 
-<div class="list js-gallery" data-url="{{ $url }}">
+<div class="list js-gallery" data-url="{{ $url }}" data-id="{{ $id }}">
     <div class="list-block top">
         <div class="table list-top">
             <div class="cell list-top title">

@@ -5,9 +5,9 @@
     ])
 @endpushonce
 
-@props(['id' => '', 'url', 'method', 'objectId' => null, 'sheet' => 1, 'sheets' => [1 => ''], 'conditions'  => [], 'apply' => true, 'save' => true, 'buttons' => ''])
+@props(['id' => '', 'url', 'method', 'objectId' => null, 'sheets' => [1 => ''], 'conditions'  => [], 'apply' => true, 'save' => true, 'buttons' => ''])
 
-<div class="js-form" data-id="{{ $id }}" data-multilang="{{ (int) $multiLang }}" data-sheet="{{ $sheet }}" data-language="{{ $language }}" data-upload-max-filesize="{{ ini_parse_quantity(ini_get('upload_max_filesize')) }}" data-post-max-size="{{ ini_parse_quantity(ini_get('post_max_size')) }}">
+<div class="js-form" data-id="{{ $id }}" data-multilang="{{ (int) $multiLang }}" data-upload-max-filesize="{{ ini_parse_quantity(ini_get('upload_max_filesize')) }}" data-post-max-size="{{ ini_parse_quantity(ini_get('post_max_size')) }}">
     <form method="post" action="{{ $url['save'] }}" enctype="multipart/form-data">
         @csrf
         @method($method)

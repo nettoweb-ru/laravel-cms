@@ -24,7 +24,6 @@ export default defineConfig({
                 'resources/js/netto/editor.js',
                 'resources/js/netto/form.js',
                 'resources/js/netto/gallery.js',
-                'resources/js/netto/jquery.longpress.js',
                 'resources/js/netto/list.js',
                 'resources/js/netto/list.widget.js',
                 'resources/js/netto/overlay.js',

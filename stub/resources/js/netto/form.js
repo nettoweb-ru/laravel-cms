@@ -1,67 +1,70 @@
 import Editor from './editor.js'
 
 class Form {
-    cookieId = null
-    language = null
-    multiLang = false
-    objects = {
-        sheets: {},
-        sheetSwitch: {},
-        langInputs: [],
-        langSwitch: {},
+    id = null
+    languages = {
+        active: null,
+        default: null,
+        isMultiple: false,
+        objects: [],
+        switches: [],
+        storageId: 'netto-admin-form-lang'
     }
-    sheet = null
-    sheetCount = 0
-    sheetsActive = false
-    transliterateTimeout = null
-    uploadMaxFileSize = 0
-    postMaxSize = 0
+    maxSizePost = 0
+    maxSizeUpload = 0
+    sheets = {
+        active: null,
+        default: null,
+        isMultiple: false,
+        objects: [],
+        switches: [],
+        storageId: 'netto-admin-form-sheet'
+    }
+    timeout = null
 
     constructor(object) {
+        this.languages.isMultiple = (parseInt(object.data('multilang')) === 1)
+
+        this.maxSizeUpload = parseInt(object.data('upload-max-filesize'))
+        this.maxSizePost = parseInt(object.data('post-max-size'))
+
         let id = object.data('id')
         if (id.length) {
-            this.cookieId = id + '_sheet'
-        }
+            this.id = id
+            this.sheets.storageId += ('-' + this.id)
 
-        this.multiLang = (parseInt(object.data('multilang')) === 1)
-
-        this.uploadMaxFileSize = parseInt(object.data('upload-max-filesize'))
-        this.postMaxSize = parseInt(object.data('post-max-size'))
-
-        this.initDelete(object)
-        this.initEditors(object)
-        this.initFileFields(object)
-        this.initAnimation(object)
-        this.initJsonFields(object)
-        this.initTransliterateFields(object)
-        this.initAutocompleteFields(object)
-
-        this.initObjects(object)
-        this.sheetsActive = (this.sheetCount > 1)
-
-        this.checkErrors()
-
-        if (this.sheetsActive) {
-            this.initSheetsSwitch()
-        } else {
-            this.objects.sheets[1].addClass('single')
-        }
-
-        if (this.multiLang) {
-            this.initLanguageSwitch()
-            if (!this.language) {
-                this.showLanguage(object.data('language'))
+            if (this.languages.isMultiple) {
+                this.languages.storageId += ('-' + this.id)
             }
         }
 
-        if (!this.sheet) {
-            this.showSheet(object.data('sheet'))
+        this.initDelete(object)
+        this.initEditors(object)
+        this.initFileInputs(object)
+        this.initAnimation(object)
+        this.initJsonInputs(object)
+        this.initTransliterateInputs(object)
+        this.initAutocompleteInputs(object)
+        this.initSheets(object)
+
+        if (this.languages.isMultiple) {
+            this.initLanguages(object)
+        }
+
+        this.checkErrors()
+
+        if (this.sheets.active === null) {
+            this.clickSheet(localStorage.getItem(this.sheets.storageId) ?? this.sheets.default)
+        }
+
+        if (this.languages.isMultiple && (this.languages.active === null)) {
+            this.clickLanguage(localStorage.getItem(this.languages.storageId) ?? this.languages.default)
         }
 
         this.initFocus()
     }
 
-    addMultipleValue(parent, object) {
+    autoCompleteAdd(parent, object) {
         let current = Array(),
             value = parseInt(object.value)
 
@@ -88,25 +91,10 @@ class Form {
             'value': object.value
         })))))
 
-        this.checkMultipleValue(parent)
+        this.autoCompleteCheck(parent)
     }
 
-    checkErrors() {
-        let key, error, lang
-        for (key in this.objects.sheets) {
-            error = this.objects.sheets[key].find('.js-form-error')
-            if (error.length) {
-                this.showSheet(key)
-                lang = error.closest('.js-multilang')
-                if (lang.length) {
-                    this.showLanguage(lang.data('code'))
-                }
-                return
-            }
-        }
-    }
-
-    checkMultipleValue(parent) {
+    autoCompleteCheck(parent) {
         if (parent.find('.js-autocomplete-multiple').length) {
             parent.find('.js-autocomplete-multiple-hidden').remove()
         } else {
@@ -119,13 +107,68 @@ class Form {
         }
     }
 
+    autoCompleteRemove(parent, item) {
+        item.remove()
+        this.autoCompleteCheck(parent)
+    }
+
+    checkErrors() {
+        let key, error, lang
+        for (key in this.sheets.objects) {
+            error = this.sheets.objects[key].find('.js-form-error')
+            if (error.length) {
+                this.clickSheet(key)
+
+                if (this.languages.isMultiple) {
+                    let multiLang = error.closest('.js-multilang')
+                    if (multiLang.length) {
+                        this.clickLanguage(multiLang.data('code'))
+                    }
+                }
+
+                return
+            }
+        }
+    }
+
+    clickLanguage(code) {
+        let key
+        if (this.languages.active) {
+            this.languages.switches[this.languages.active].removeClass('active')
+            for (key in this.languages.objects[this.languages.active]) {
+                this.languages.objects[this.languages.active][key].hide()
+            }
+        }
+
+        this.languages.active = code
+        localStorage.setItem(this.languages.storageId, this.languages.active)
+
+        this.languages.switches[this.languages.active].addClass('active')
+        for (key in this.languages.objects[this.languages.active]) {
+            this.languages.objects[this.languages.active][key].show()
+        }
+    }
+
+    clickSheet(id) {
+        if (this.sheets.active) {
+            this.sheets.switches[this.sheets.active].removeClass('active')
+            this.sheets.objects[this.sheets.active].hide()
+        }
+
+        this.sheets.active = parseInt(id)
+        localStorage.setItem(this.sheets.storageId, this.sheets.active)
+
+        this.sheets.switches[this.sheets.active].addClass('active')
+        this.sheets.objects[this.sheets.active].show()
+    }
+
     initAnimation(object) {
         object.find('form').submit(function() {
             Overlay.showAnimation()
         })
     }
 
-    initAutocompleteFields(object) {
+    initAutocompleteInputs(object) {
         let self = this
 
         object.find('.js-autocomplete').each(function() {
@@ -157,7 +200,7 @@ class Form {
                 },
                 select: function(event, ui) {
                     if (multiple) {
-                        self.addMultipleValue(parent, ui.item)
+                        self.autoCompleteAdd(parent, ui.item)
                         event.target.value = ''
                     } else {
                         parent.find('.js-autocomplete-single').val(ui.item.value)
@@ -169,7 +212,7 @@ class Form {
             })
 
             parent.on('click', '.js-autocomplete-multiple', function() {
-                self.removeMultipleValue(parent, $(this))
+                self.autoCompleteRemove(parent, $(this))
             })
         })
     }
@@ -192,7 +235,7 @@ class Form {
         })
     }
 
-    initFileFields(object) {
+    initFileInputs(object) {
         let self = this
         object.find('.js-file-attr').each(function() {
             let parent = $(this),
@@ -216,7 +259,7 @@ class Form {
                         for (let key in this.files) {
                             if (typeof this.files[key] === 'object') {
                                 postSize += this.files[key].size
-                                if (this.files[key].size > self.uploadMaxFileSize) {
+                                if (this.files[key].size > self.maxSizeUpload) {
                                     uploadMaxFileSizeError = true
                                     break
                                 }
@@ -230,7 +273,7 @@ class Form {
                             return false
                         }
 
-                        if (postSize > self.postMaxSize) {
+                        if (postSize > self.maxSizePost) {
                             Overlay.showMessage(App.messages.errors.postMaxSize)
                             this.value = ''
                             this.files.value = null
@@ -275,35 +318,20 @@ class Form {
     }
 
     initFocus() {
-        let focused = this.objects.sheets[this.sheet].find('*[autofocus]:first')
-
+        let focused = this.sheets.objects[this.sheets.active].find('*[autofocus]:first')
         if (focused.length) {
-            if (this.language) {
+            if (this.languages.isMultiple) {
                 let parent = focused.parent()
                 if (parent.hasClass('js-multilang')) {
-                    focused = parent.parent().find('.js-multilang[data-code="' + this.language + '"] *[autofocus]:first')
+                    focused = parent.parent().find('.js-multilang[data-code="' + this.languages.active + '"] *[autofocus]:first')
                 }
             }
 
-            setTimeout(function() {focused.focus()})
+            setTimeout(function() {focused.focus()}, 100)
         }
     }
 
-    initTransliterateFields(object) {
-        let self = this
-        object.find('.js-transliterate').each(function() {
-            let target = $('#' + $(this).data('transliterate-code'))
-            $(this).on('change', function() {
-                let source = $(this)
-                clearTimeout(self.transliterateTimeout)
-                self.transliterateTimeout = setTimeout(function() {
-                    self.transliterate(source, target)
-                }, 1000)
-            })
-        })
-    }
-
-    initJsonFields(object) {
+    initJsonInputs(object) {
         let self = this
         object.find('.js-json').each(function() {
             let parent = $(this)
@@ -321,11 +349,11 @@ class Form {
             })
 
             parent.on('blur change', '.js-json-value', function() {
-                self.initJsonFieldWidth($(this))
+                self.initJsonValueWidth($(this))
             })
 
             parent.find('.js-json-value').each(function() {
-                self.initJsonFieldWidth($(this))
+                self.initJsonValueWidth($(this))
             })
 
             parent.find('.js-json-values').change(function() {
@@ -340,12 +368,12 @@ class Form {
                     } else {
                         object.find('input[type="hidden"]').remove()
                     }
-                }, 1);
+                }, 1)
             })
         })
     }
 
-    initJsonFieldWidth(object) {
+    initJsonValueWidth(object) {
         let length = object.val().length
         if (length) {
             object.css('width', (length + 2) + 'ch')
@@ -355,116 +383,71 @@ class Form {
         object.parent().remove()
     }
 
-    initLanguageSwitch() {
+    initLanguages(object) {
         let self = this
-        for (let key in this.objects.langSwitch) {
-            this.objects.langSwitch[key].click(function() {
-                if ($(this).hasClass('active')) {
-                    return
-                }
+        object.find('.js-form-lang-switch').each(function() {
+            self.languages.switches[$(this).data('id')] = $(this)
+            self.languages.objects[$(this).data('id')] = []
 
-                let id = $(this).data('id')
-                Overlay.showAnimation()
+            if (self.languages.default === null) {
+                self.languages.default = $(this).data('id')
+            }
 
-                Ajax.post(App.url.setCookie, {
-                    key: 'lang_public',
-                    value: id
-                }, function() {
-                    self.showLanguage(id)
-                    Overlay.hideAnimation()
-                })
+            $(this).click(function() {
+                self.clickLanguage($(this).data('id'))
             })
-        }
-    }
-
-    initObjects(object) {
-        let self = this
-        object.find('.js-form-sheet').each(function() {
-            self.objects.sheets[parseInt($(this).data('id'))] = $(this)
-            self.sheetCount++
-        })
-
-        object.find('.js-form-sheet-switch').each(function() {
-            self.objects.sheetSwitch[parseInt($(this).data('id'))] = $(this)
         })
 
         object.find('.js-multilang').each(function() {
-            let code = $(this).data('code')
-            if (typeof self.objects.langInputs[code] === 'undefined') {
-                self.objects.langInputs[code] = []
-            }
-
-            self.objects.langInputs[code][self.objects.langInputs[code].length] = $(this)
-        })
-
-        object.find('.js-form-lang-switch').each(function() {
-            self.objects.langSwitch[$(this).data('id')] = $(this)
+            self.languages.objects[$(this).data('code')][self.languages.objects[$(this).data('code')].length] = $(this)
         })
     }
 
-    initSheetsSwitch() {
-        let self = this
-        for (let key in this.objects.sheetSwitch) {
-            this.objects.sheetSwitch[key].click(function() {
+    initSheets(object) {
+        let self = this,
+            count = 0
+
+        object.find('.js-form-sheet').each(function() {
+            let id = parseInt($(this).data('id')),
+                objectSwitch = object.find('.js-form-sheet-switch[data-id="' + id + '"]')
+
+            if (self.sheets.default === null) {
+                self.sheets.default = id
+            }
+
+            self.sheets.objects[id] = $(this)
+            self.sheets.switches[id] = objectSwitch
+
+            objectSwitch.click(function() {
                 if ($(this).hasClass('active')) {
                     return
                 }
 
-                let id = $(this).data('id')
-                Overlay.showAnimation()
-
-                Ajax.post(App.url.setCookie, {
-                    key: self.cookieId,
-                    value: id
-                }, function() {
-                    self.showSheet(id)
-                    Overlay.hideAnimation()
-                })
+                self.clickSheet(parseInt($(this).data('id')))
             })
+
+            count++
+        })
+
+        if (count > 1) {
+            this.sheets.isMultiple = true
+        } else {
+            this.sheets.objects[1].addClass('single')
         }
     }
 
-    removeMultipleValue(parent, item) {
-        item.remove()
-        this.checkMultipleValue(parent)
-    }
-
-    showLanguage(id) {
-        let key
-        if (this.language) {
-            this.objects.langSwitch[this.language].removeClass('active')
-            for (key in this.objects.langInputs[this.language]) {
-                this.objects.langInputs[this.language][key].hide()
-            }
-        }
-
-        this.language = id
-
-        if (!$.isEmptyObject(this.objects.langSwitch)) {
-            this.objects.langSwitch[this.language].addClass('active')
-        }
-
-        for (key in this.objects.langInputs[this.language]) {
-            this.objects.langInputs[this.language][key].show()
-        }
-    }
-
-    showSheet(id) {
-        if (this.sheet) {
-            if (this.sheetsActive) {
-                this.objects.sheetSwitch[this.sheet].removeClass('active')
-            }
-
-            this.objects.sheets[this.sheet].hide()
-        }
-
-        this.sheet = id
-
-        if (this.sheetsActive) {
-            this.objects.sheetSwitch[this.sheet].addClass('active')
-        }
-
-        this.objects.sheets[this.sheet].show()
+    initTransliterateInputs(object) {
+        let self = this
+        object.find('.js-transliterate').each(function() {
+            let target = $('#' + $(this).data('transliterate-code'))
+            $(this).on('change', function() {
+                let source = $(this)
+                clearTimeout(self.timeout)
+                self.timeout = setTimeout(function() {
+                    self.transliterate(source, target)
+                }, 1000)
+            })
+        })
     }
 
     transliterate(source, target) {

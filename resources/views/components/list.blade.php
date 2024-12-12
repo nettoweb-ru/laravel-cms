@@ -3,23 +3,22 @@
         'resources/css/netto/list.css',
         'resources/js/netto/list.widget.js',
         'resources/js/netto/list.js',
-        'resources/js/netto/jquery.longpress.js',
     ])
 @endpushonce
 
-<div class="list js-list" data-url="{{ $url }}">
+<div class="list js-list" data-url="{{ $url }}" data-id="{{ $id }}">
     <div class="list-block top">
         <div class="table list-top">
             <div class="cell list-top title">
                 <span class="text-big header js-title"></span>
             </div>
             <div class="cell list-top actions">
-                <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal js-icon-create js-link hidden disabled" disabled data-url="" title="{{ __('cms::main.title_create') }}" />
+                <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal js-icon-create js-link disabled hidden" disabled data-url="" title="{{ __('cms::main.title_create') }}" />
                 <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal js-icon-find hidden disabled" disabled title="{{ __('cms::main.title_find') }}" />
                 <x-cms::form.button type="button" bg="icons.download" class="btn-icon btn-normal js-icon-download hidden disabled" disabled title="{{ __('cms::main.title_download') }}" />
-                <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal js-icon-invert hidden disabled" disabled title="{{ __('cms::main.title_invert') }}" />
+                <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal js-icon-invert disabled" disabled title="{{ __('cms::main.title_invert') }}" />
                 <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal js-icon-toggle hidden disabled" disabled title="{{ __('cms::main.title_toggle') }}" />
-                <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning js-icon-delete hidden disabled" disabled title="{{ __('cms::main.title_delete') }}" />
+                <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning js-icon-delete disabled" disabled title="{{ __('cms::main.title_delete') }}" />
             </div>
         </div>
     </div>
@@ -67,7 +66,7 @@
                                     </div>
                                     <div class="cell">
                                         <label>
-                                            <select class="select narrow text js-page" name="page"></select>
+                                            <select class="select narrow text js-page disabled" disabled name="page"></select>
                                         </label>
                                     </div>
                                     <div class="cell padding">

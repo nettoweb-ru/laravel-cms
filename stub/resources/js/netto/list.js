@@ -1,65 +1,72 @@
 import ListWidget from './list.widget.js'
 
 class List extends ListWidget {
-    filter = {}
-    id = ''
-    init = false
-    params = {}
-    url = {
-        list: '',
-        delete: '',
-        toggle: ''
+    body = null
+    columns = null
+    iconCreate = null
+    iconDownload = null
+    iconFind = null
+    id = 'netto-admin-list'
+    objects = {
+        head: null,
+        title: null,
+        page: null,
+        perPage: null,
+        total: null,
+        pages: null
     }
 
     constructor(object) {
-        super(object);
-
+        super(object)
+        this.initObjects(object)
+        this.initIcons(object)
+        this.setObjectId(object)
+        this.initParams()
+        this.initSortColumns()
         this.initPerPage()
         this.initPage()
-
-        this.url.list = object.data('url')
-
         this.load()
     }
 
-    initActions(object) {
-        super.initActions(object)
-
-        this.initIconToggle()
-        this.initIconFind()
-        this.initIconDownload()
+    getDefaultParams() {
+        return {
+            page: 1,
+            perPage: 10,
+            sort: 'id',
+            sortDir: 'asc'
+        }
     }
 
-    initIconDownload() {
+    initIcons(object) {
+        this.initToggleIcon(object)
 
-    }
+        this.iconFind = object.find('.js-icon-find')
+        this.iconDownload = object.find('.js-icon-download')
 
-    initIconFind() {
-
+        let self = this
+        this.iconCreate = object.find('.js-icon-create')
+        this.iconCreate.click(function() {
+            self.followUrl($(this))
+        })
     }
 
     initObjects(object) {
-        super.initObjects(object)
+        this.body = object.find('.js-body')
 
-        this.objects.icons.toggle = object.find('.js-icon-toggle')
-        this.objects.icons.find = object.find('.js-icon-find')
-        this.objects.icons.download = object.find('.js-icon-download')
-        this.objects.icons.create = object.find('.js-icon-create')
-
+        this.objects.head = object.find('.js-head')
         this.objects.title = object.find('.js-title')
-
         this.objects.page = object.find('.js-page')
         this.objects.perPage = object.find('.js-per-page')
-        this.objects.countItems = object.find('.js-counter-items')
-        this.objects.countPages = object.find('.js-counter-pages')
+        this.objects.total = object.find('.js-counter-items')
+        this.objects.pages = object.find('.js-counter-pages')
     }
 
     initPage() {
         let self = this
         this.objects.page.change(function() {
             self.params.page = parseInt($(this).val())
-
             self.saveParams()
+            self.load()
         })
     }
 
@@ -70,72 +77,78 @@ class List extends ListWidget {
             self.params.perPage = parseInt($(this).val())
 
             self.saveParams()
+            self.load()
         })
     }
 
-    lockBulkActionButtons() {
-        this.objectDisable(this.objects.icons.delete)
-        this.objectDisable(this.objects.icons.toggle)
-    }
+    initWidget(data) {
+        this.objects.title.html(data.title)
 
-    onAfterLoad(data) {
-        this.params = data.params
-
-        if (!this.init) {
-            this.id = data.id
-            this.objects.title.html(data.title)
-
-            if (typeof data.url.create === 'string') {
-                this.objects.icons.create.data('url', data.url.create).show()
-            }
-
-            let invert = false
-            if (typeof data.url.delete === 'string') {
-                this.url.delete = data.url.delete
-                this.objects.icons.delete.show()
-                invert = true
-            }
-
-            if (typeof data.url.toggle === 'string') {
-                this.url.toggle = data.url.toggle
-                this.objects.icons.toggle.show()
-                invert = true
-            }
-
-            if (invert) {
-                this.objects.icons.invert.show()
-            }
-
-            this.renderPerPage()
-            this.init = true
+        if (typeof data.url.toggle === 'string') {
+            this.iconToggle.show()
         }
 
-        this.objectEnable(this.objects.icons.create)
+        this.columns = data.columns
+        for (let k1 in this.columns) {
+            this.objects.head.append($('<th />', {'data-code': k1, 'width': this.columns[k1].width + '%', 'class': 'sortable'}).html($('<span />', {'class': 'text-small'}).html(this.columns[k1].title)))
+        }
 
-        if (data.nav.total === 0) {
-            this.objects.layers.empty.show()
+        this.renderSortColumns()
+        super.initWidget(data)
+
+        if (typeof data.url.create === 'string') {
+            this.iconCreate.data('url', this.url.create).show()
+        }
+    }
+
+    lock() {
+        if (this.locked) {
             return
         }
 
-        this.objectEnable(this.objects.icons.invert)
+        this.disable(this.iconToggle)
+        this.disable(this.iconCreate)
 
-        this.objects.countItems.html(data.nav.total)
-        this.objects.countPages.html(data.nav.max)
+        this.disable(this.objects.page)
 
-        this.renderPages(data.nav.max)
+        super.lock()
+    }
+
+    lockBulkButtons() {
+        this.disable(this.iconToggle)
+        super.lockBulkButtons()
+    }
+
+    render(data) {
+        this.enable(this.iconCreate)
+        if (data.nav.total === 0) {
+            this.layers.empty.show()
+            return
+        }
+
+        this.enable(this.iconInvert)
+
+        this.objects.total.html(data.nav.total)
+        this.objects.pages.html(data.nav.max)
+
+        let a, params
+        for (a = 1; a <= data.nav.max; a++) {
+            params = {
+                value: a
+            }
+
+            if (a === this.params.page) {
+                params.selected = true
+            }
+
+            this.objects.page.append($('<option />', params).html(a))
+        }
 
         if (data.nav.max > 1) {
-            this.objectEnable(this.objects.page)
+            this.enable(this.objects.page)
         }
 
-        let attr = {}, k1
-        for (k1 in data.columns) {
-            this.objects.head.append($('<th />', {'data-code': k1, 'width': data.columns[k1].width + '%', 'class': 'sortable'}).html($('<span />', {'class': 'text-small'}).html(data.columns[k1].title)))
-        }
-
-        this.renderSortParams()
-
-        let tr, k2
+        let k1, k2, tr, attr = {}, self = this
         for (k1 in data.items) {
             attr = {
                 'data-id': data.items[k1].id,
@@ -147,64 +160,33 @@ class List extends ListWidget {
             }
 
             tr = $('<tr />', attr)
-            for (k2 in data.columns) {
+            for (k2 in this.columns) {
                 tr.append($('<td />').html($('<span />', {'class': 'text'}).html(data.items[k1][k2])))
             }
 
-            this.render(tr)
+            this.setClickEvent(tr, function() {
+                self.followUrl($(this))
+            })
+
+            this.body.append(tr)
         }
 
-        this.objects.layers.found.show()
-    }
-
-    onAfterSaveParams(data) {
-        this.renderPerPage()
-        this.load()
-    }
-
-    onRowClick(object) {
-        let url = object.data('url')
-        if (!url.length) {
-            return
-        }
-
-        Overlay.redirect(url)
-    }
-
-    renderPages(max) {
-        let a, params
-        for (a = 1; a <= max; a++) {
-            params = {
-                value: a
-            }
-
-            if (a === this.params.page) {
-                params.selected = true
-            }
-
-            this.objects.page.append($('<option />', params).html(a))
-        }
-    }
-
-    renderPerPage() {
         this.objects.perPage.find('option:selected').attr('selected', false)
         this.objects.perPage.find('option[value="' + this.params.perPage + '"]').attr('selected', true)
+
+        super.render(data)
     }
 
     reset() {
-        super.reset()
-
         this.objects.page.html('')
-        this.objects.countItems.html('0')
-        this.objects.countPages.html('0')
-        this.objects.head.html('')
-
-        this.objectDisable(this.objects.page)
+        this.objects.total.html('0')
+        this.objects.pages.html('0')
+        super.reset()
     }
 
-    unlockBulkActionButtons() {
-        this.objectEnable(this.objects.icons.delete)
-        this.objectEnable(this.objects.icons.toggle)
+    unlockBulkButtons() {
+        this.enable(this.iconToggle)
+        super.unlockBulkButtons()
     }
 }
 

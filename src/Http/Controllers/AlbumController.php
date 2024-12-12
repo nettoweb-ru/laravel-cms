@@ -26,12 +26,6 @@ class AlbumController extends Abstract\AdminCrudController
                 'width' => 95
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => 10,
-            'sort' => 'sort',
-            'sortDir' => 'asc',
-        ],
         'relations' => [],
         'select' => [
             'id',
@@ -57,10 +51,6 @@ class AlbumController extends Abstract\AdminCrudController
         'edit' => 'admin.album.edit',
         'store' => 'admin.album.store',
         'update' => 'admin.album.update',
-    ];
-
-    protected array $tabs = [
-        'edit' => ['album_tab'],
     ];
 
     protected string $title = 'cms::main.list_album';

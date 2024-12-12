@@ -123,6 +123,7 @@
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total{
     white-space: nowrap;
+    padding:5px 0;
     width:100%;
 }
 

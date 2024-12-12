@@ -34,12 +34,6 @@ class PublicationController extends Abstract\AdminCrudController
                 'width' => 20
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => 10,
-            'sort' => 'name',
-            'sortDir' => 'asc',
-        ],
         'relations' => ['language'],
         'select' => [
             'id',
@@ -66,10 +60,6 @@ class PublicationController extends Abstract\AdminCrudController
         'edit' => 'admin.publication.edit',
         'store' => 'admin.publication.store',
         'update' => 'admin.publication.update',
-    ];
-
-    protected array $sheets = [
-        'edit' => ['publication_sheet'],
     ];
 
     protected string $title = 'cms::main.list_publication';

@@ -77,7 +77,7 @@ window.App = {
         $('.js-set-language').click(function() {
             Overlay.showAnimation()
             Ajax.post(self.url.setCookie, {
-                key: 'lang',
+                key: 'netto-admin-lang',
                 value: $(this).data('code')
             }, function() {
                 window.location.reload()

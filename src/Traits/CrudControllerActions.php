@@ -114,7 +114,6 @@ trait CrudControllerActions
             $this->route[$key] = [
                 'name' => $value,
                 'parameters' => [],
-
             ];
         }
     }

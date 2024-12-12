@@ -39,12 +39,6 @@ class LanguageController extends Abstract\AdminCrudController
                 'width' => 10
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => 10,
-            'sort' => 'sort',
-            'sortDir' => 'asc',
-        ],
         'relations' => [],
         'select' => [
             'id',

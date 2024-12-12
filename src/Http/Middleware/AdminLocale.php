@@ -36,6 +36,8 @@ class AdminLocale
         'ru' => 'ru_RU',
     ];
 
+    private const COOKIE_ID = 'netto-admin-lang';
+
     /**
      * @param Request $request
      * @param Closure $next
@@ -43,11 +45,11 @@ class AdminLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $lang = Cookie::get('lang');
+        $lang = Cookie::get(self::COOKIE_ID);
 
         if (is_null($lang)) {
             $lang = self::DEFAULT;
-            CmsService::setAdminCookie('lang', $lang);
+            CmsService::setAdminCookie(self::COOKIE_ID, $lang);
         }
 
         $config = config('cms.locales', self::LOCALES);
@@ -70,7 +72,7 @@ class AdminLocale
             $language = $lang;
         } else {
             $language = self::DEFAULT;
-            CmsService::setAdminCookie('lang', $language);
+            CmsService::setAdminCookie(self::COOKIE_ID, $language);
         }
 
         set_language($language, $locales[$language]);

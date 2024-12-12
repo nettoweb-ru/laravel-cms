@@ -5,6 +5,7 @@ class Tabs {
         switch: {},
         tab: {},
     }
+    storageIdTab = 'netto-admin-form-tab'
 
     constructor(object) {
         this.id = object.data('id')
@@ -14,9 +15,12 @@ class Tabs {
 
         this.checkErrors()
 
-        if (!this.current) {
-            this.show(object.data('current'))
+        let id = localStorage.getItem(this.storageIdTab)
+        if ((id === null) || (typeof this.objects.tab[id] === 'undefined')) {
+            id = Object.keys(this.objects.tab)[0]
         }
+
+        this.show(id)
     }
 
     checkErrors() {
@@ -48,15 +52,8 @@ class Tabs {
                 }
 
                 let id = $(this).data('id')
-                Overlay.showAnimation()
-
-                Ajax.post(App.url.setCookie, {
-                    key: self.id,
-                    value: id
-                }, function() {
-                    self.show(id)
-                    Overlay.hideAnimation()
-                })
+                localStorage.setItem(self.storageIdTab, id)
+                self.show(id)
             })
         }
     }

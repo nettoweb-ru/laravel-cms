@@ -27,6 +27,7 @@ class BrowserController extends Abstract\AdminController
 
         return $this->getView('cms::browser', [
             'header' => $title,
+            'url' => route('admin.browser.list')
         ]);
     }
 
@@ -100,21 +101,16 @@ class BrowserController extends Abstract\AdminController
      */
     public function list(Request $request): JsonResponse
     {
-        $dir = DIRECTORY_SEPARATOR.ltrim($request->get('dir', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
-        $disk = Storage::disk(self::STORAGE);
+        $params = $request->query();
 
-        if (!$disk->directoryExists($dir)) {
-            abort(400);
+        $dir = DIRECTORY_SEPARATOR;
+        if (!empty($params['dir'])) {
+            $dir .= ltrim($params['dir'], DIRECTORY_SEPARATOR);
         }
 
-        $id = "browser";
-        $params = Cookie::get($id);
-
-        if (is_null($params)) {
-            $params = ['sort' => 'name', 'sortDir' => 'asc'];
-            CmsService::setAdminCookie($id, json_encode($params));
-        } else {
-            $params = json_decode($params, true);
+        $disk = Storage::disk(self::STORAGE);
+        if (!$disk->directoryExists($dir)) {
+            abort(400);
         }
 
         $dirs = [];
@@ -149,7 +145,7 @@ class BrowserController extends Abstract\AdminController
             $list[$key]['date'] = format_date($value['date']);
         }
 
-        $parent = '';
+        $parent = null;
         $explode = array_filter(explode(DIRECTORY_SEPARATOR, $dir));
 
         if ($explode) {
@@ -158,12 +154,23 @@ class BrowserController extends Abstract\AdminController
         }
 
         $return = [
-            'list' => $list,
-            'dir' => $dir,
-            'parent' => $parent,
-            'params' => $params,
-            'path' => get_storage_path(self::STORAGE),
+            'results' => [
+                'items' => $list,
+                'dirCurrent' => $dir,
+                'dirParent' => $parent,
+            ],
         ];
+
+        if (!empty($params['init'])) {
+            $return['init'] = [
+                'path' => get_storage_path(self::STORAGE),
+                'url' => [
+                    'delete' => route('admin.browser.delete'),
+                    'upload' => route('admin.browser.upload'),
+                    'directory' => route('admin.browser.directory'),
+                ],
+            ];
+        }
 
         return response()->json($return);
     }

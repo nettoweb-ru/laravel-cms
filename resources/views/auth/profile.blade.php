@@ -1,5 +1,5 @@
 <x-cms::layout.admin :title="$title" :header="$header">
-    <x-cms::tabs id="profile_tab" :current="$tabs['profile_tab']" :tabs="[1 => 'cms::auth.profile', 2 => 'cms::auth.update_password']">
+    <x-cms::tabs id="profile_tab" :tabs="[1 => 'cms::auth.profile', 2 => 'cms::auth.update_password']">
         <x-slot name="tab1">
             <x-cms-form :url="['save' => route('admin.profile.update')]" method="patch" :objectId="$object->id" :apply="false">
                 <x-slot name="sheet1">

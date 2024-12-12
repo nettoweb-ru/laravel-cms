@@ -2,34 +2,12 @@
 
 namespace Netto\Http\Controllers\Abstract;
 
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\View\View;
-
-use Netto\Services\CmsService;
-
 use App\Http\Controllers\Controller;
+use Illuminate\View\View;
 
 abstract class AdminController extends Controller
 {
     protected array $crumbs = [];
-
-    /**
-     * @param string $id
-     * @return int
-     */
-    protected function getCookie(string $id): int
-    {
-        $return = 1;
-        $tab = Cookie::get($id);
-
-        if (is_null($tab)) {
-            CmsService::setAdminCookie($id, $return);
-        } else {
-            $return = $tab;
-        }
-
-        return $return;
-    }
 
     /**
      * @param string $id

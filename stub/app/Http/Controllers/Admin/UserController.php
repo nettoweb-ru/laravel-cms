@@ -38,12 +38,6 @@ class UserController extends Abstract\AdminCrudController
                 'width' => 35
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => 10,
-            'sort' => 'name',
-            'sortDir' => 'asc',
-        ],
         'relations' => [],
         'select' => [
             'id',
@@ -69,10 +63,6 @@ class UserController extends Abstract\AdminCrudController
         'edit' => 'admin.user.edit',
         'store' => 'admin.user.store',
         'update' => 'admin.user.update',
-    ];
-
-    protected array $tabs = [
-        'edit' => ['user_tab'],
     ];
 
     protected string $title = 'cms::main.list_user';

@@ -1,5 +1,5 @@
 <x-cms::layout.admin :title="$title" :chain="$chain" :header="$header">
-    <x-cms::tabs id="menu_tab" :current="$tabs['menu_tab']" :tabs="[1 => 'cms::main.general_properties', 2 => 'cms::main.list_menu_item']" :conditions="[2 => !empty($object->id)]">
+    <x-cms::tabs id="menu_tab" :tabs="[1 => 'cms::main.general_properties', 2 => 'cms::main.list_menu_item']" :conditions="[2 => !empty($object->id)]">
         <x-slot name="tab1">
             <x-cms-form :url="$url" :method="$method" :objectId="$object->id">
                 <x-slot name="sheet1">
@@ -12,7 +12,7 @@
         </x-slot>
         @if ($object->id)
             <x-slot name="tab2">
-                <x-cms::list :url="route('admin.menu.menuItem.list', ['menu' => $object], false)" />
+                <x-cms::list :url="route('admin.menu.menuItem.list', ['menu' => $object], false)" id="menu-item-{{ $object->id }}" />
             </x-slot>
         @endif
     </x-cms::tabs>

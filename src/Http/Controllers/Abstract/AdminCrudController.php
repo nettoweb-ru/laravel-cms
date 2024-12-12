@@ -4,41 +4,20 @@ namespace Netto\Http\Controllers\Abstract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Database\Eloquent\Model as WorkModel;
 use Illuminate\Foundation\Http\FormRequest as WorkRequest;
-use Netto\Models\Album;
 use Netto\Services\CmsService;
 
 abstract class AdminCrudController extends AdminController
 {
-    private const DEFAULT_LIST_PARAMS = [
-        'page' => 1,
-        'perPage' => 10,
-        'sort' => 'id',
-        'sortDir' => 'asc',
-    ];
-
     protected bool $autoSort = false;
-    protected string $class;
-    protected string $id;
-    protected array $list;
     protected array $messages;
-    protected string $parentId;
-    protected string $parentClass;
-    protected string $parentAttr;
-    protected array $route;
-    protected array $tabs = [];
     protected string $title = '';
-    protected array $sheets = [];
     protected array $sync = [];
-    protected array $view;
 
     /**
      * @return View
@@ -68,8 +47,6 @@ abstract class AdminCrudController extends AdminController
             $model->delete();
         }
 
-        $this->resetListPage();
-
         $status = session('status');
         if ($status) {
             Session::forget('status');
@@ -92,7 +69,6 @@ abstract class AdminCrudController extends AdminController
 
         $status = session('status');
         if (is_null($status)) {
-            $this->resetListPage();
             $status = __('cms::main.general_status_deleted');
             $route = route(...$this->route['index']);
         } else {
@@ -152,24 +128,6 @@ abstract class AdminCrudController extends AdminController
             'reference' => $this->getReference($object),
         ];
 
-        if (!empty($this->tabs['edit'])) {
-            $params['tabs'] = [];
-            foreach ($this->tabs['edit'] as $tabId) {
-                $params['tabs'][$tabId] = $object->exists
-                    ? $this->getCookie($tabId)
-                    : 1;
-            }
-        }
-
-        if (!empty($this->sheets['edit'])) {
-            $params['sheets'] = [];
-            foreach ($this->sheets['edit'] as $sheetId) {
-                $params['sheets'][$sheetId] = $object->exists
-                    ? $this->getCookie($sheetId)
-                    : 1;
-            }
-        }
-
         return $this->getView($this->view['edit'], array_merge($params, $extraParams));
     }
 
@@ -179,15 +137,7 @@ abstract class AdminCrudController extends AdminController
      */
     protected function _list(array $filter = []): JsonResponse
     {
-        $id = "{$this->id}_list";
-        $params = Cookie::get($id);
-
-        if (is_null($params)) {
-            $params = $this->list['params'] ?: self::DEFAULT_LIST_PARAMS;
-            CmsService::setAdminCookie($id, json_encode($params));
-        } else {
-            $params = json_decode($params, true);
-        }
+        $params = request()->query();
 
         /** @var Builder $class */
         $class = $this->class;
@@ -197,47 +147,55 @@ abstract class AdminCrudController extends AdminController
 
         $collection = $builder->get();
 
-        if ($params['perPage']) {
+        if (empty($params['perPage'])) {
+            $list = $collection->all();
+
+            $maxPage = 1;
+            $total = count($list);
+        } else {
             $list = $collection->slice(($params['page'] - 1) * $params['perPage'], $params['perPage'])->all();
             $pagination = new LengthAwarePaginator($list, count($collection), $params['perPage'], $params['page']);
 
             $maxPage = $pagination->lastPage();
             $total = $pagination->total();
-        } else {
-            $list = $collection->all();
-
-            $maxPage = 1;
-            $total = count($list);
         }
 
-        $columns = [];
-        foreach ($this->list['columns'] as $key => $value) {
-            $value['title'] = __($value['title']);
-            $columns[$key] = $value;
-        }
-
-        $url = [];
-        foreach ($this->list['url'] as $value) {
-            $url[$value] = route(...$this->route[$value]);
-        }
-
-        $items = [];
-        foreach ($list as $item) {
-            $items[] = array_merge(['id' => $item->id, 'url' => route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $item->id]))], $this->getItem($item));
-        }
-
-        return response()->json([
-            'items' => $items,
-            'id' => $id,
-            'title' => empty($this->list['title']) ? '' : __($this->list['title']),
-            'columns' => $columns,
-            'params' => $params,
-            'url' => $url,
+        $data = [
+            'items' => [],
             'nav' => [
                 'max' => $maxPage,
                 'total' => $total,
             ],
-        ]);
+        ];
+
+        foreach ($list as $item) {
+            $data['items'][] = array_merge(['id' => $item->id, 'url' => route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $item->id]))], $this->getItem($item));
+        }
+
+        $return = [
+            'results' => $data,
+        ];
+
+        if (!empty($params['init'])) {
+            $init = [
+                'title' => empty($this->list['title']) ? '' : __($this->list['title']),
+                'columns' => [],
+                'url' => [],
+            ];
+
+            foreach ($this->list['columns'] as $key => $value) {
+                $value['title'] = __($value['title']);
+                $init['columns'][$key] = $value;
+            }
+
+            foreach ($this->list['url'] as $value) {
+                $init['url'][$value] = route(...$this->route[$value]);
+            }
+
+            $return['init'] = $init;
+        }
+
+        return response()->json($return);
     }
 
     /**
@@ -412,23 +370,5 @@ abstract class AdminCrudController extends AdminController
         }
 
         return Redirect::to(route($this->route['edit']['name'], array_merge($this->route['edit']['parameters'], [$this->id => $id])))->with('status', $status);
-    }
-
-    /**
-     * @return void
-     */
-    private function resetListPage(): void
-    {
-        $id = "{$this->id}_list";
-        $params = Cookie::get($id);
-
-        if (is_null($params)) {
-            $params = $this->list['params'] ?: self::DEFAULT_LIST_PARAMS;
-        } else {
-            $params = json_decode($params, true);
-            $params['page'] = 1;
-        }
-
-        CmsService::setAdminCookie($id, json_encode($params));
     }
 }

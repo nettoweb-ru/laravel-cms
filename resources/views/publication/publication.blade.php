@@ -1,5 +1,5 @@
 <x-cms::layout.admin :title="$title" :chain="$chain" :header="$header">
-    <x-cms-form id="publication" :url="$url" :method="$method" :objectId="$object->id" :sheets="[1 => 'cms::main.general_properties', 2 => 'cms::main.general_seo']" :sheet="$sheets['publication_sheet']">
+    <x-cms-form id="publication" :url="$url" :method="$method" :objectId="$object->id" :sheets="[1 => 'cms::main.general_properties', 2 => 'cms::main.general_seo']">
         <x-slot name="sheet1">
             <x-cms::form.string name="name" type="text" width="9" maxlength="255" :label="__('cms::main.attr_name')" :value="old('name', $object->name)" :messages="$errors->get('name')" transliterate="{{ $object->exists ? '' : 'slug' }}" required autofocus />
             <x-cms::form.select name="lang_id" width="3" :options="$reference['language']" :label="__('cms::main.attr_language')" :value="old('lang_id', $object->lang_id)" :messages="$errors->get('lang_id')" required />

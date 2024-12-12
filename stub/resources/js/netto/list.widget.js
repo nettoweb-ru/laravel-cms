@@ -1,38 +1,38 @@
 export default class ListWidget {
-    locked = true
-    objects = {
-        body: null,
-        layers: {
-            results: null,
-            animation: null,
-            found: null,
-            empty: null
-        },
-        icons: {
-            invert: null,
-            delete: null
-        }
+    iconDelete = null
+    iconInvert = null
+    iconToggle = null
+    id = 'netto-admin-widget'
+    init = false
+    layers = {
+        results: null,
+        animation: null,
+        found: null,
+        empty: null
     }
+    locked = true
+    params = {}
     selected = []
+    url = {}
+    urlLoad = ''
 
     constructor(object) {
-        this.initObjects(object)
-        this.initActions(object)
-
-        this.initSort()
+        this.initLayers(object)
+        this.initCommonIcons(object)
+        this.setLoadUrl(object)
     }
 
     checkSelection() {
-        this.lockBulkActionButtons()
+        this.lockBulkButtons()
 
         let selected = []
-        this.objects.body.children('.selected').each(function() {
+        this.body.children('.selected').each(function() {
             selected[selected.length] = $(this).data('id')
         })
         this.selected = selected
 
         if (this.selected.length) {
-            this.unlockBulkActionButtons()
+            this.unlockBulkButtons()
         }
     }
 
@@ -45,63 +45,77 @@ export default class ListWidget {
                 Overlay.showMessage(data.status)
             }
 
+            self.params.page = 1
+            self.saveParams()
+
             self.load()
         }, function() {
             self.unlock()
         })
     }
 
-    initActions(object) {
-        this.initIconDelete()
-        this.initIconInvert()
+    disable(object) {
+        object.attr('disabled', true).addClass('disabled')
     }
 
-    initIconDelete() {
+    enable(object) {
+        object.removeAttr('disabled').removeClass('disabled')
+    }
+
+    followUrl(object) {
+        let url = object.data('url')
+        if (!url.length) {
+            return
+        }
+
+        Overlay.redirect(url)
+    }
+
+    getDefaultParams() {
+        return {}
+    }
+
+    initCommonIcons(object) {
         let self = this
-        this.objects.icons.delete.click(async function() {
+
+        this.iconInvert = object.find('.js-icon-invert')
+        this.iconInvert.click(function() {
+            self.invert()
+        })
+
+        this.iconDelete = object.find('.js-icon-delete')
+        this.iconDelete.click(async function() {
             if (await Overlay.showConfirmDelete()) {
                 self.delete()
             }
         })
     }
 
-    initIconInvert() {
-        let self = this
-        this.objects.icons.invert.click(function() {
-            self.objects.body.children().each(function() {
-                $(this).toggleClass('selected')
-            })
-
-            self.checkSelection()
-        })
+    initLayers(object) {
+        this.layers.animation = object.find('.js-animation')
+        this.layers.results = object.find('.js-results')
+        this.layers.found = object.find('.js-results-found')
+        this.layers.empty = object.find('.js-results-empty')
     }
 
-    initIconToggle() {
-        let self = this
-        this.objects.icons.toggle.click(async function() {
-            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
-                self.toggle()
-            }
-        })
+    initParams() {
+        //localStorage.removeItem(this.id)
+
+        let params = localStorage.getItem(this.id)
+
+        if (params === null) {
+            this.params = this.getDefaultParams()
+            this.saveParams()
+        } else {
+            this.params = JSON.parse(params)
+        }
     }
 
-    initObjects(object) {
-        this.objects.body = object.find('.js-body')
-        this.objects.head = object.find('.js-head')
-
-        this.objects.layers.results = object.find('.js-results')
-        this.objects.layers.animation = object.find('.js-animation')
-        this.objects.layers.found = object.find('.js-results-found')
-        this.objects.layers.empty = object.find('.js-results-empty')
-
-        this.objects.icons.invert = object.find('.js-icon-invert')
-        this.objects.icons.delete = object.find('.js-icon-delete')
-    }
-
-    initSort() {
+    initSortColumns() {
         let self = this
         this.objects.head.on('click', 'th', function() {
             let code = $(this).data('code')
+
             if (code === self.params.sort) {
                 self.params.sortDir = (self.params.sortDir === 'asc') ? 'desc' : 'asc'
             } else {
@@ -109,44 +123,98 @@ export default class ListWidget {
             }
 
             self.saveParams()
+            self.renderSortColumns()
+
+            self.load()
         })
+    }
+
+    initToggleIcon(object) {
+        let self = this
+
+        this.iconToggle = object.find('.js-icon-toggle')
+        this.iconToggle.click(async function() {
+            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
+                self.toggle()
+            }
+        })
+    }
+
+    initWidget(data) {
+        this.url = data.url
+        this.init = true
+    }
+
+    invert() {
+        this.body.children().each(function() {
+            $(this).toggleClass('selected')
+        })
+
+        this.checkSelection()
     }
 
     load() {
-        this.lock()
         this.reset()
+        this.lock()
 
-        let self = this
-        Ajax.get(this.url.list, this.filter, function(data) {
-            self.onAfterLoad(data)
-            self.unlock()
-        }, function() {
-            self.unlock()
-        })
+        let self = this,
+            finish = function() {
+                self.unlock()
+            },
+            params = this.params
+
+        if (!this.init) {
+            params.init = true
+        }
+
+        Ajax.get(this.urlLoad, params, function(data) {
+            if (!self.init) {
+                self.initWidget(data.init)
+            }
+
+            self.render(data.results)
+            finish()
+        }, finish)
     }
 
     lock() {
-        if (this.locked) {
-            return
-        }
+        this.disable(this.iconInvert)
+        this.disable(this.iconDelete)
 
-        this.objects.layers.results.hide()
-        this.objects.layers.animation.show()
+        this.layers.results.hide()
+        this.layers.animation.show()
 
         this.locked = true
     }
 
-    objectDisable(button) {
-        button.attr('disabled', true).addClass('disabled')
+    lockBulkButtons() {
+        this.disable(this.iconDelete)
     }
 
-    objectEnable(button) {
-        button.removeAttr('disabled').removeClass('disabled')
+    render(data) {
+        this.layers.found.show()
     }
 
-    render(tr) {
+    renderSortColumns() {
+        this.objects.head.find('th').removeClass('sort asc desc')
+        this.objects.head.find('th[data-code="' + this.params.sort + '"]').addClass('sort ' + ((this.params.sortDir === 'asc') ? 'asc' : 'desc'))
+    }
+
+    reset() {
+        this.selected = []
+
+        this.layers.found.hide()
+        this.layers.empty.hide()
+
+        this.body.html('')
+    }
+
+    saveParams() {
+        localStorage.setItem(this.id, JSON.stringify(this.params))
+    }
+
+    setClickEvent(tr, event) {
         let self = this
-
         tr.longpress(function(event) {
             if (("which" in event) && (event.which === 3)) {
                 return
@@ -158,42 +226,23 @@ export default class ListWidget {
 
             $(this).toggleClass('selected')
             self.checkSelection()
-        }, function(event) {
-            self.onRowClick($(this))
-        })
-
-        this.objects.body.append(tr)
+        }, event)
     }
 
-    renderSortParams() {
-        this.objects.head.find('th').removeClass('sort asc desc')
-        this.objects.head.find('th[data-code="' + this.params.sort + '"]').addClass('sort ' + ((this.params.sortDir === 'asc') ? 'asc' : 'desc'))
-    }
-
-    reset() {
-        this.selected = [];
-        this.objects.body.html('')
-
-        this.objects.layers.found.hide()
-        this.objects.layers.empty.hide()
-
-        for (let key in this.objects.icons) {
-            this.objectDisable(this.objects.icons[key])
+    setLoadUrl(object) {
+        let url = object.data('url')
+        if (typeof url === 'string') {
+            this.urlLoad = url
         }
     }
 
-    saveParams() {
-        this.lock()
+    setObjectId(object) {
+        let id = object.data('id')
+        if (typeof id === 'undefined') {
+            return
+        }
 
-        let self = this
-        Ajax.post(App.url.setCookie, {
-            key: self.id,
-            value: JSON.stringify(self.params),
-        }, function() {
-            self.onAfterSaveParams()
-        }, function() {
-            self.unlock()
-        })
+        this.id += ('-' + id.toString())
     }
 
     toggle() {
@@ -216,9 +265,13 @@ export default class ListWidget {
             return
         }
 
-        this.objects.layers.animation.hide()
-        this.objects.layers.results.show()
+        this.layers.animation.hide()
+        this.layers.results.show()
 
         this.locked = false
+    }
+
+    unlockBulkButtons() {
+        this.enable(this.iconDelete)
     }
 }

@@ -24,12 +24,6 @@ class ImageController extends Abstract\AdminCrudController
                 'width' => 100
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => null,
-            'sort' => 'sort',
-            'sortDir' => 'asc',
-        ],
         'relations' => [],
         'select' => [
             'id',

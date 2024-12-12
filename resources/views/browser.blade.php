@@ -4,13 +4,12 @@
         'resources/css/netto/browser.css',
         'resources/js/netto/list.widget.js',
         'resources/js/netto/browser.js',
-        'resources/js/netto/jquery.longpress.js',
     ])
 @endpushonce
     <p>
         <span class="text-big header js-title">{{ $header }}</span>
     </p>
-    <div class="browser js-browser" data-dir="{{ DIRECTORY_SEPARATOR }}">
+    <div class="browser js-browser" data-url="{{ $url }}" data-dir="{{ DIRECTORY_SEPARATOR }}" data-upload-max-filesize="{{ ini_parse_quantity(ini_get('upload_max_filesize')) }}" data-post-max-size="{{ ini_parse_quantity(ini_get('post_max_size')) }}">
         <div class="block header">
             <div class="table table-header">
                 <div class="cell cell-path" dir="ltr">

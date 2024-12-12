@@ -34,12 +34,6 @@ class MenuController extends Abstract\AdminCrudController
                 'width' => 20
             ],
         ],
-        'params' => [
-            'page' => 1,
-            'perPage' => 10,
-            'sort' => 'name',
-            'sortDir' => 'asc',
-        ],
         'relations' => [],
         'select' => [
             'id',
@@ -66,10 +60,6 @@ class MenuController extends Abstract\AdminCrudController
         'edit' => 'admin.menu.edit',
         'store' => 'admin.menu.store',
         'update' => 'admin.menu.update',
-    ];
-
-    protected array $tabs = [
-        'edit' => ['menu_tab'],
     ];
 
     protected string $title = 'cms::main.list_menu';
