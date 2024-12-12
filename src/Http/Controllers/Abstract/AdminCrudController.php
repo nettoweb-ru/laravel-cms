@@ -176,7 +176,7 @@ abstract class AdminCrudController extends AdminController
             'results' => $data,
         ];
 
-        if (!empty($params['init'])) {
+        if ($params['init']) {
             $init = [
                 'title' => empty($this->list['title']) ? '' : __($this->list['title']),
                 'columns' => [],

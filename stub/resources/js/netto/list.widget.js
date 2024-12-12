@@ -163,9 +163,7 @@ export default class ListWidget {
             },
             params = this.params
 
-        if (!this.init) {
-            params.init = true
-        }
+        params.init = this.init ? 0 : 1
 
         Ajax.get(this.urlLoad, params, function(data) {
             if (!self.init) {
