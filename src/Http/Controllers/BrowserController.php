@@ -161,7 +161,7 @@ class BrowserController extends Abstract\AdminController
             ],
         ];
 
-        if (!empty($params['init'])) {
+        if ($params['init']) {
             $return['init'] = [
                 'path' => get_storage_path(self::STORAGE),
                 'url' => [

@@ -43,6 +43,11 @@ class Gallery extends ListWidget {
 
     initWidget(data) {
         this.objects.title.html(data.title)
+        
+        if (typeof data.url.toggle === 'string') {
+            this.iconToggle.show()
+        }
+
         super.initWidget(data)
 
         this.iconCreate.data('url', this.url.create)
@@ -57,6 +62,11 @@ class Gallery extends ListWidget {
         this.disable(this.iconCreate)
 
         super.lock()
+    }
+
+    lockBulkButtons() {
+        this.disable(this.iconToggle)
+        super.lockBulkButtons()
     }
 
     render(data) {
@@ -96,6 +106,11 @@ class Gallery extends ListWidget {
     reset() {
         this.objects.total.html('0')
         super.reset()
+    }
+
+    unlockBulkButtons() {
+        this.enable(this.iconToggle)
+        super.unlockBulkButtons()
     }
 }
 
