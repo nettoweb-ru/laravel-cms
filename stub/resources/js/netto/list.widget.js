@@ -99,8 +99,6 @@ export default class ListWidget {
     }
 
     initParams() {
-        //localStorage.removeItem(this.id)
-
         let params = localStorage.getItem(this.id)
 
         if (params === null) {

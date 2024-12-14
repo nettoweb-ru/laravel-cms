@@ -23,7 +23,10 @@ class Browser extends ListWidget {
         this.setObjectId(object)
         this.setInitDirectory(object)
         this.setUploadLimits(object)
+
         this.initParams()
+        this.params.dir = '/'
+
         this.initSortColumns()
         this.initUpload()
         this.load()
