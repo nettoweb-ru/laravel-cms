@@ -20,7 +20,7 @@ class Gallery extends ListWidget {
 
     getDefaultParams() {
         return {
-            sort: 'sort',
+            sort: 'id',
             sortDir: 'asc'
         }
     }
