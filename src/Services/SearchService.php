@@ -3,13 +3,17 @@
 namespace Netto\Services;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 abstract class SearchService
 {
     public const MIN_NEEDLE_LENGTH = 3;
+    public const CHUNK_SIZE = 500;
 
     private const TABLE = 'cms__search';
     private const MAX_NAME_LENGTH = 2048;
@@ -18,6 +22,9 @@ abstract class SearchService
     protected int $perPage;
     protected int $maxPreviewLength;
     protected string $highlightClass;
+
+    private array $paths = [];
+    private array $deleteId = [];
 
     /**
      * @param string $query
@@ -92,68 +99,68 @@ abstract class SearchService
     }
 
     /**
+     * @param bool $force
      * @return void
      */
-    public function reindex(): void
+    public function reindex(bool $force = false): void
     {
-        DB::table(self::TABLE)->delete();
-        DB::statement("ALTER TABLE `".self::TABLE."` AUTO_INCREMENT=1");
+        if ($force) {
+            DB::statement("TRUNCATE TABLE `".self::TABLE."`");
+        }
 
-        $paths = $this->paths();
-        if (empty($paths)) {
-            return;
+        foreach ($this->paths() as $data) {
+            $this->paths[] = $data['path'];
         }
 
         $languages = LanguageService::getList();
-        foreach ($paths as $item) {
-            $response = Http::get($item['path']);
-            usleep($this->delay);
 
-            if ($response->failed()) {
+        if (!$force) {
+            $service = &$this;
+
+            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(self::CHUNK_SIZE, function(Collection $collection) use ($service) {
+                foreach ($collection as $item) {
+                    if (in_array($item->url, $service->paths)) {
+                        unset($service->paths[array_search($item->url, $service->paths)]);
+                    } else {
+                        $service->deleteId[] = $item->id;
+                        continue;
+                    }
+
+                    try {
+                        [$langId, $name, $content, $updatedAt] = $this->parse($item->url);
+                    } catch (\Throwable $throwable) {
+                        Log::error($throwable->getMessage());
+                        continue;
+                    }
+
+                    DB::table(self::TABLE)->where('id', $item->id)->update([
+                        'lang_id' => $langId,
+                        'name' => $name,
+                        'url' => $item->url,
+                        'content' => $content,
+                        'updated_at' => $updatedAt,
+                    ]);
+                }
+            });
+
+            if ($this->deleteId) {
+                DB::table(self::TABLE)->whereIn('id', $this->deleteId)->delete();
+            }
+        }
+
+        foreach ($this->paths as $path) {
+            try {
+                [$langId, $name, $content, $updatedAt] = $this->parse($path);
+            } catch (\Throwable $throwable) {
+                Log::error($throwable->getMessage());
                 continue;
             }
-
-            $headers = $response->headers();
-            if (empty($headers['Content-Language'][0])) {
-                continue;
-            }
-
-            if (!array_key_exists($headers['Content-Language'][0], $languages)) {
-                continue;
-            }
-
-            $lang_id = $languages[$headers['Content-Language'][0]]['id'];
-
-            $updatedAt = null;
-            if (!empty($headers['Last-Modified'][0])) {
-                $date = Carbon::createFromFormat('D, d M Y H:i:s e', $headers['Last-Modified'][0], 'GMT');
-                $date->setTimezone(date_default_timezone_get());
-                $updatedAt = $date->format('Y-m-d H:i:s');
-            }
-
-            $body = $response->body();
-            $body = html_entity_decode($body);
-
-            preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
-            $name = $item['path'];
-            if (!empty($matches[2][0])){
-                $name = trim($matches[2][0]);
-            }
-
-            if (mb_strlen($name) > self::MAX_NAME_LENGTH) {
-                $name = mb_substr($name, 0, self::MAX_NAME_LENGTH);
-            }
-
-            $content = preg_replace([
-                "/<netto-skip-reindex>[\s\S]*?<\/netto-skip-reindex>/",
-                "/<head>[\s\S]*?<\/head>/"
-            ], '', $body);
 
             DB::table(self::TABLE)->insert([
-                'lang_id' => $lang_id,
+                'lang_id' => $langId,
                 'name' => $name,
-                'url' => $item['path'],
-                'content' => $this->content($content),
+                'url' => $path,
+                'content' => $content,
                 'updated_at' => $updatedAt,
             ]);
         }
@@ -175,7 +182,69 @@ abstract class SearchService
     }
 
     /**
+     * @param string $url
+     * @return array
+     * @throws Exception
+     */
+    private function parse(string $url): array
+    {
+        $response = Http::get($url);
+        if ($response->failed()) {
+            throw new Exception("Request returned status {$response->status()}");
+        }
+
+        $headers = $response->headers();
+        if (empty($headers['Content-Language'][0])) {
+            throw new Exception("Unable to detect language for url {$url}");
+        }
+
+        $languages = LanguageService::getList();
+        if (!array_key_exists($headers['Content-Language'][0], $languages)) {
+            throw new Exception("Language {$headers['Content-Language'][0]} is not configured for url {$url}");
+        }
+
+        usleep($this->delay);
+
+        $langId = $languages[$headers['Content-Language'][0]]['id'];
+
+        $body = $response->body();
+        $body = html_entity_decode($body);
+
+        preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
+
+        $name = $url;
+        if (!empty($matches[2][0])){
+            $name = trim($matches[2][0]);
+        }
+
+        if (mb_strlen($name) > self::MAX_NAME_LENGTH) {
+            $name = mb_substr($name, 0, self::MAX_NAME_LENGTH);
+        }
+
+        $content = preg_replace([
+            "/<netto-skip-reindex>[\s\S]*?<\/netto-skip-reindex>/",
+            "/<head>[\s\S]*?<\/head>/"
+        ], '', $body);
+
+        $updatedAt = null;
+        if (!empty($headers['Last-Modified'][0])) {
+            $date = Carbon::createFromFormat('D, d M Y H:i:s e', $headers['Last-Modified'][0], 'GMT');
+            $date->setTimezone(date_default_timezone_get());
+            $updatedAt = $date->format('Y-m-d H:i:s');
+        }
+
+        return [
+            $langId,
+            $name,
+            $this->content($content),
+            $updatedAt,
+        ];
+    }
+
+    /**
      * @param string $needle
+     * @param int $length
+     * @param int $cutLength
      * @param string $content
      * @return string
      */

@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class RefreshSearchDatabase extends Command
 {
-    protected $signature = 'cms:refresh-search';
+    protected $signature = 'cms:refresh-search {--force=0 : Truncate table before reindexing}';
     protected $description = 'Reindex search database';
 
     /**
@@ -15,6 +15,6 @@ class RefreshSearchDatabase extends Command
      */
     public function handle(): void
     {
-        (new SearchService())->reindex();
+        (new SearchService())->reindex(!empty($this->option('force')));
     }
 }
