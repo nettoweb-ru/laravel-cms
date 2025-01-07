@@ -15,6 +15,6 @@ class RefreshSearchDatabase extends Command
      */
     public function handle(): void
     {
-        (new SearchService())->reindex(!empty($this->option('force')));
+        (new SearchService(!empty($this->option('force'))))->reindex();
     }
 }

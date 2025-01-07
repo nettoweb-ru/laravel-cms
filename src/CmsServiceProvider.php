@@ -47,15 +47,16 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        date_default_timezone_set(config('cms.timezone', 'UTC'));
+
         define('CMS_LOCATION', config('cms::location', 'admin'));
         define('CMS_ADMIN_ROLE', 'administrator');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Console\InstallCommand::class,
-                Console\ImportCommand::class,
                 Console\RefreshSitemapCommand::class,
                 Console\RefreshSearchDatabase::class,
+                Console\ReportLogsCommand::class,
             ]);
 
             $this->publishes([
@@ -64,6 +65,20 @@ class CmsServiceProvider extends ServiceProvider
                 __DIR__.'/../stub/resources/css/netto' => resource_path('css/netto'),
                 __DIR__.'/../stub/resources/js/netto' => resource_path('js/netto'),
             ], 'laravel-assets');
+
+            $this->publishes([
+                __DIR__.'/../config/cms.php' => config_path('cms.php'),
+                __DIR__.'/../stub/app' => app_path(),
+                __DIR__.'/../stub/resources/views' => resource_path('views'),
+                __DIR__.'/../stub/resources/css/styles.css' => resource_path('css/styles.css'),
+                __DIR__.'/../stub/resources/js/styles.js' => resource_path('js/styles.js'),
+                __DIR__.'/../stub/vite.config.js' => base_path('vite.config.js'),
+                __DIR__.'/../stub/storage' => storage_path('app'),
+                __DIR__.'/../stub/storage/auto' => storage_path('app/auto'),
+                __DIR__.'/../stub/storage/public/files' => storage_path('app/public/files'),
+                __DIR__.'/../stub/storage/public/images' => storage_path('app/public/images'),
+                __DIR__.'/../stub/storage/public/auto' => storage_path('app/public/auto'),
+            ], 'nettoweb-laravel-cms');
         }
 
         /** @var Router $router */

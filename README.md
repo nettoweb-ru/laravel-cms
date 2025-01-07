@@ -19,7 +19,7 @@ php artisan migrate
 Publish assets:
 
 ```shell
-php artisan cms:install
+php artisan vendor:publish --tag=nettoweb-laravel-cms
 ```
 
 Use **admin@admin.com** and **password** to access the administrative section by opening the URL (replace *127.0.0.1* with your actual project location):

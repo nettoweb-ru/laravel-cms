@@ -24,6 +24,7 @@
       "laravel/tinker": "^2.8",
       "ext-intl": "*",
       "ext-simplexml": "*",
+      "ext-zip": "*",
       "intervention/image": "^3.3.3"
   },
   "require-dev": {

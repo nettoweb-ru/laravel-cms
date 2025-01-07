@@ -26,6 +26,16 @@ abstract class SearchService
     private array $paths = [];
     private array $deleteId = [];
 
+    private bool $force;
+
+    /**
+     * @param bool $force
+     */
+    public function __construct(bool $force = false)
+    {
+        $this->force = $force;
+    }
+
     /**
      * @param string $query
      * @param int $page
@@ -99,12 +109,11 @@ abstract class SearchService
     }
 
     /**
-     * @param bool $force
      * @return void
      */
-    public function reindex(bool $force = false): void
+    public function reindex(): void
     {
-        if ($force) {
+        if ($this->force) {
             DB::statement("TRUNCATE TABLE `".self::TABLE."`");
         }
 
@@ -112,9 +121,7 @@ abstract class SearchService
             $this->paths[] = $data['path'];
         }
 
-        $languages = LanguageService::getList();
-
-        if (!$force) {
+        if (!$this->force) {
             $service = &$this;
 
             DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(self::CHUNK_SIZE, function(Collection $collection) use ($service) {
@@ -205,11 +212,7 @@ abstract class SearchService
 
         usleep($this->delay);
 
-        $langId = $languages[$headers['Content-Language'][0]]['id'];
-
-        $body = $response->body();
-        $body = html_entity_decode($body);
-
+        $body = html_entity_decode($response->body());
         preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
 
         $name = $url;
@@ -234,7 +237,7 @@ abstract class SearchService
         }
 
         return [
-            $langId,
+            $languages[$headers['Content-Language'][0]]['id'],
             $name,
             $this->content($content),
             $updatedAt,
