@@ -43,9 +43,9 @@
                         <div class="cell list-bottom per-page">
                             <label>
                                 <select class="select narrow text js-per-page" name="per-page" title="{{ __('cms::main.title_per_page') }}">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
+                                    @foreach ([10, 20, 50] as $item)
+                                        <option value="{{ $item }}">{{ format_number($item) }}</option>
+                                    @endforeach
                                     <option value="0">{{ __('cms::main.general_list_all') }}</option>
                                 </select>
                             </label>
@@ -55,7 +55,7 @@
                                 <span class="text">{{ __('cms::main.general_list_total') }}:</span>
                             </div>
                             <div class="list-total-block">
-                                <span class="text js-counter-items">0</span>
+                                <span class="text js-counter-items">{{ format_number(0) }}</span>
                             </div>
                         </div>
                         <div class="cell list-bottom navigation">
@@ -73,7 +73,7 @@
                                         <span class="text">/</span>
                                     </div>
                                     <div class="cell">
-                                        <span class="text js-counter-pages">0</span>
+                                        <span class="text js-counter-pages">{{ format_number(0) }}</span>
                                     </div>
                                 </div>
                             </div>

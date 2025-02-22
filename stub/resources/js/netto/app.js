@@ -4,6 +4,15 @@ window.App = {
         styles: [],
     },
     lang: '',
+    locale: '',
+    locales: {
+        'en': 'en-US',
+        'fr': 'fr-FR',
+        'es': 'es-ES',
+        'de': 'de-DE',
+        'pt': 'pt-PT',
+        'ru': 'ru-RU'
+    },
     token: '',
     messages: {
         confirm: {
@@ -34,6 +43,30 @@ window.App = {
         window.open('/admin/download/?filename=' + filename)
     },
 
+    formatCurrency: function(value, currency, precision) {
+        if (typeof precision === 'undefined') {
+            precision = 2
+        }
+
+        return new Intl.NumberFormat(this.locale, { style: 'currency', currency: currency, maximumFractionDigits: precision}).format(value)
+    },
+
+    formatDate: function(value, options) {
+        if (typeof options == 'undefined') {
+            options = {}
+        }
+
+        return new Intl.DateTimeFormat(this.locale, options).format(value)
+    },
+
+    formatNumber: function(value, precision) {
+        if (typeof precision === 'undefined') {
+            precision = 0
+        }
+
+        return new Intl.NumberFormat(this.locale, { style: 'decimal', maximumFractionDigits: precision}).format(value)
+    },
+
     hideLanguages: function() {
         this.objects.blockLanguages.hide()
         this.langOpen = false
@@ -47,6 +80,8 @@ window.App = {
     },
 
     init: function() {
+        this.locale = this.locales[this.lang]
+
         this.initObjects()
         this.initDropdowns()
         this.initResize()

@@ -128,8 +128,8 @@ class List extends ListWidget {
 
         this.enable(this.iconInvert)
 
-        this.objects.total.html(data.nav.total)
-        this.objects.pages.html(data.nav.max)
+        this.objects.total.html(App.formatNumber(data.nav.total))
+        this.objects.pages.html(App.formatNumber(data.nav.max))
 
         let a, params
         for (a = 1; a <= data.nav.max; a++) {
@@ -141,7 +141,7 @@ class List extends ListWidget {
                 params.selected = true
             }
 
-            this.objects.page.append($('<option />', params).html(a))
+            this.objects.page.append($('<option />', params).html(App.formatNumber(a)))
         }
 
         if (data.nav.max > 1) {
