@@ -20,6 +20,23 @@ if (!function_exists('format_date')) {
     }
 }
 
+if (!function_exists('format_number')) {
+    /**
+     * @param int|float $number
+     * @param int|null $precision
+     * @return string
+     */
+    function format_number(int|float $number, ?int $precision = null): string
+    {
+        $formatter = new \NumberFormatter(config()->get('locale'), \NumberFormatter::DECIMAL);
+        if (!is_null($precision)) {
+            $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, abs($precision));
+        }
+
+        return (string) $formatter->format($number);
+    }
+}
+
 if (!function_exists('format_file_size')) {
     /**
      * @param int $size
@@ -45,7 +62,7 @@ if (!function_exists('format_file_size')) {
             $size = round($size, 2);
         }
 
-        return $size.' '.$prefix.'b';
+        return format_number($size)." {$prefix}b";
     }
 }
 
