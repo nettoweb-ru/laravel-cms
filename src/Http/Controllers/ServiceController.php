@@ -6,8 +6,6 @@ use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Request;
 use Netto\Http\Requests\CookieRequest;
-use Netto\Services\CmsService;
-
 use App\Http\Controllers\Controller;
 
 class ServiceController extends Controller
@@ -18,7 +16,7 @@ class ServiceController extends Controller
      */
     public function setCookie(CookieRequest $request): JsonResponse
     {
-        CmsService::setAdminCookie($request->get('key'), $request->get('value'));
+        set_admin_cookie($request->get('key'), $request->get('value'));
         return response()->json(true);
     }
 

@@ -14,7 +14,7 @@ class Languages extends Component
     {
         $language = app()->getLocale();
 
-        foreach (AdminLocale::SUPPORTED as $key => $value) {
+        foreach (AdminLocale::LANGUAGES as $key => $value) {
             $this->items[$key] = [
                 'title' => $value,
                 'current' => ($key == $language)

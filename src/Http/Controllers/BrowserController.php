@@ -5,11 +5,8 @@ namespace Netto\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-
-use Netto\Services\CmsService;
 
 class BrowserController extends Abstract\AdminController
 {

@@ -6,9 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Netto\Http\Requests\MenuItemRequest as WorkRequest;
 use Netto\Models\Menu as ParentModel;
 use Netto\Models\MenuItem as WorkModel;
-
 use Netto\Models\Role;
-use Netto\Services\CmsService;
 use Netto\Traits\CrudControllerParentActions;
 
 class MenuItemController extends Abstract\AdminCrudController
@@ -138,8 +136,8 @@ class MenuItemController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'boolean' => CmsService::getBooleanLabels(),
-            'role' => CmsService::getModelLabels(Role::class),
+            'boolean' => get_labels_boolean(),
+            'role' => get_labels(Role::class),
         ];
     }
 }

@@ -6,10 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="preconnect" href="//cdn.nettoweb.ru">
-    <link href="//cdn.nettoweb.ru/css/normalize/normalize.css" rel="stylesheet" type="text/css">
-    <link href="//cdn.nettoweb.ru/css/fonts/play.css" rel="stylesheet" type="text/css">
-    <script src="//cdn.nettoweb.ru/js/jquery/3.7.1.min.js"></script>
+    {!! load_cdn_resources(['normalize', 'play', 'jquery'], true) !!}
     @include('cms::components.favicons')
     @vite([
         'resources/css/netto/layers.css',

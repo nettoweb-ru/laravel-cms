@@ -8,6 +8,7 @@
     'value',
     'id',
     'dynamic',
+    'allowCustomValue',
 ])
 
 @if ($dynamic)
@@ -17,26 +18,26 @@
                     @foreach ($options as $k => $v)
                     @if (is_array($v))
                     @foreach ($v as $k2 => $v2)
-                {label: '{{ $v2 }}', value: '{{ $k2 }}'},
+                {label: '{!! escape_quotes($v2) !!}', value: '{!! escape_quotes($k2) !!}'},
                     @endforeach
                     @else
-                {label: '{{ $v }}', value: '{{ $k }}'},
+                {label: '{!! escape_quotes($v) !!}', value: '{!! escape_quotes($k) !!}'},
                 @endif
                 @endforeach
             ]
         </script>
     @endpush
 
-    <div class="grid-item-autocomplete js-autocomplete" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}">
+    <div class="grid-item-autocomplete js-autocomplete" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}" data-custom-value="{{ (int) $allowCustomValue }}">
         <div class="autocomplete-input">
-            <label for="{{ $name }}-autocomplete">
-                <input id="{{ $name }}-autocomplete" class="input text js-autocomplete-input" placeholder="{{ __('cms::main.general_autocomplete_prompt') }}" @if (!$multiple) value="{{ is_null($value) ? '' : $options[$value] }}" @endif/>
+            <label for="{{ $id }}-autocomplete">
+                <input id="{{ $id }}-autocomplete" class="input text js-autocomplete-input" placeholder="{{ __('cms::main.general_autocomplete_prompt') }}" @if (!$multiple) value="{{ is_null($value) ? '' : $options[$value] }}" @endif/>
             </label>
         </div>
         @if ($multiple)
-            <?php
-            $value = array_filter((array) $value);
-            ?>
+            @php
+                $value = array_filter((array) $value);
+            @endphp
             <div class="autocomplete-value js-autocomplete-multiple-hold">
                 @if ($value)
                     @foreach ($value as $item)

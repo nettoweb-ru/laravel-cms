@@ -6,7 +6,6 @@ use Illuminate\Http\RedirectResponse;
 use Netto\Http\Requests\RoleRequest as WorkRequest;
 use Netto\Models\Permission;
 use Netto\Models\Role as WorkModel;
-use Netto\Services\CmsService;
 use Netto\Traits\CrudControllerActions;
 
 class RoleController extends Abstract\AdminCrudController
@@ -103,7 +102,7 @@ class RoleController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'permission' => CmsService::getModelLabels(Permission::class),
+            'permission' => get_labels(Permission::class),
         ];
     }
 }

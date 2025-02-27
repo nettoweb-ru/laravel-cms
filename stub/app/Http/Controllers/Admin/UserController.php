@@ -13,7 +13,6 @@ use App\Models\User as WorkModel;
 use Netto\Http\Controllers\Abstract;
 use Netto\Models\Permission;
 use Netto\Models\Role;
-use Netto\Services\CmsService;
 use Netto\Traits\CrudControllerActions;
 
 class UserController extends Abstract\AdminCrudController
@@ -94,7 +93,7 @@ class UserController extends Abstract\AdminCrudController
         $this->addCrumbIndex();
 
         return $this->_edit($object, [
-            'balance' => number_format($object->getBalance(), 2),
+            'balance' => format_number($object->getBalance(), 2),
         ]);
     }
 
@@ -136,8 +135,8 @@ class UserController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'role' => CmsService::getModelLabels(Role::class),
-            'permission' => CmsService::getModelLabels(Permission::class),
+            'role' => get_labels(Role::class),
+            'permission' => get_labels(Permission::class),
         ];
     }
 

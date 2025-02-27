@@ -6,9 +6,6 @@ use Illuminate\Http\RedirectResponse;
 use Netto\Http\Requests\UserBalanceRequest as WorkRequest;
 use App\Models\User as ParentModel;
 use Netto\Models\UserBalance as WorkModel;
-
-use Netto\Models\Role;
-use Netto\Services\CmsService;
 use Netto\Traits\CrudControllerParentActions;
 
 class UserBalanceController extends Abstract\AdminCrudController
@@ -106,7 +103,7 @@ class UserBalanceController extends Abstract\AdminCrudController
     {
         return [
             'created_at' => format_date($object->created_at),
-            'value' => $object->value,
+            'value' => format_number($object->value, 2),
         ];
     }
 }

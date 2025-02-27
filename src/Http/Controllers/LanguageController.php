@@ -5,7 +5,6 @@ namespace Netto\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Netto\Http\Requests\LanguageRequest as WorkRequest;
 use Netto\Models\Language as WorkModel;
-use Netto\Services\CmsService;
 use Netto\Traits\CrudControllerActions;
 
 class LanguageController extends Abstract\AdminCrudController
@@ -117,7 +116,7 @@ class LanguageController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'boolean' => CmsService::getBooleanLabels(),
+            'boolean' => get_labels_boolean(),
         ];
     }
 }

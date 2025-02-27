@@ -7,7 +7,6 @@ use Illuminate\View\View;
 use Netto\Http\Requests\MenuRequest as WorkRequest;
 use Netto\Models\Language;
 use Netto\Models\Menu as WorkModel;
-use Netto\Services\CmsService;
 use Netto\Services\LanguageService;
 use Netto\Services\MenuService;
 use Netto\Traits\CrudControllerActions;
@@ -122,7 +121,7 @@ class MenuController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'language' => CmsService::getModelLabels(Language::class),
+            'language' => get_labels(Language::class),
             'menu_items' => MenuService::getDropdownOptions($object->id)
         ];
     }

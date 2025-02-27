@@ -9,7 +9,6 @@
     'label' => '',
     'messages' => [],
     'lang' => '',
-    'interface' => app()->getLocale(),
 ])
 
 @pushonce('head')
@@ -17,10 +16,7 @@
         'resources/css/styles.css',
         'resources/js/styles.js',
     ])
-    <script src="//cdn.nettoweb.ru/js/ckeditor/ckeditor.js"></script>
-    @if ($interface != 'en')
-        <script src="//cdn.nettoweb.ru/js/ckeditor/translations/{{ $interface }}.js"></script>
-    @endif
+    {!! load_cdn_resources('ckeditor') !!}
     <link rel="stylesheet" href="{{ asset('assets/css/editor.css') }}">
 @endpushonce
 

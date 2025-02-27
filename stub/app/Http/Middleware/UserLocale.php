@@ -5,9 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Netto\Services\LanguageService;
+use Netto\Http\Middleware\BaseLocale;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserLocale
+class UserLocale extends BaseLocale
 {
     /**
      * @param Request $request
@@ -22,17 +23,8 @@ class UserLocale
         foreach (LanguageService::getList() as $key => $value) {
             $locales[$key] = $value['locale'];
         }
-        $locale = $locales[$language];
 
-        app()->setLocale($language);
-        setlocale(LC_ALL, $locale.'.utf8');
-
-        config()->set('locale', $locale);
-        config()->set('text_dir', get_text_direction($language));
-
-        $response = $next($request);
-        $response->header('Content-Language', $language);
-
-        return $response;
+        set_language($language, $locales[$language]);
+        return $this->setContentHeader($next($request), $language);
     }
 }

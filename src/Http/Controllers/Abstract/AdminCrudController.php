@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Illuminate\Database\Eloquent\Model as WorkModel;
 use Illuminate\Foundation\Http\FormRequest as WorkRequest;
-use Netto\Services\CmsService;
 
 abstract class AdminCrudController extends AdminController
 {
@@ -41,7 +40,7 @@ abstract class AdminCrudController extends AdminController
         $object = new $this->class();
         $builder = $object::query();
 
-        CmsService::setBuilderFilter($builder, $filter);
+        set_builder_filter($builder, $filter);
 
         foreach ($builder->get() as $model) {
             $model->delete();
@@ -143,7 +142,7 @@ abstract class AdminCrudController extends AdminController
         $class = $this->class;
 
         $builder = $class::select($this->list['select'])->orderBy($params['sort'], $params['sortDir'])->with($this->list['relations']);
-        CmsService::setBuilderFilter($builder, $filter);
+        set_builder_filter($builder, $filter);
 
         $collection = $builder->get();
 
@@ -246,7 +245,7 @@ abstract class AdminCrudController extends AdminController
         $object = new $this->class();
         $builder = $object::query();
 
-        CmsService::setBuilderFilter($builder, $filter);
+        set_builder_filter($builder, $filter);
 
         $true = [];
         $false = [];
@@ -261,7 +260,7 @@ abstract class AdminCrudController extends AdminController
 
         if ($true) {
             $builder = $object::query();
-            CmsService::setBuilderFilter($builder, [
+            set_builder_filter($builder, [
                 'id' => [
                     'operator' => '=',
                     'value' => $true,
@@ -275,7 +274,7 @@ abstract class AdminCrudController extends AdminController
 
         if ($false) {
             $builder = $object::query();
-            CmsService::setBuilderFilter($builder, [
+            set_builder_filter($builder, [
                 'id' => [
                     'operator' => '=',
                     'value' => $false,
@@ -309,7 +308,7 @@ abstract class AdminCrudController extends AdminController
      */
     protected function getAutoSort(WorkModel $object): int
     {
-        return CmsService::getModelSort($object);
+        return get_next_sort($object);
     }
 
     /**
@@ -337,7 +336,7 @@ abstract class AdminCrudController extends AdminController
         }
 
         $builder = $return::query();
-        CmsService::setBuilderFilter($builder, $filter);
+        set_builder_filter($builder, $filter);
 
         $return = $builder->get();
         if (!count($return)) {

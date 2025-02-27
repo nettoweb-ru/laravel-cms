@@ -48,8 +48,6 @@ class CmsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         date_default_timezone_set(config('cms.timezone', 'UTC'));
-
-        define('CMS_LOCATION', config('cms::location', 'admin'));
         define('CMS_ADMIN_ROLE', 'administrator');
 
         if ($this->app->runningInConsole()) {

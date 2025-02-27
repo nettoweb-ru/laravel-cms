@@ -8,7 +8,6 @@ use Netto\Http\Requests\PublicationRequest as WorkRequest;
 use Netto\Models\Album;
 use Netto\Models\Language;
 use Netto\Models\Publication as WorkModel;
-use Netto\Services\CmsService;
 use Netto\Services\LanguageService;
 use Netto\Traits\CrudControllerActions;
 
@@ -122,8 +121,8 @@ class PublicationController extends Abstract\AdminCrudController
     protected function getReference($object): array
     {
         return [
-            'language' => CmsService::getModelLabels(Language::class),
-            'albums' => CmsService::getModelLabels(Album::class, 'name', true),
+            'language' => get_labels(Language::class),
+            'albums' => get_labels(Album::class),
         ];
     }
 }

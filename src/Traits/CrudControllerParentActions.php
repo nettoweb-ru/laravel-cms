@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Netto\Services\CmsService;
 
 trait CrudControllerParentActions
 {
@@ -214,7 +213,7 @@ trait CrudControllerParentActions
      */
     protected function getAutoSort(Model $object): int
     {
-        return CmsService::getModelSort($object, [
+        return get_next_sort($object, [
             $this->parentAttr => [
                 'operator' => '=',
                 'value' => $object->{$this->parentAttr},

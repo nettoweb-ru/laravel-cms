@@ -175,6 +175,7 @@ class Form {
             let parent = $(this),
                 name = parent.data('name'),
                 multiple = (parseInt(parent.data('multiple')) === 1),
+                customValue = (parseInt(parent.data('custom-value')) === 1),
                 options = autocomplete[name]
 
             parent.find('.js-autocomplete-input').autocomplete({
@@ -186,17 +187,22 @@ class Form {
                     return false
                 },
                 change: function(event, ui) {
-                    event.target.value = ''
-
-                    if (!multiple) {
-                        let hidden = parent.find('.js-autocomplete-single')
-                        if (ui.item === null) {
-                            hidden.val('')
-                        } else {
-                            hidden.val(ui.item.value)
-                            event.target.value = ui.item.label
-                        }
+                    if (multiple) {
+                        event.target.value = ''
+                        return
                     }
+
+                    let hidden = parent.find('.js-autocomplete-single')
+                    if (ui.item !== null) {
+                        event.target.value = ui.item.label
+                        hidden.val(ui.item.value)
+                    } else if (!customValue) {
+                        event.target.value = ''
+                        hidden.val('')
+                    } else {
+                        hidden.val(event.target.value)
+                    }
+
                 },
                 select: function(event, ui) {
                     if (multiple) {

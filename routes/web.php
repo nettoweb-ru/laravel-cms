@@ -24,7 +24,7 @@ use Netto\Http\Controllers\UserBalanceController;
 use App\Http\Controllers\Admin\UserController;
 use Netto\Http\Controllers\VerifyEmailController;
 
-Route::prefix(CMS_LOCATION)->name('admin.')->group(function() {
+Route::prefix(config('cms.location', 'admin'))->name('admin.')->group(function() {
     Route::middleware('admin.guest')->group(function() {
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.store');

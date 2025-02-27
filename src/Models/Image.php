@@ -4,7 +4,6 @@ namespace Netto\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Netto\Services\CmsService;
 use Netto\Traits\HasMultiLangAttributes;
 use Netto\Traits\HasUploadedFiles;
 
@@ -38,7 +37,7 @@ class Image extends Model
         parent::boot();
 
         self::saving(function($model) {
-            $model->setAttribute('thumb', CmsService::imageResize($model->filename, $model->files['thumb']));
+            $model->setAttribute('thumb', image_resize($model->filename, $model->files['thumb']));
         });
 
         self::updated(function($model) {
