@@ -56,7 +56,6 @@ return [
     "error_saving_model" => "Échec de l'enregistrement du modèle",
     "error_upload_max_size_exceeded" => "La taille maximale du fichier de téléchargement est dépassée",
     "general_access" => "Accéder",
-    "general_autocomplete_prompt" => "entrez le titre",
     "general_balance_history" => "Historique du solde",
     "general_browser" => "Fichiers",
     "general_browser_date" => "Date de modification",

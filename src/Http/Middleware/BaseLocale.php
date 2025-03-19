@@ -13,8 +13,11 @@ abstract class BaseLocale
      */
     protected function setContentHeader(Response $response, string $language): Response
     {
-        /** @var \Illuminate\Http\Response $response */
-        $response->header('Content-Language', $language);
+        if (method_exists($response, 'header')) {
+            /** @var \Illuminate\Http\Response $response */
+            $response->header('Content-Language', $language);
+        }
+
         return $response;
     }
 }

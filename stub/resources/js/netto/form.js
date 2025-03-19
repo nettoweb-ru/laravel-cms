@@ -180,7 +180,7 @@ class Form {
 
             parent.find('.js-autocomplete-input').autocomplete({
                 source: function(request, response) {
-                    response($.ui.autocomplete.filter(options, request.term).slice(0, 3))
+                    response($.ui.autocomplete.filter(options, request.term).slice(0, 5))
                 },
                 focus(event, ui) {
                     event.target.value = ui.item.label

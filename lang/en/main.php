@@ -56,7 +56,6 @@ return [
     "error_saving_model" => "Failed to save model",
     "error_upload_max_size_exceeded" => "Maximum upload file size is exceeded",
     "general_access" => "Access",
-    "general_autocomplete_prompt" => "enter title",
     "general_balance_history" => "Balance history",
     "general_browser" => "Files",
     "general_browser_date" => "Date modified",

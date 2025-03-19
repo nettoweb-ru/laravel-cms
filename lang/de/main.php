@@ -56,7 +56,6 @@ return [
     "error_saving_model" => "Modell konnte nicht gespeichert werden",
     "error_upload_max_size_exceeded" => "Die maximale Größe der Upload-Datei wurde überschritten",
     "general_access" => "Zugang",
-    "general_autocomplete_prompt" => "geben Sie den Titel ein",
     "general_balance_history" => "Saldohistorie",
     "general_browser" => "Dateien",
     "general_browser_date" => "Änderungsdatum",

@@ -122,14 +122,12 @@ abstract class SearchService
         }
 
         if (!$this->force) {
-            $service = &$this;
-
-            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(self::CHUNK_SIZE, function(Collection $collection) use ($service) {
+            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(self::CHUNK_SIZE, function(Collection $collection) {
                 foreach ($collection as $item) {
-                    if (in_array($item->url, $service->paths)) {
-                        unset($service->paths[array_search($item->url, $service->paths)]);
+                    if (in_array($item->url, $this->paths)) {
+                        unset($this->paths[array_search($item->url, $this->paths)]);
                     } else {
-                        $service->deleteId[] = $item->id;
+                        $this->deleteId[] = $item->id;
                         continue;
                     }
 

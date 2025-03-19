@@ -56,7 +56,6 @@ return [
     "error_saving_model" => "Ошибка при сохранении модели",
     "error_upload_max_size_exceeded" => "Превышен максимально допустимый размер загружаемого файла",
     "general_access" => "Доступ",
-    "general_autocomplete_prompt" => "введите название",
     "general_balance_history" => "История баланса",
     "general_browser" => "Файлы",
     "general_browser_date" => "Дата изменения",

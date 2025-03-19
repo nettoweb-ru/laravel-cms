@@ -31,7 +31,7 @@
     <div class="grid-item-autocomplete js-autocomplete" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}" data-custom-value="{{ (int) $allowCustomValue }}">
         <div class="autocomplete-input">
             <label for="{{ $id }}-autocomplete">
-                <input id="{{ $id }}-autocomplete" class="input text js-autocomplete-input" placeholder="{{ __('cms::main.general_autocomplete_prompt') }}" @if (!$multiple) value="{{ is_null($value) ? '' : $options[$value] }}" @endif/>
+                <input id="{{ $id }}-autocomplete" class="input text js-autocomplete-input" placeholder="…" @if (!$multiple) value="{{ is_null($value) ? '' : $options[$value] }}" @endif/>
             </label>
         </div>
         @if ($multiple)

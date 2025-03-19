@@ -56,7 +56,6 @@ return [
     "error_saving_model" => "Falha ao salvar modelo",
     "error_upload_max_size_exceeded" => "O tamanho máximo do arquivo para upload foi excedido",
     "general_access" => "Acesso",
-    "general_autocomplete_prompt" => "insira o título",
     "general_balance_history" => "Histórico de saldo",
     "general_browser" => "Arquivos",
     "general_browser_date" => "Modificação de data",
