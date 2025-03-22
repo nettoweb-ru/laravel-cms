@@ -29,31 +29,6 @@ trait HasUploadedFiles
     }
 
     /**
-     * @param array $rules
-     * @return array
-     */
-    public function getUploadRules(array $rules): array
-    {
-        $return = [];
-        foreach ($rules as $attribute => $value) {
-            $old = $attribute;
-            $new = $attribute.'_new';
-
-            $required = false;
-            if (in_array('required', $value)) {
-                $required = true;
-                unset($value[array_search('required', $value)]);
-            }
-
-            $return[$new] = array_merge(['sometimes'], $value);
-            $return[$old] = $required ? ['required'] : ['nullable'];
-            $return[$old][] = 'string';
-        }
-
-        return $return;
-    }
-
-    /**
      * @param array $attributes
      * @return bool
      */

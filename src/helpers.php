@@ -1,4 +1,8 @@
 <?php
+
+use Illuminate\Support\ViewErrorBag;
+use Netto\Services\LanguageService;
+
 if (!function_exists('escape_quotes')) {
     /**
      * @param string $string
@@ -86,6 +90,23 @@ if (!function_exists('get_auto_upload_path')) {
     }
 }
 
+if (!function_exists('get_errors_multilang')) {
+    /**
+     * @param ViewErrorBag $errorBag
+     * @param string $attribute
+     * @return array
+     */
+    function get_errors_multilang(ViewErrorBag $errorBag, string $attribute): array
+    {
+        $return = [];
+        foreach (LanguageService::getList() as $lang => $value) {
+            $return[$lang] = ($errors = $errorBag->get("{$attribute}|{$lang}")) ? $errors : [];
+        }
+
+        return $return;
+    }
+}
+
 if (!function_exists('get_labels')) {
     /**
      * @param string $class
@@ -144,6 +165,47 @@ if (!function_exists('get_next_sort')) {
         }
 
         $return += 10;
+        return $return;
+    }
+}
+
+if (!function_exists('get_rules_multilang')) {
+    /**
+     * @param array $rules
+     * @return array
+     */
+    function get_rules_multilang(array $rules): array
+    {
+        $return = [];
+        foreach (LanguageService::getList() as $lang => $value) {
+            foreach ($rules as $attribute => $array) {
+                $return["{$attribute}|{$lang}"] = $array;
+            }
+        }
+
+        return $return;
+    }
+}
+
+if (!function_exists('get_rules_upload')) {
+    function get_rules_upload(array $rules): array
+    {
+        $return = [];
+        foreach ($rules as $attribute => $value) {
+            $old = $attribute;
+            $new = $attribute.'_new';
+
+            $required = false;
+            if (in_array('required', $value)) {
+                $required = true;
+                unset($value[array_search('required', $value)]);
+            }
+
+            $return[$new] = array_merge(['sometimes'], $value);
+            $return[$old] = $required ? ['required'] : ['nullable'];
+            $return[$old][] = 'string';
+        }
+
         return $return;
     }
 }

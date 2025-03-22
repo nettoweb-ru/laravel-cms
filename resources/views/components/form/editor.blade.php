@@ -16,7 +16,7 @@
         'resources/css/styles.css',
         'resources/js/styles.js',
     ])
-    {!! load_cdn_resources('ckeditor') !!}
+    @php load_cdn_resources('ckeditor') @endphp
     <link rel="stylesheet" href="{{ asset('assets/css/editor.css') }}">
 @endpushonce
 

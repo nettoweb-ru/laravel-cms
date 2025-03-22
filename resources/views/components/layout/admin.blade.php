@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {!! load_cdn_resources(['normalize', 'play', 'jquery', 'longpress'], true) !!}
+    @php load_cdn_resources(['normalize', 'play', 'jquery', 'longpress'], true) @endphp
     @include('cms::components.favicons')
     @vite([
         'resources/css/netto/layers.css',

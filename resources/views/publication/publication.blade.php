@@ -1,5 +1,5 @@
 @pushonce('head')
-    {!! load_cdn_resources('ui') !!}
+    @php load_cdn_resources('ui') @endphp
 @endpushonce
 
 <x-cms::layout.admin :title="$title" :chain="$chain" :header="$header">

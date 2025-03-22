@@ -2,7 +2,6 @@
 namespace Netto\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Netto\Models\Image;
 
 class ImageRequest extends FormRequest
 {
@@ -11,13 +10,11 @@ class ImageRequest extends FormRequest
      */
     public function rules(): array
     {
-        $object = new Image();
-
         return array_merge(
-            $object->getUploadRules([
+            get_rules_upload([
                 'filename' => ['required', 'mimes:jpg,png,gif,webp'],
             ]),
-            $object->getMultiLangRules([
+            get_rules_multilang([
                 'caption' => ['nullable', 'string', 'max:255'],
             ]),
             [

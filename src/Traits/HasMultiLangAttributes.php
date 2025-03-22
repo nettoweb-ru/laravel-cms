@@ -16,75 +16,43 @@ use Netto\Services\LanguageService;
 trait HasMultiLangAttributes
 {
     /**
-     * @return array
+     * @param $name
+     * @return mixed
      */
-    public function getMultiLangAttributes(): array
-    {
-        $return = [];
-        foreach (LanguageService::getList() as $lang => $value) {
-            foreach ($this->multiLang as $attribute) {
-                $return[] = "{$attribute}|{$lang}";
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param string $name
-     * @param string|null $lang
-     * @return string|array|null
-     */
-    public function getMultiLangAttributeValue(string $name, ?string $lang = null): string|array|null
+    public function __get($name): mixed
     {
         if (in_array($name, $this->multiLang)) {
-            if (is_null($lang)) {
-                $return = $this->empty();
-                if (!$this->exists) {
-                    return $return;
-                }
-
-                foreach ($this->translated->all() as $item) {
-                    $return[$item->slug] = $item->pivot->{$name};
-                }
-
-                return $return;
-            }
-
             if ($this->exists) {
+                $lang = app()->getLocale();
+
                 foreach ($this->translated->all() as $item) {
                     if ($item->slug == $lang) {
                         return (string) $item->pivot->{$name};
                     }
                 }
             }
+
+            return null;
         }
 
-        return null;
+        return parent::__get($name);
     }
 
     /**
-     * @return string
-     */
-    public function getMultiLangClass(): string
-    {
-        return $this->multiLangClass;
-    }
-
-    /**
-     * @param ViewErrorBag $errorBag
-     * @param string $attribute
+     * @param string $name
      * @return array
      */
-    public function getMultiLangInputErrors(ViewErrorBag $errorBag, string $attribute): array
+    public function getTranslated(string $name): array
     {
         $return = [];
-        if (!in_array($attribute, $this->multiLang)) {
-            return $return;
+        foreach (LanguageService::getList() as $key => $value) {
+            $return[$key] = '';
         }
 
-        foreach (LanguageService::getList() as $lang => $value) {
-            $return[$lang] = ($errors = $errorBag->get("{$attribute}|{$lang}")) ? $errors : [];
+        if ($this->exists) {
+            foreach ($this->translated->all() as $item) {
+                $return[$item->slug] = $item->pivot->{$name};
+            }
         }
 
         return $return;
@@ -101,26 +69,10 @@ trait HasMultiLangAttributes
             return $return;
         }
 
-        $old = $this->getMultiLangAttributeValue($attribute);
+        $old = $this->getTranslated($attribute);
 
         foreach (LanguageService::getList() as $lang => $value) {
             $return[$lang] = old("{$attribute}|{$lang}", $old[$lang]);
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param array $rules
-     * @return array
-     */
-    public function getMultiLangRules(array $rules): array
-    {
-        $return = [];
-        foreach (LanguageService::getList() as $lang => $value) {
-            foreach ($rules as $attribute => $array) {
-                $return["{$attribute}|{$lang}"] = $array;
-            }
         }
 
         return $return;
@@ -199,22 +151,5 @@ trait HasMultiLangAttributes
     public function translated(): BelongsToMany
     {
         return $this->belongsToMany(Language::class, $this->multiLangClass, 'object_id', 'lang_id')->withPivot($this->multiLang)->using($this->multiLangClass);
-    }
-
-    /**
-     * @return array
-     */
-    private function empty(): array
-    {
-        static $return;
-
-        if (is_null($return)) {
-            $return = [];
-            foreach (LanguageService::getList() as $key => $value) {
-                $return[$key] = '';
-            }
-        }
-
-        return $return;
     }
 }
