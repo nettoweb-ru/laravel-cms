@@ -23,26 +23,7 @@ class UserController extends Abstract\AdminCrudController
     protected string $id = 'user';
 
     protected array $list = [
-        'columns' => [
-            'id' => [
-                'title' => 'cms::main.attr_id',
-                'width' => 5
-            ],
-            'name' => [
-                'title' => 'cms::auth.name',
-                'width' => 60
-            ],
-            'email' => [
-                'title' => 'cms::auth.email',
-                'width' => 35
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'name',
-            'email',
-        ],
         'title' => 'cms::main.list_user',
         'url' => [
             'create',
@@ -114,18 +95,6 @@ class UserController extends Abstract\AdminCrudController
     public function update(WorkRequest $request, string $id): RedirectResponse
     {
         return $this->_update($request, $id);
-    }
-
-    /**
-     * @param WorkModel $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'name' => $object->name,
-            'email' => $object->email,
-        ];
     }
 
     /**

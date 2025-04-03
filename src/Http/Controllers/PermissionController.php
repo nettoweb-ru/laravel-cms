@@ -15,22 +15,7 @@ class PermissionController extends Abstract\AdminCrudController
     protected string $id = 'permission';
 
     protected array $list = [
-        'columns' => [
-            'name' => [
-                'title' => 'cms::main.attr_name',
-                'width' => 60
-            ],
-            'slug' => [
-                'title' => 'cms::main.attr_slug',
-                'width' => 40
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'name',
-            'slug',
-        ],
         'title' => 'cms::main.list_permission',
         'url' => [
             'create',
@@ -76,17 +61,5 @@ class PermissionController extends Abstract\AdminCrudController
     public function update(WorkRequest $request, string $id): RedirectResponse
     {
         return $this->_update($request, $id);
-    }
-
-    /**
-     * @param WorkModel $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'name' => $object->name,
-            'slug' => $object->slug,
-        ];
     }
 }

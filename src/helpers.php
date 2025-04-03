@@ -29,7 +29,7 @@ if (!function_exists('format_date')) {
             $value = strtotime($value);
         }
 
-        return (new \IntlDateFormatter(config('locale'), $dateType, $timeType))->format($value);
+        return (new \IntlDateFormatter(setlocale(LC_TIME, '0'), $dateType, $timeType))->format($value);
     }
 }
 
@@ -70,7 +70,7 @@ if (!function_exists('format_number')) {
      */
     function format_number(int|float $number, ?int $precision = null): string
     {
-        $formatter = new \NumberFormatter(config('locale'), \NumberFormatter::DECIMAL);
+        $formatter = new \NumberFormatter(setlocale(LC_NUMERIC, '0')."@numbers=latn", \NumberFormatter::DECIMAL);
         if (!is_null($precision)) {
             $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, abs($precision));
         }
@@ -385,11 +385,15 @@ if (!function_exists('set_language')) {
      */
     function set_language(string $language, string $locale): void
     {
-        setlocale(LC_ALL, $locale.'.utf8');
-
         app()->setLocale($language);
 
-        config()->set('locale', $locale);
+        $suffix = config('cms.utf8suffix', 'utf8');
+        $regional = "{$locale}.{$suffix}";
+
+        setlocale(LC_MONETARY, $regional);
+        setlocale(LC_NUMERIC, $regional);
+        setlocale(LC_TIME, $regional);
+
         config()->set('text_dir', get_text_direction($language));
     }
 }

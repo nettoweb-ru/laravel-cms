@@ -141,7 +141,13 @@ abstract class AdminCrudController extends AdminController
         /** @var Builder $class */
         $class = $this->class;
 
-        $builder = $class::select($this->list['select'])->orderBy($params['sort'], $params['sortDir'])->with($this->list['relations']);
+        $select = isset($params['columns']) ? array_merge(['id'], array_keys($params['columns'])) : ['id'];
+        if (isset($this->route['toggle'])) {
+            $select[] = 'is_active';
+        }
+        $select = array_unique($select);
+
+        $builder = $class::select($select)->orderBy($params['sort'], $params['sortDir'])->with($this->list['relations']);
         set_builder_filter($builder, $filter);
 
         $collection = $builder->get();
@@ -178,14 +184,8 @@ abstract class AdminCrudController extends AdminController
         if ($params['init']) {
             $init = [
                 'title' => empty($this->list['title']) ? '' : __($this->list['title']),
-                'columns' => [],
                 'url' => [],
             ];
-
-            foreach ($this->list['columns'] as $key => $value) {
-                $value['title'] = __($value['title']);
-                $init['columns'][$key] = $value;
-            }
 
             foreach ($this->list['url'] as $value) {
                 $init['url'][$value] = route(...$this->route[$value]);
@@ -315,7 +315,26 @@ abstract class AdminCrudController extends AdminController
      * @param $object
      * @return array
      */
-    abstract protected function getItem($object): array;
+    protected function getItem($object): array
+    {
+        $return = $object->toArray();
+
+        foreach ($return as $key => $value) {
+            if ($key == 'is_active') {
+                $return[$key] = (bool) $value;
+                continue;
+            }
+
+            if (str_starts_with($key, 'is_')) {
+                $return[$key] = $value ? __('cms::main.general_yes') : __('cms::main.general_no');
+            }
+            elseif (str_ends_with($key, '_at')) {
+                $return[$key] = format_date($value);
+            }
+        }
+
+        return $return;
+    }
 
     /**
      * @param string $className

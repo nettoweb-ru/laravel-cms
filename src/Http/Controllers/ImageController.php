@@ -98,8 +98,11 @@ class ImageController extends Abstract\AdminCrudController
      */
     protected function getItem($object): array
     {
-        return [
-            'thumb' => $object->getPreview(),
-        ];
+        $return = parent::getItem($object);
+        if (isset($return['thumb'])) {
+            $return['thumb'] = $object->getPreview();
+        }
+
+        return $return;
     }
 }

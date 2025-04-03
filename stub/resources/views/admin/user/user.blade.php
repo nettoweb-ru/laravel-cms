@@ -20,7 +20,17 @@
         </x-slot>
         @if ($object->id)
             <x-slot name="tab2">
-                <x-cms::list :url="route('admin.user.balance.list', ['user' => $object], false)" id="balance-{{ $object->id }}" />
+                <x-cms::list
+                    :url="route('admin.user.balance.list', ['user' => $object], false)"
+                    id="balance-{{ $object->id }}"
+                    :columns="[
+                        'id' => __('cms::main.attr_id'),
+                        'value' => __('cms::main.attr_value'),
+                        'created_at' => __('cms::main.attr_created_at'),
+                        'updated_at' => __('cms::main.attr_updated_at'),
+                    ]"
+                    :default="['value', 'created_at']"
+                />
             </x-slot>
         @endif
     </x-cms::tabs>

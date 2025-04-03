@@ -65,8 +65,46 @@
     position: relative;
 }
 
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-visible{
+    position: relative;
+    width: inherit;
+}
+
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-data{
     width: inherit;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown{
+    position: absolute;
+    top:0;
+    left:0;
+    background: var(--color-light-gray-2);
+    border-style:solid;
+    border-color: var(--color-background-dark);
+    border-width: 0 1px 1px;
+    color:var(--color-gray);
+    display: none;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table{
+    width:100%;
+    display:table;
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table:hover{
+    cursor: pointer;
+    color:var(--color-main);
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table.selected{
+    background-color:var(--color-background);
+}
+
+.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table .list-column-cell{
+    width: inherit;
+    display: table-cell;
+    vertical-align: middle;
+    padding:3px 8px;
 }
 
 .list .list-block.content table{
@@ -175,7 +213,7 @@ body.rtl .list .list-block.content table thead th.sort span:after{
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom select.narrow{
-    width:60px;
+    width: 65px;
 }
 
 .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total{

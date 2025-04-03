@@ -16,22 +16,7 @@ class UserBalanceController extends Abstract\AdminCrudController
     protected string $id = 'balance';
 
     protected array $list = [
-        'columns' => [
-            'created_at' => [
-                'title' => 'cms::main.attr_created_at',
-                'width' => 60
-            ],
-            'value' => [
-                'title' => 'cms::main.attr_value',
-                'width' => 40
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'created_at',
-            'value',
-        ],
         'url' => [
             'create',
             'delete',
@@ -101,9 +86,12 @@ class UserBalanceController extends Abstract\AdminCrudController
      */
     protected function getItem($object): array
     {
-        return [
-            'created_at' => format_date($object->created_at),
-            'value' => format_number($object->value, 2),
-        ];
+        $return = parent::getItem($object);
+
+        if (isset($return['value'])) {
+            $return['value'] = format_number($object->value, 2);
+        }
+
+        return $return;
     }
 }

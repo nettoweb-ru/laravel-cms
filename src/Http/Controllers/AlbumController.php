@@ -16,22 +16,7 @@ class AlbumController extends Abstract\AdminCrudController
     protected string $id = 'album';
 
     protected array $list = [
-        'columns' => [
-            'sort' => [
-                'title' => 'cms::main.attr_sort',
-                'width' => 5
-            ],
-            'name' => [
-                'title' => 'cms::main.attr_name',
-                'width' => 95
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'name',
-            'sort',
-        ],
         'title' => 'cms::main.list_album',
         'url' => [
             'create',
@@ -77,17 +62,5 @@ class AlbumController extends Abstract\AdminCrudController
     public function update(WorkRequest $request, string $id): RedirectResponse
     {
         return $this->_update($request, $id);
-    }
-
-    /**
-     * @param WorkModel $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'name' => $object->name,
-            'sort' => $object->sort,
-        ];
     }
 }

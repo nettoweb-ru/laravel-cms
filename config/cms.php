@@ -9,6 +9,7 @@ return [
     'default_email' => '',
     'service_email' => '',
     'timezone' => 'UTC',
+    'utf8suffix' => 'utf8',
     'cdn' => [
         'url' => '//cdn.nettoweb.ru',
         'files' => [
@@ -24,6 +25,7 @@ return [
             ],
             'ui' => [
                 'js/jquery.ui/1.13.2.js',
+                'css/jquery.ui/1.13.2.css'
             ],
             'normalize' => [
                 'css/normalize/normalize.css',

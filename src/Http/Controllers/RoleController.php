@@ -84,18 +84,6 @@ class RoleController extends Abstract\AdminCrudController
     }
 
     /**
-     * @param WorkModel $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'name' => $object->name,
-            'slug' => $object->slug,
-        ];
-    }
-
-    /**
      * @param $object
      * @return array
      */

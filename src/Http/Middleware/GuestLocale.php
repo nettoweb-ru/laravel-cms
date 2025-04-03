@@ -15,6 +15,7 @@ class GuestLocale extends AdminLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $this->setContentHeader($next($request), $this->setLanguage());
+        $language = $this->setLanguage();
+        return $this->setContentHeader($next($request), $language);
     }
 }

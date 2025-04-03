@@ -18,34 +18,7 @@ class MenuItemController extends Abstract\AdminCrudController
     protected string $id = 'menuItem';
 
     protected array $list = [
-        'columns' => [
-            'sort' => [
-                'title' => 'cms::main.attr_sort',
-                'width' => 5
-            ],
-            'name' => [
-                'title' => 'cms::main.attr_name',
-                'width' => 35
-            ],
-            'link' => [
-                'title' => 'cms::main.attr_link',
-                'width' => 20
-            ],
-            'slug' => [
-                'title' => 'cms::main.attr_slug',
-                'width' => 40
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'name',
-            'slug',
-            'link',
-            'is_active',
-            'sort',
-            'menu_id',
-        ],
         'url' => [
             'create',
             'delete',
@@ -111,21 +84,6 @@ class MenuItemController extends Abstract\AdminCrudController
         $this->crumbs[] = [
             'title' => __('cms::main.list_menu'),
             'link' => route('admin.menu.index'),
-        ];
-    }
-
-    /**
-     * @param $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'name' => $object->name,
-            'slug' => $object->slug,
-            'link' => $object->link,
-            'is_active' => $object->is_active,
-            'sort' => $object->sort,
         ];
     }
 

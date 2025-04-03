@@ -16,37 +16,7 @@ class LanguageController extends Abstract\AdminCrudController
     protected string $id = 'language';
 
     protected array $list = [
-        'columns' => [
-            'sort' => [
-                'title' => 'cms::main.attr_sort',
-                'width' => 5
-            ],
-            'name' => [
-                'title' => 'cms::main.attr_name',
-                'width' => 45
-            ],
-            'slug' => [
-                'title' => 'cms::main.attr_slug',
-                'width' => 20
-            ],
-            'locale' => [
-                'title' => 'cms::main.attr_locale',
-                'width' => 20
-            ],
-            'is_default' => [
-                'title' => 'cms::main.attr_is_default',
-                'width' => 10
-            ],
-        ],
         'relations' => [],
-        'select' => [
-            'id',
-            'sort',
-            'name',
-            'slug',
-            'locale',
-            'is_default',
-        ],
         'title' => 'cms::main.list_language',
         'url' => [
             'create',
@@ -92,21 +62,6 @@ class LanguageController extends Abstract\AdminCrudController
     public function update(WorkRequest $request, string $id): RedirectResponse
     {
         return $this->_update($request, $id);
-    }
-
-    /**
-     * @param WorkModel $object
-     * @return array
-     */
-    protected function getItem($object): array
-    {
-        return [
-            'sort' => $object->sort,
-            'name' => $object->name,
-            'slug' => $object->slug,
-            'locale' => $object->locale,
-            'is_default' => $object->is_default ? __('cms::main.general_yes') : __('cms::main.general_no'),
-        ];
     }
 
     /**

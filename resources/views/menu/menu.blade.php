@@ -12,7 +12,19 @@
         </x-slot>
         @if ($object->id)
             <x-slot name="tab2">
-                <x-cms::list :url="route('admin.menu.menuItem.list', ['menu' => $object], false)" id="menu-item-{{ $object->id }}" />
+                <x-cms::list
+                    :url="route('admin.menu.menuItem.list', ['menu' => $object], false)"
+                    id="menu-item-{{ $object->id }}"
+                    :columns="[
+                        'id' => __('cms::main.attr_id'),
+                        'sort' => __('cms::main.attr_sort'),
+                        'name' => __('cms::main.attr_name'),
+                        'slug' => __('cms::main.attr_slug'),
+                        'link' => __('cms::main.attr_link'),
+                        'is_blank' => __('cms::main.attr_is_blank'),
+                    ]"
+                    :default="['sort', 'name']"
+                />
             </x-slot>
         @endif
     </x-cms::tabs>

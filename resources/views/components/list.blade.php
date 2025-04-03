@@ -4,7 +4,15 @@
         'resources/js/netto/list.widget.js',
         'resources/js/netto/list.js',
     ])
+    @php load_cdn_resources('ui') @endphp
 @endpushonce
+
+@props([
+    'id',
+    'url',
+    'columns' => ['id' => __('cms::main.attr_id')],
+    'default' => ['id'],
+])
 
 <div class="list js-list" data-url="{{ $url }}" data-id="{{ $id }}">
     <div class="list-block top">
@@ -32,53 +40,64 @@
         </div>
         <div class="list-content-layer results js-results">
             <div class="list-results found js-results-found">
-                <div class="list-results-data">
-                    <table>
-                        <thead><tr class="js-head"></tr></thead>
-                        <tbody class="js-body"></tbody>
-                    </table>
-                </div>
-                <div class="list-results-bottom">
-                    <div class="table list-bottom">
-                        <div class="cell list-bottom per-page">
-                            <label>
-                                <select class="select narrow text js-per-page" name="per-page" title="{{ __('cms::main.title_per_page') }}">
-                                    @foreach ([10, 20, 50] as $item)
-                                        <option value="{{ $item }}">{{ format_number($item) }}</option>
-                                    @endforeach
-                                    <option value="0">{{ __('cms::main.general_list_all') }}</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div class="cell list-bottom total">
-                            <div class="list-total-block">
-                                <span class="text">{{ __('cms::main.general_list_total') }}:</span>
+                <div class="list-results-visible">
+                    <div class="list-results-data">
+                        <table class="js-table">
+                            <thead><tr class="js-head"></tr></thead>
+                            <tbody class="js-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="list-results-bottom">
+                        <div class="table list-bottom">
+                            <div class="cell list-bottom per-page">
+                                <label>
+                                    <select class="select narrow text js-per-page" name="per-page" title="{{ __('cms::main.title_per_page') }}">
+                                        @foreach ([10, 20, 50] as $item)
+                                            <option value="{{ $item }}">{{ format_number($item) }}</option>
+                                        @endforeach
+                                        <option value="0">{{ __('cms::main.general_list_all') }}</option>
+                                    </select>
+                                </label>
                             </div>
-                            <div class="list-total-block">
-                                <span class="text js-counter-items">{{ format_number(0) }}</span>
+                            <div class="cell list-bottom total">
+                                <div class="list-total-block">
+                                    <span class="text">{{ __('cms::main.general_list_total') }}:</span>
+                                </div>
+                                <div class="list-total-block">
+                                    <span class="text js-counter-items">{{ format_number(0) }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="cell list-bottom navigation">
-                            <div class="list-nav">
-                                <div class="table list-nav">
-                                    <div class="cell padding">
-                                        <span class="text">{{ __('cms::main.general_list_page') }}</span>
-                                    </div>
-                                    <div class="cell">
-                                        <label>
-                                            <select class="select narrow text js-page disabled" disabled name="page"></select>
-                                        </label>
-                                    </div>
-                                    <div class="cell padding">
-                                        <span class="text">/</span>
-                                    </div>
-                                    <div class="cell">
-                                        <span class="text js-counter-pages">{{ format_number(0) }}</span>
+                            <div class="cell list-bottom navigation">
+                                <div class="list-nav">
+                                    <div class="table list-nav">
+                                        <div class="cell padding">
+                                            <span class="text">{{ __('cms::main.general_list_page') }}</span>
+                                        </div>
+                                        <div class="cell">
+                                            <label>
+                                                <select class="select narrow text js-page disabled" disabled name="page"></select>
+                                            </label>
+                                        </div>
+                                        <div class="cell padding">
+                                            <span class="text">/</span>
+                                        </div>
+                                        <div class="cell">
+                                            <span class="text js-counter-pages">{{ format_number(0) }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="list-results-dropdown js-dropdown-columns">
+                    @foreach ($columns as $key => $value)
+                        <div class="list-column-table" data-id="{{ $key }}" data-default="{{ (int) in_array($key, $default) }}">
+                            <div class="list-column-cell">
+                                <span class="text-small">{{ $value }}</span>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
             <div class="list-results empty js-results-empty">

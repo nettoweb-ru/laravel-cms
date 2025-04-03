@@ -19,27 +19,7 @@ class PublicationController extends Abstract\AdminCrudController
     protected string $id = 'publication';
 
     protected array $list = [
-        'columns' => [
-            'name' => [
-                'title' => 'cms::main.attr_name',
-                'width' => 40
-            ],
-            'slug' => [
-                'title' => 'cms::main.attr_slug',
-                'width' => 40
-            ],
-            'lang_id' => [
-                'title' => 'cms::main.attr_language',
-                'width' => 20
-            ],
-        ],
         'relations' => ['language'],
-        'select' => [
-            'id',
-            'name',
-            'slug',
-            'lang_id',
-        ],
         'title' => 'cms::main.list_publication',
         'url' => [
             'create',
@@ -107,11 +87,12 @@ class PublicationController extends Abstract\AdminCrudController
      */
     protected function getItem($object): array
     {
-        return [
-            'name' => $object->name,
-            'slug' => $object->slug,
-            'lang_id' => $object->language->name,
-        ];
+        $return = parent::getItem($object);
+        if ($object->language) {
+            $return['lang_id'] = $object->language->name;
+        }
+
+        return $return;
     }
 
     /**

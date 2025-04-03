@@ -188,7 +188,6 @@ window.Overlay = {
         let self = this
         $(window).one('unload.netto', function() {
             self.hideOverlay()
-            $(window).off('unload.netto')
         })
     },
 
@@ -294,7 +293,6 @@ window.Overlay = {
         if (!modal) {
             let self = this
             this.objects.overlay.container.one('click.netto', function() {
-                self.objects.overlay.container.off('click.netto')
                 self.hideOverlay()
             })
         }
