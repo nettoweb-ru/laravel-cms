@@ -1,7 +1,6 @@
 # nettoweb CMS for Laravel
 
-This software provides administrative section with basic functionality 
-for a Laravel-based project.
+This software provides administrative section with basic functionality for a Laravel-based project.
 
 ## Installation
 
