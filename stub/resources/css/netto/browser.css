@@ -1,125 +1,29 @@
-.browser{
-    width: 100%;
-    margin-top:20px;
-}
-
-.browser .block{
-    width: inherit;
-    display: inline-block;
-}
-
-.browser .block.header{
-    margin-bottom: 10px;
-}
-
-.browser .block.header .table-header{
-    width: inherit;
-}
-
-.browser .block.header .table-header .cell{
-    vertical-align: middle;
-}
-
-.browser .block.header .table-header .cell.cell-path{
-    width: inherit;
-}
-
-body.ltr .browser .block.header .table-header .cell.cell-path{
-    padding-right:8px;
-}
-
-body.rtl .browser .block.header .table-header .cell.cell-path{
-    padding-left:8px;
-}
-
-.browser .block.header .table-header .cell.cell-buttons{
-    white-space: nowrap;
-}
-
-.browser .block.main{
-    position: relative;
-}
-
-.browser .block.main .browser-layer{
-    width:inherit;
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .browser{
     max-height:400px;
-}
-
-.browser .block.main .browser-layer.content{
-    position: relative;
-    display: none;
-}
-
-.browser .block.main .browser-layer.content .results{
-    width:inherit;
-    max-height: inherit;
-    position: absolute;
-    top:0;
-    left:0;
-    display:none;
-}
-
-.browser .block.main .browser-layer.content .results.data .files{
     display: inline-block;
-    width: inherit;
-    max-height:inherit;
+    width: 100%;
     overflow-y: scroll;
 }
 
-.browser .block.main .browser-layer.content .results.data table.info thead tr th.size{
-    text-align: right;
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr:last-child td{
+    border-bottom:none;
 }
 
-.browser .block.main .browser-layer.content .results.data table.info tbody tr:hover{
-    cursor: pointer;
-}
-
-.browser .block.main .browser-layer.content .results.data table.info tbody tr.selected{
-    background-color:var(--color-main) !important;
-}
-
-.browser .block.main .browser-layer.content .results.data table.info tbody tr.selected td span{
-    color:var(--color-reset);
-}
-
-.browser .block.main .browser-layer.content .results.data table.info tbody tr.selected:hover td span{
-    color:var(--color-border);
-}
-
-.browser .block.main .browser-layer.content .results.data table.info tbody tr.dir td.name span{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr.dir td.name span{
     font-weight: 700;
 }
 
-.browser .block.main .browser-layer.content .results.data table.info tbody tr td.size{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr td.size,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr td.date{
+    white-space: nowrap;
+}
+
+body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr td.size,
+body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info thead tr th.size{
     text-align: right;
-    white-space: nowrap;
 }
 
-.browser .block.main .browser-layer.content .results.data table.info tbody tr td.date{
-    white-space: nowrap;
-}
-
-.browser .block.main .browser-layer.animation{
-    background-color: var(--color-light-gray-2);
-    position: absolute;
-    top:0;
-    left:0;
-}
-
-.browser .block.main .browser-layer.animation .table-animation{
-    width:inherit;
-    max-height: inherit;
-}
-
-.browser .block.main .browser-layer.animation .table-animation .cell{
-    vertical-align: middle;
-    text-align: center;
-}
-
-body.ltr .browser .block.header .table-header .cell.cell-buttons .button{
-    margin-left:8px;
-}
-
-body.rtl .browser .block.header .table-header .cell.cell-buttons .button{
-    margin-right:8px;
+body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info tbody tr td.size,
+body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result table.info thead tr th.size{
+    text-align: left;
 }

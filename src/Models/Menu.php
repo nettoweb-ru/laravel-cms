@@ -2,17 +2,15 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\{Collection, Relations\BelongsTo, Relations\HasMany};
+use Netto\Models\Abstract\Model as BaseModel;
 
 /**
  * @property Collection $items
  * @property Language $language
  */
 
-class Menu extends Model
+class Menu extends BaseModel
 {
     public $timestamps = false;
     public $table = 'cms__menus';

@@ -8,7 +8,7 @@
                         <span class="text js-text"></span>
                     </div>
                     <div class="overlay-block-item buttons">
-                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-close" type="button">{{ __('cms::main.action_ok') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-close" type="button">{{ __('main.action_ok') }}</x-cms::form.button>
                     </div>
                 </div>
                 <div class="overlay-block info prompt" id="js-overlay-prompt">
@@ -19,8 +19,8 @@
                         <x-cms::form.string name="js_prompt" />
                     </div>
                     <div class="overlay-block-item buttons">
-                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-confirm" type="button">{{ __('cms::main.action_confirm') }}</x-cms::form.button>
-                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('cms::main.action_cancel') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-confirm" type="button">{{ __('main.action_confirm') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('main.action_cancel') }}</x-cms::form.button>
                     </div>
                 </div>
                 <div class="overlay-block info confirm" id="js-overlay-confirm">
@@ -28,17 +28,17 @@
                         <span class="text js-text"></span>
                     </div>
                     <div class="overlay-block-item buttons">
-                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-confirm" type="button">{{ __('cms::main.action_confirm') }}</x-cms::form.button>
-                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('cms::main.action_cancel') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.done" class="btn-form btn-normal js-btn-confirm" type="button">{{ __('main.action_confirm') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('main.action_cancel') }}</x-cms::form.button>
                     </div>
                 </div>
                 <div class="overlay-block info confirm" id="js-overlay-confirm-delete">
                     <div class="overlay-block-item text-msg">
-                        <span class="text js-text">{{ __('cms::main.confirmation_delete') }}</span>
+                        <span class="text js-text">{{ __('main.confirmation_delete') }}</span>
                     </div>
                     <div class="overlay-block-item buttons">
-                        <x-cms::form.button bg="icons.remove" class="btn-form btn-warning js-btn-confirm" type="button">{{ __('cms::main.action_delete') }}</x-cms::form.button>
-                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('cms::main.action_cancel') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.remove" class="btn-form btn-warning js-btn-confirm" type="button">{{ __('main.action_delete') }}</x-cms::form.button>
+                        <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-btn-close" type="button">{{ __('main.action_cancel') }}</x-cms::form.button>
                     </div>
                 </div>
             </div>

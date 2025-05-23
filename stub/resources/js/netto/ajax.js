@@ -52,30 +52,32 @@ window.Ajax = {
             onSuccess(data)
         }
 
-        params.error = function(jqXHR, textStatus, errorThrown) {
-            let message = ''
-            if (jqXHR.responseText.length) {
-                let parse = JSON.parse(jqXHR.responseText)
+        if (typeof params.error === 'undefined') {
+            params.error = function(jqXHR, textStatus, errorThrown) {
+                let message = ''
+                if (jqXHR.responseText.length) {
+                    let parse = JSON.parse(jqXHR.responseText)
 
-                if (typeof parse.message === 'string') {
-                    message = parse.message
+                    if (typeof parse.message === 'string') {
+                        message = parse.message
+                    }
                 }
-            }
 
-            if (!message.length) {
-                if (errorThrown.length) {
-                    message = errorThrown
-                } else if (textStatus.length) {
-                    message = textStatus
+                if (!message.length) {
+                    if (errorThrown.length) {
+                        message = errorThrown
+                    } else if (textStatus.length) {
+                        message = textStatus
+                    }
                 }
-            }
 
-            if (!message.length) {
-                message = 'Unknown error'
-            }
+                if (!message.length) {
+                    message = 'Unknown error'
+                }
 
-            Overlay.showMessage(message)
-            onError()
+                Overlay.showMessage(message)
+                onError()
+            }
         }
 
         params.beforeSend = function(jqXHR, settings) {

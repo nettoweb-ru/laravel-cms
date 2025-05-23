@@ -1,35 +1,45 @@
-@props(['title' => config('app.name'), 'header' => '', 'chain' => []])
+@php \Netto\Services\CDNService::load(['normalize', 'font.play', 'jquery']) @endphp
+@props([
+    'head',
+    'header' => '',
+    'chain' => [],
+    'url'
+])
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" xml:lang="{{ app()->getLocale() }}" dir="{{ config('text_dir') }}" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="{{ $head['language'] }}" xml:lang="{{ $head['language'] }}" dir="{{ $head['text_dir'] }}" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>{{ $title }}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @php load_cdn_resources(['normalize', 'play', 'jquery', 'longpress'], true) @endphp
-    @include('cms::components.favicons')
-    @vite([
-        'resources/css/netto/layers.css',
-        'resources/css/netto/buttons.css',
-        'resources/css/netto/admin.css',
-        'resources/js/netto/overlay.js',
-        'resources/js/netto/ajax.js',
-        'resources/js/netto/app.js',
-    ])
-    <script>
-        let autocomplete = {}
-        $(document).ready(function () {
-            App.lang = '{{ app()->getLocale() }}'
-            App.messages.confirm.toggle = '{{ __('cms::main.confirmation_toggle') }}'
-            App.messages.confirm.logout = '{{ __('cms::main.confirmation_logout') }}'
-            App.messages.labels.delete = '{{ __('cms::main.action_delete') }}'
-            App.messages.errors.uploadMaxFileSize = '{{ __('cms::main.error_upload_max_size_exceeded') }}'
-            App.messages.errors.postMaxSize = '{{ __('cms::main.error_post_max_size_exceeded') }}'
-        })
-    </script>
-    @stack('head')
+<title>{{ $head['title'] }}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@include('cms::components.favicons')
+<script>
+    let autocomplete = {}
+</script>
+@php echo \Netto\Services\CDNService::tags(); @endphp
+@vite([
+    'resources/css/netto/layers.css',
+    'resources/css/netto/buttons.css',
+    'resources/css/netto/admin.css',
+    'resources/js/netto/overlay.js',
+    'resources/js/netto/ajax.js',
+    'resources/js/netto/app.js',
+])
+
+@stack('head')
+<script>
+    $(document).ready(function () {
+        App.lang = '{{ app()->getLocale() }}'
+        App.locale = '{{ config('locale_js') }}'
+        App.messages.confirm.toggle = '{{ __('main.confirmation_toggle') }}'
+        App.messages.confirm.logout = '{{ __('main.confirmation_logout') }}'
+        App.messages.labels.delete = '{{ __('main.action_delete') }}'
+        App.messages.errors.uploadMaxFileSize = '{{ __('main.error_upload_max_size_exceeded') }}'
+        App.messages.errors.postMaxSize = '{{ __('main.error_post_max_size_exceeded') }}'
+    })
+</script>
 </head>
-<body class="{{ config('text_dir') }}">
+<body class="{{ $head['text_dir'] }}">
 <div class="wrapper">
     <div class="layer content">
         <div class="block mobile-top">
@@ -48,37 +58,38 @@
                     @endif
                 </div>
                 <div class="cell right">
-                    <div class="mobile-icon languages" id="js-icon-languages">
-                        @include('cms::components.icons.hiragana-ma')
-                    </div>
+                    <x-cms::menu-icon-mobile icon="home" route="{{ $url['home'] }}" />
+                    <x-cms::menu-icon-mobile icon="user" route="{{ $url['profile'] }}" />
+                    <x-cms::menu-icon-mobile icon="logout-{{ config('text_dir') }}" id="js-logout-mobile" />
+                    <x-cms::menu-icon-mobile icon="hiragana-ma" id="js-icon-languages" />
                 </div>
             </div>
         </div>
         <div class="block mobile-menu" id="js-mobile-menu">
-            <x-cms-navigation />
+            <x-cms-navigation/>
         </div>
         <div class="block mobile-languages" id="js-mobile-languages">
-            <x-cms-languages />
+            <x-cms-languages/>
         </div>
         <div class="block content">
             <div class="inline">
                 <div class="block menu">
                     <div class="table">
                         <div class="cell left">
-                            <x-cms-navigation />
+                            <x-cms-navigation/>
                         </div>
                         <div class="cell right">
                             <div class="menu">
-                                <div class="menu-item">
-                                    <div class="menu-item-block title">
-                                        <span class="icon">
-                                            @include('cms::components.icons.hiragana-ma')
-                                        </span>
-                                    </div>
-                                    <div class="menu-item-block dropdown">
-                                        <x-cms-languages />
-                                    </div>
-                                </div>
+                                <x-cms::menu-icon icon="home" route="{{ $url['home'] }}" title="{{ __('main.general_home') }}" />
+                                <x-cms::menu-icon icon="user" route="{{ $url['profile'] }}" title="{{ __('auth.profile') }}" />
+                                <x-cms::menu-icon icon="logout-{{ config('text_dir') }}" id="js-logout" title="{{ __('auth.logout') }}" />
+                                <x-cms::menu-icon icon="hiragana-ma">
+                                    <x-slot:dropdown>
+                                        <div class="menu-item-block dropdown">
+                                            <x-cms-languages/>
+                                        </div>
+                                    </x-slot:dropdown>
+                                </x-cms::menu-icon>
                             </div>
                         </div>
                     </div>
@@ -110,5 +121,9 @@
     @include('cms::components.overlay')
 </div>
 <x-cms::session-status :status="session('status')"/>
+@stack('bottom')
+<form method="post" action="{{ route($url['logout']) }}" id="js-logout-form">
+    @csrf
+</form>
 </body>
 </html>

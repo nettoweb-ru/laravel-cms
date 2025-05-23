@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/css/styles.css',
+                'resources/css/error.css',
                 'resources/css/netto/admin.css',
                 'resources/css/netto/browser.css',
                 'resources/css/netto/buttons.css',
@@ -15,6 +16,7 @@ export default defineConfig({
                 'resources/css/netto/guest.css',
                 'resources/css/netto/layers.css',
                 'resources/css/netto/list.css',
+                'resources/css/netto/list.widget.css',
                 'resources/css/netto/tabs.css',
                 'resources/js/app.js',
                 'resources/js/styles.js',

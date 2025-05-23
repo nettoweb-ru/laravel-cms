@@ -1,7 +1,45 @@
 <?php
 
+use Composer\InstalledVersions;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ViewErrorBag;
-use Netto\Services\LanguageService;
+
+use Netto\Services\MultilingualService;
+use Netto\Traits\IsMultiLingual;
+
+if (!function_exists('errors_multilingual')) {
+    /**
+     * Extract errors from error bag for specified multilingual attribute.
+     *
+     * @param string $attribute
+     * @param ViewErrorBag $errorBag
+     * @return array
+     */
+    function errors_multilingual(string $attribute, ViewErrorBag $errorBag): array
+    {
+        $return = [];
+        foreach (get_language_list() as $lang => $value) {
+            $return[$lang] = ($errors = $errorBag->get("{$attribute}|{$lang}")) ? $errors : [];
+        }
+
+        return $return;
+    }
+}
+
+if (!function_exists('errors_upload')) {
+    /**
+     * Extract errors from error bag for specified upload attribute.
+     *
+     * @param string $attribute
+     * @param ViewErrorBag $errors
+     * @return array
+     */
+    function errors_upload(string $attribute, ViewErrorBag $errors): array
+    {
+        return array_merge($errors->get($attribute), $errors->get($attribute.'|new'));
+    }
+}
 
 if (!function_exists('escape_quotes')) {
     /**
@@ -13,8 +51,27 @@ if (!function_exists('escape_quotes')) {
     }
 }
 
+if (!function_exists('find_language_code')) {
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    function find_language_code(int $id): ?string
+    {
+        foreach (get_language_list() as $slug => $language) {
+            if ($language['id'] == $id) {
+                return $slug;
+            }
+        }
+
+        return null;
+    }
+}
+
 if (!function_exists('format_date')) {
     /**
+     * Format date using locale settings.
+     *
      * @param string|int|null $value
      * @param int $timeType
      * @param int $dateType
@@ -25,16 +82,18 @@ if (!function_exists('format_date')) {
             return '';
         }
 
-        if (!is_int($value)) {
+        if (is_string($value)) {
             $value = strtotime($value);
         }
 
-        return (new \IntlDateFormatter(setlocale(LC_TIME, '0'), $dateType, $timeType))->format($value);
+        return (new \IntlDateFormatter(config('locale_full'), $dateType, $timeType))->format($value);
     }
 }
 
 if (!function_exists('format_file_size')) {
     /**
+     * Format file size using locale settings.
+     *
      * @param int $size
      * @return string
      */
@@ -64,13 +123,15 @@ if (!function_exists('format_file_size')) {
 
 if (!function_exists('format_number')) {
     /**
+     * Format number using locale settings.
+     *
      * @param int|float $number
      * @param int|null $precision
      * @return string
      */
     function format_number(int|float $number, ?int $precision = null): string
     {
-        $formatter = new \NumberFormatter(setlocale(LC_NUMERIC, '0')."@numbers=latn", \NumberFormatter::DECIMAL);
+        $formatter = new \NumberFormatter(config('locale_full')."@numbers=latn", \NumberFormatter::DECIMAL);
         if (!is_null($precision)) {
             $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, abs($precision));
         }
@@ -79,52 +140,124 @@ if (!function_exists('format_number')) {
     }
 }
 
-if (!function_exists('get_auto_upload_path')) {
+if (!function_exists('get_admin_locales')) {
     /**
-     * @param string $filename
-     * @return string
-     */
-    function get_auto_upload_path(string $filename = ''): string
-    {
-        return '/storage/auto'.($filename ? '/'.basename($filename) : '');
-    }
-}
-
-if (!function_exists('get_errors_multilang')) {
-    /**
-     * @param ViewErrorBag $errorBag
-     * @param string $attribute
+     * Return the list of supported administrative locales.
+     *
      * @return array
      */
-    function get_errors_multilang(ViewErrorBag $errorBag, string $attribute): array
+    function get_admin_locales(): array
     {
-        $return = [];
-        foreach (LanguageService::getList() as $lang => $value) {
-            $return[$lang] = ($errors = $errorBag->get("{$attribute}|{$lang}")) ? $errors : [];
+        $return = [
+            'en' => 'en_US',
+            'fr' => 'fr_FR',
+            'es' => 'es_ES',
+            'de' => 'de_DE',
+            'pt' => 'pt_PT',
+            'nl' => 'nl_NL',
+            'it' => 'it_IT',
+            'ru' => 'ru_RU',
+            'tr' => 'tr_TR',
+            'zh' => 'zh_CN',
+            'ja' => 'ja_JP',
+            'hi' => 'hi_IN',
+            'ar' => 'ar_AE',
+            'fa' => 'fa_IR',
+            'he' => 'he_IL',
+        ];
+
+        foreach (config('cms.locales', []) as $key => $value) {
+            $return[$key] = $value;
         }
 
         return $return;
     }
 }
 
+if (!function_exists('get_admin_role')) {
+    /**
+     * Return the slug of administrative role from configuration setting.
+     *
+     * @return string
+     */
+    function get_admin_role(): string
+    {
+        return config('cms.admin', 'administrator');
+    }
+}
+
+if (!function_exists('get_current_language_id')) {
+    /**
+     * Return ID of current public language. Should be called on public pages only.
+     *
+     * @return int
+     */
+    function get_current_language_id(): int
+    {
+        return MultilingualService::getCurrentId();
+    }
+}
+
+if (!function_exists('get_default_language_code')) {
+    /**
+     * Return slug of default public language.
+     *
+     * @return string
+     */
+    function get_default_language_code(): string
+    {
+        return MultilingualService::getDefaultCode();
+    }
+}
+
+if (!function_exists('get_default_language_id')) {
+    /**
+     * Return ID of default public language.
+     *
+     * @return int
+     */
+    function get_default_language_id(): int
+    {
+        return MultilingualService::getDefaultId();
+    }
+}
+
 if (!function_exists('get_labels')) {
     /**
-     * @param string $class
+     * Returns associative array [$columnKey => $columnValue] for given model class.
+     *
+     * @param string $className
      * @param bool $empty
      * @param string $columnKey
      * @param string $columnValue
      * @return array
      */
-    function get_labels(string $class, bool $empty = false, string $columnKey = 'id', string $columnValue = 'name', ): array
+    function get_labels(string $className, bool $empty = false, string $columnKey = 'id', string $columnValue = 'name'): array
     {
         $return = [];
         if ($empty) {
             $return[''] = '';
         }
 
-        /** @var \Illuminate\Database\Eloquent\Model $class */
-        foreach ($class::query()->select($columnValue, $columnKey)->orderBy($columnValue)->get() as $model) {
-            $return[$model->{$columnKey}] = $model->{$columnValue};
+        /** @var Model $className */
+        $object = new $className();
+        $builder = $object::query();
+
+        $isMultilingual = is_multilingual($object) && in_array($columnValue, $object->multiLingual);
+        if ($isMultilingual) {
+            $builder->with('translated');
+            $defaultLanguageCode = get_default_language_code();
+        }
+
+        foreach ($builder->get() as $model) {
+            if ($isMultilingual) {
+                /** @var IsMultiLingual $model */
+                $name = $model->getTranslated($columnValue)[$defaultLanguageCode];
+            } else {
+                $name = $model->{$columnValue};
+            }
+
+            $return[$model->{$columnKey}] = $name;
         }
 
         return $return;
@@ -133,53 +266,34 @@ if (!function_exists('get_labels')) {
 
 if (!function_exists('get_labels_boolean')) {
     /**
+     * Return associative array [$value => $name] for boolean values.
+     *
      * @return array
      */
     function get_labels_boolean(): array
     {
         static $return;
         if (is_null($return)) {
-            $return = [1 => __('cms::main.general_yes'), 0 => __('cms::main.general_no')];
+            $return = [1 => __('main.general_yes'), 0 => __('main.general_no')];
         }
 
         return $return;
     }
 }
 
-if (!function_exists('get_next_sort')) {
+if (!function_exists('get_labels_language')) {
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param array $filter
-     * @return int
-     */
-    function get_next_sort(\Illuminate\Database\Eloquent\Model $model, array $filter = []): int
-    {
-        $return = 0;
-
-        $builder = $model->newQuery()->select('sort')->orderBy('sort', 'desc')->limit(1);
-        set_builder_filter($builder, $filter);
-
-        if ($builder->count()) {
-            $item = $builder->get()->get(0);
-            $return = $item->sort;
-        }
-
-        $return += 10;
-        return $return;
-    }
-}
-
-if (!function_exists('get_rules_multilang')) {
-    /**
-     * @param array $rules
+     * Returns associative array [$id => $name] for public language list.
+     *
      * @return array
      */
-    function get_rules_multilang(array $rules): array
+    function get_labels_language(): array
     {
-        $return = [];
-        foreach (LanguageService::getList() as $lang => $value) {
-            foreach ($rules as $attribute => $array) {
-                $return["{$attribute}|{$lang}"] = $array;
+        static $return;
+        if (is_null($return)) {
+            $return = [];
+            foreach (get_language_list() as $code => $language) {
+                $return[$language['id']] = $language['name'];
             }
         }
 
@@ -187,13 +301,77 @@ if (!function_exists('get_rules_multilang')) {
     }
 }
 
+if (!function_exists('get_labels_translated')) {
+    /**
+     * Returns associative array [$columnKey => $columnValue] for given model class with column value used as a translatable message key.
+     *
+     * @param string $className
+     * @param bool $empty
+     * @param string $columnKey
+     * @param string $columnValue
+     * @return array
+     */
+    function get_labels_translated(string $className, bool $empty = false, string $columnKey = 'id', string $columnValue = 'name'): array
+    {
+        $return = [];
+        foreach (get_labels($className, $empty, $columnKey, $columnValue) as $id => $name) {
+            $return[$id] = $name ? __($name) : '';
+        }
+
+        return $return;
+    }
+}
+
+if (!function_exists('get_language_list')) {
+    /**
+     * Return the list of public languages.
+     *
+     * @return array
+     */
+    function get_language_list(): array
+    {
+        return MultilingualService::getList();
+    }
+}
+
+if (!function_exists('get_language_route')) {
+    /**
+     * @param string $route
+     * @param array $params
+     * @return string
+     */
+    function get_language_route(string $route, array $params = []): string
+    {
+        return route(app()->getLocale().'.'.$route, $params);
+    }
+}
+
+if (!function_exists('get_rules_multilingual')) {
+    /**
+     * Convert the list of rules to multilingual rules.
+     *
+     * @param array $rules
+     * @return array
+     */
+    function get_rules_multilingual(array $rules): array
+    {
+        return MultilingualService::getRules($rules);
+    }
+}
+
 if (!function_exists('get_rules_upload')) {
+    /**
+     * Convert the list of rules to file upload rules.
+     *
+     * @param array $rules
+     * @return array
+     */
     function get_rules_upload(array $rules): array
     {
         $return = [];
         foreach ($rules as $attribute => $value) {
             $old = $attribute;
-            $new = $attribute.'_new';
+            $new = $attribute.'|new';
 
             $required = false;
             if (in_array('required', $value)) {
@@ -210,116 +388,115 @@ if (!function_exists('get_rules_upload')) {
     }
 }
 
-if (!function_exists('get_storage_path')) {
+if (!function_exists('get_public_uploaded_path')) {
     /**
-     * @param string $storage
-     * @param string $suffix
+     * Return relative public path for automatic upload file.
+     *
+     * @param string $path
      * @return string
      */
-    function get_storage_path(string $storage, string $suffix = ''): string
+    function get_public_uploaded_path(string $path): string
     {
-        return str_replace(base_path(), '', config("filesystems.disks.{$storage}.root")).$suffix;
+        return $path
+            ? '/storage/auto/'.basename($path)
+            : '';
+    }
+}
+
+if (!function_exists('get_storage_path')) {
+    /**
+     * Return relative path for configured disk storage.
+     *
+     * @param string $storage
+     * @return string
+     */
+    function get_storage_path(string $storage): string
+    {
+        return str_replace(base_path(), '', config("filesystems.disks.{$storage}.root"));
     }
 }
 
 if (!function_exists('get_text_direction')) {
     /**
+     * Return text direction for given language code.
+     *
      * @param string|null $language
      * @return string
      */
     function get_text_direction(?string $language): string
     {
-        return in_array($language, ['ar', 'he', 'fa']) ? 'rtl' : 'ltr';
+        return in_array($language, ['ar', 'fa', 'he']) ? 'rtl' : 'ltr';
     }
 }
 
-if (!function_exists('image_resize')) {
+if (!function_exists('get_versions')) {
     /**
-     * @param string $path
-     * @param string $storage
-     * @param int|null $width
-     * @param int|null $height
-     * @return string
+     * Return information about used software versions.
+     *
+     * @return array
      */
-    function image_resize(string $path, string $storage, ?int $width = null, ?int $height = null): string
+    function get_versions(): array
     {
-        if (is_null($width)) {
-            $width = config('cms.album_max_width', 150);
-        }
+        $packages = [
+            'laravel/framework',
+            'laravel/sanctum',
+            'laravel/tinker',
+            'nettoweb/laravel-cms',
+            'nettoweb/laravel-cms-currency',
+            'nettoweb/laravel-cms-store',
+        ];
 
-        if (is_null($height)) {
-            $height = config('cms.album_max_height', 150);
-        }
+        $return = ['PHP' => PHP_VERSION];
 
-        $basePath = base_path().DIRECTORY_SEPARATOR;
-        $manager = new \Intervention\Image\ImageManager(\Intervention\Image\Drivers\Gd\Driver::class);
-
-        $image = $manager->read($basePath.$path);
-
-        if ($imageSize = getimagesize($basePath.$path)) {
-            if (($imageSize[0] <= $width) && ($imageSize[1] <= $height)) {
-                return $path;
+        foreach ($packages as $package) {
+            if (InstalledVersions::isInstalled($package)) {
+                $return[$package] = InstalledVersions::getVersion($package);
             }
         }
 
-        $tmp = tempnam('/tmp', 'resize');
-        $image->cover($width, $height)->save($tmp, 95);
-        $file = new \Illuminate\Http\UploadedFile($tmp, basename($tmp));
-
-        $resized = $file->store('auto', $storage);
-        $disk = \Illuminate\Support\Facades\Storage::disk($storage);
-
-        return str_replace($basePath, '', $disk->path('').$resized);
+        return $return;
     }
 }
 
-if (!function_exists('load_cdn_resources')) {
+if (!function_exists('is_multilingual')) {
     /**
-     * @param string|array $id
-     * @param bool $preconnect
-     * @return void
+     * Checks if model supports multiple languages.
+     *
+     * @param Model $model
+     * @return bool
      */
-    function load_cdn_resources(string|array $id, bool $preconnect = false): void
+    function is_multilingual(Model $model): bool
     {
-        if (is_string($id)) {
-            $id = [$id];
+        return in_array(IsMultiLingual::class, class_uses_recursive($model));
+    }
+}
+
+if (!function_exists('old_multilingual')) {
+    /**
+     * Return old value for multilingual attribute.
+     *
+     * @param string $attribute
+     * @param Model $object
+     * @return array
+     */
+    function old_multilingual(string $attribute, Model $object): array
+    {
+        /** @var IsMultiLingual $object */
+        $old = $object->getTranslated($attribute);
+
+        $return = [];
+        foreach (get_language_list() as $lang => $value) {
+            $return[$lang] = old("{$attribute}|{$lang}", $old[$lang]);
         }
 
-        $config = config('cms.cdn.files', []);
-        $files = [];
-        foreach (array_unique($id) as $item) {
-            $files = array_merge($files, $config[$item]);
-        }
-
-        if (empty($files)) {
-            return;
-        }
-
-        $baseUrl = config('cms.cdn.url', '');
-        $tags = [];
-        if ($preconnect && $baseUrl) {
-            $tags[] = "<link rel=\"preconnect\" href=\"{$baseUrl}\">";
-        }
-
-        $language = app()->getLocale();
-        foreach ($files as $file) {
-            if (str_contains($file, ':langId')) {
-                $file = str_replace(':langId', $language, $file);
-            }
-
-            if (str_starts_with($file, 'js/')) {
-                $tags[] = "<script src=\"{$baseUrl}/{$file}\"></script>";
-            } elseif (str_starts_with($file, 'css/')) {
-                $tags[] = "<link href=\"{$baseUrl}/{$file}\" rel=\"stylesheet\" type=\"text/css\">";
-            }
-        }
-
-        echo implode(PHP_EOL, $tags);
+        return $return;
     }
 }
 
 if (!function_exists('parse_xml')) {
     /**
+     * Parse XML string into associative array.
+     *
      * @param string $string
      * @return mixed
      */
@@ -331,54 +508,22 @@ if (!function_exists('parse_xml')) {
 
 if (!function_exists('set_admin_cookie')) {
     /**
+     * Set cookie for administrative pages.
+     *
      * @param string $name
      * @param string $value
      * @return void
      */
     function set_admin_cookie(string $name, string $value): void
     {
-        \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forever($name, $value, '/'.config('cms.location', 'admin')));
-    }
-}
-
-if (!function_exists('set_builder_filter')) {
-    /**
-     * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @param array $filter
-     * @return void
-     */
-    function set_builder_filter(\Illuminate\Database\Eloquent\Builder &$builder, array $filter): void
-    {
-        if (empty($filter)) {
-            return;
-        }
-
-        foreach ($filter as $key => $value) {
-            if (str_contains($key, '.')) {
-                $tmp = explode('.', $key);
-                $builder->whereHas($tmp[0], function($builder) use ($tmp, $value) {
-                    unset($tmp[0]);
-                    set_builder_filter($builder, [
-                        implode('.', $tmp) => $value,
-                    ]);
-                });
-            } else {
-                if (is_null($value['value'])) {
-                    $builder->whereNull($key);
-                } else {
-                    if (is_array($value['value'])) {
-                        $builder->whereIn($key, $value['value']);
-                    } else {
-                        $builder->where($key, $value['operator'], $value['value']);
-                    }
-                }
-            }
-        }
+        Cookie::queue(Cookie::forever($name, $value, '/'.config('cms.location', 'admin')));
     }
 }
 
 if (!function_exists('set_language')) {
     /**
+     * Set application language and locale.
+     *
      * @param string $language
      * @param string $locale
      * @return void
@@ -386,20 +531,55 @@ if (!function_exists('set_language')) {
     function set_language(string $language, string $locale): void
     {
         app()->setLocale($language);
-
-        $suffix = config('cms.utf8suffix', 'utf8');
-        $regional = "{$locale}.{$suffix}";
-
-        setlocale(LC_MONETARY, $regional);
-        setlocale(LC_NUMERIC, $regional);
-        setlocale(LC_TIME, $regional);
-
         config()->set('text_dir', get_text_direction($language));
+
+        $full = $locale.'.'.config('cms.utf8suffix', 'utf8');
+
+        setlocale(LC_MONETARY, $full);
+        setlocale(LC_NUMERIC, $full);
+        setlocale(LC_TIME, $full);
+
+        config()->set('locale', $locale);
+        config()->set('locale_full', $full);
+        config()->set('locale_js', str_replace('_', '-', $locale));
+    }
+}
+
+if (!function_exists('set_language_default')) {
+    /**
+     * @return void
+     */
+    function set_language_default(): void
+    {
+        $language = get_default_language_code();
+
+        $locales = [];
+        foreach (get_language_list() as $key => $value) {
+            $locales[$key] = $value['locale'];
+        }
+
+        set_language($language, $locales[$language]);
+    }
+}
+
+if (!function_exists('spell_number')) {
+    /**
+     * Spell out number.
+     *
+     * @param int $number
+     * @return string
+     */
+    function spell_number(int $number): string
+    {
+        $formatter = new \NumberFormatter(config('locale_full'), \NumberFormatter::SPELLOUT);
+        return $formatter->format($number);
     }
 }
 
 if (!function_exists('transliterate')) {
     /**
+     * Transliterate any string to Latin.
+     *
      * @param string $string
      * @return string
      */

@@ -1,4 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
 <g>
     <g>
         <g>
@@ -82,4 +81,3 @@
         </g>
     </g>
 </g>
-</svg>

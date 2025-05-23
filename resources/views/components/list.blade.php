@@ -1,110 +1,73 @@
 @pushonce('head')
     @vite([
         'resources/css/netto/list.css',
-        'resources/js/netto/list.widget.js',
         'resources/js/netto/list.js',
     ])
-    @php load_cdn_resources('ui') @endphp
 @endpushonce
 
+@php \Netto\Services\CDNService::load('jquery.ui') @endphp
+
 @props([
-    'id',
+    'class' => 'js-list',
+    'id' => 'list',
+    'title' => '',
     'url',
-    'columns' => ['id' => __('cms::main.attr_id')],
+    'actions' => [],
+    'columns' => ['id' => __('main.attr_id')],
     'default' => ['id'],
+    'defaultSort' => ['id' => 'asc'],
+    'noSort' => [],
 ])
 
-<div class="list js-list" data-url="{{ $url }}" data-id="{{ $id }}">
-    <div class="list-block top">
-        <div class="table list-top">
-            <div class="cell list-top title">
-                <span class="text-big header js-title"></span>
-            </div>
-            <div class="cell list-top actions">
-                <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal js-icon-create js-link disabled hidden" disabled data-url="" title="{{ __('cms::main.title_create') }}" />
-                <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal js-icon-find hidden disabled" disabled title="{{ __('cms::main.title_find') }}" />
-                <x-cms::form.button type="button" bg="icons.download" class="btn-icon btn-normal js-icon-download hidden disabled" disabled title="{{ __('cms::main.title_download') }}" />
-                <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal js-icon-invert disabled" disabled title="{{ __('cms::main.title_invert') }}" />
-                <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal js-icon-toggle hidden disabled" disabled title="{{ __('cms::main.title_toggle') }}" />
-                <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning js-icon-delete disabled" disabled title="{{ __('cms::main.title_delete') }}" />
-            </div>
+<x-cms::ajaxlist :showNav="true" :id="$id" :url="$url" :class="$class" :noSort="$noSort" :defaultSort="$defaultSort">
+    <x-slot:head>
+        <span class="text-big">{{ $title }}</span>
+    </x-slot:head>
+
+    <x-slot:buttons>
+        @if (!empty($actions['create']))
+            <x-cms::form.button type="button" bg="icons.create"
+                                class="btn-icon btn-normal disabled js-link js-list-button" data-type="create"
+                                data-url="{{ $actions['create'] }}" title="{{ __('main.title_create') }}"/>
+        @endif
+        <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal hidden disabled js-list-button"
+                            data-type="search" title="{{ __('main.title_find') }}"/>
+        <x-cms::form.button type="button" bg="icons.download" class="btn-icon btn-normal hidden disabled js-list-button"
+                            data-type="download" title="{{ __('main.title_download') }}"/>
+        <x-cms::form.button type="button" bg="icons.invert-selection"
+                            class="btn-icon btn-normal disabled js-list-button" data-type="invert"
+                            title="{{ __('main.title_invert') }}"/>
+        @if (!empty($actions['toggle']))
+            <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal disabled js-list-button"
+                                data-type="toggle" data-url="{{ $actions['toggle'] }}"
+                                title="{{ __('main.title_toggle') }}"/>
+        @endif
+        @if (!empty($actions['delete']))
+            <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning disabled js-list-button"
+                                data-type="delete" data-url="{{ $actions['delete'] }}"
+                                title="{{ __('main.title_delete') }}"/>
+        @endif
+    </x-slot:buttons>
+
+    <div class="list-results">
+        <div class="list-results-visible">
+            <table>
+                <thead class="js-head">
+                <tr></tr>
+                </thead>
+                <tbody class="js-body"></tbody>
+            </table>
         </div>
-    </div>
-    <div class="list-block content">
-        <div class="list-content-layer animation js-animation">
-            <div class="table">
-                <div class="cell">
-                    <div class="loading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                </div>
-            </div>
-        </div>
-        <div class="list-content-layer results js-results">
-            <div class="list-results found js-results-found">
-                <div class="list-results-visible">
-                    <div class="list-results-data">
-                        <table class="js-table">
-                            <thead><tr class="js-head"></tr></thead>
-                            <tbody class="js-body"></tbody>
-                        </table>
-                    </div>
-                    <div class="list-results-bottom">
-                        <div class="table list-bottom">
-                            <div class="cell list-bottom per-page">
-                                <label>
-                                    <select class="select narrow text js-per-page" name="per-page" title="{{ __('cms::main.title_per_page') }}">
-                                        @foreach ([10, 20, 50] as $item)
-                                            <option value="{{ $item }}">{{ format_number($item) }}</option>
-                                        @endforeach
-                                        <option value="0">{{ __('cms::main.general_list_all') }}</option>
-                                    </select>
-                                </label>
-                            </div>
-                            <div class="cell list-bottom total">
-                                <div class="list-total-block">
-                                    <span class="text">{{ __('cms::main.general_list_total') }}:</span>
-                                </div>
-                                <div class="list-total-block">
-                                    <span class="text js-counter-items">{{ format_number(0) }}</span>
-                                </div>
-                            </div>
-                            <div class="cell list-bottom navigation">
-                                <div class="list-nav">
-                                    <div class="table list-nav">
-                                        <div class="cell padding">
-                                            <span class="text">{{ __('cms::main.general_list_page') }}</span>
-                                        </div>
-                                        <div class="cell">
-                                            <label>
-                                                <select class="select narrow text js-page disabled" disabled name="page"></select>
-                                            </label>
-                                        </div>
-                                        <div class="cell padding">
-                                            <span class="text">/</span>
-                                        </div>
-                                        <div class="cell">
-                                            <span class="text js-counter-pages">{{ format_number(0) }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="list-results-dropdown js-dropdown">
+            @foreach ($columns as $key => $value)
+                <div class="table list-column-table" data-id="{{ $key }}"
+                     data-default="{{ (int) in_array($key, $default) }}">
+                    <div class="cell list-column-cell">
+                        <span class="text-small">{{ $value }}</span>
                     </div>
                 </div>
-                <div class="list-results-dropdown js-dropdown-columns">
-                    @foreach ($columns as $key => $value)
-                        <div class="list-column-table" data-id="{{ $key }}" data-default="{{ (int) in_array($key, $default) }}">
-                            <div class="list-column-cell">
-                                <span class="text-small">{{ $value }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            <div class="list-results empty js-results-empty">
-                <p class="text">
-                    {{ __('cms::main.general_list_empty') }}
-                </p>
-            </div>
+            @endforeach
         </div>
     </div>
-</div>
+
+</x-cms::ajaxlist>

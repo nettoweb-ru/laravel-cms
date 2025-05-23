@@ -1,28 +1,51 @@
 @props([
     'name',
-    'value' => '',
-    'multilang' => false,
-    'width' => 12,
-    'required' => false,
-    'disabled' => false,
     'id' => $name,
     'label' => '',
+    'width' => 3,
+    'required' => false,
+    'disabled' => false,
+    'autofocus' => false,
     'messages' => [],
-    'autocomplete' => 'off',
+    'value' => '',
+    'multilang' => false,
 ])
 
-<div class="grid-cols-{{ $width }}">
-    <x-cms::form.partials.label :id="$id" :text="$label" :required="$required" />
+<div class="grid-cols grid-cols-{{ $width }}">
+    <x-cms::form.partials.label
+        :id="$multilang ? '' : $id"
+        :text="$label"
+        :required="$required"
+    />
     <x-cms::form.partials.value>
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <input name="{{ $name }}|{{ $langCode }}" value="{{ $langValue }}" type="date" id="{{ $id }}_{{ $langCode }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
+                    <x-cms::form.partials.string
+                        type="date"
+                        :name="$name.'|'.$langCode"
+                        :id="$id.'_'.$langCode"
+                        :value="$langValue"
+                        :disabled="$disabled"
+                        :autofocus="$autofocus"
+                        {{ $attributes }}
+                    />
                 </div>
             @endforeach
         @else
-            <input name="{{ $name }}" value="{{ $value }}" type="date" id="{{ $id }}" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'input text'.($disabled ? ' disabled' : '')]) !!} autocomplete="{{ $autocomplete }}" />
+            <x-cms::form.partials.string
+                type="date"
+                :name="$name"
+                :id="$id"
+                :value="$value"
+                :disabled="$disabled"
+                :autofocus="$autofocus"
+                {{ $attributes }}
+            />
         @endif
     </x-cms::form.partials.value>
-    <x-cms::form.partials.errors :messages="$messages" />
+    <x-cms::form.errors
+        :messages="$messages"
+        :multilang="$multilang"
+    />
 </div>

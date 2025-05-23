@@ -1,29 +1,57 @@
-<x-cms::layout.admin :title="$title" :chain="$chain" :header="$header">
-    <x-cms::tabs id="menu_tab" :tabs="[1 => 'cms::main.general_properties', 2 => 'cms::main.list_menu_item']" :conditions="[2 => !empty($object->id)]">
+<x-cms::layout.admin :head="$head" :url="$url" :chain="$chain" :header="$header">
+    <x-cms::tabs id="menu-tabs-{{ (int) $object->id }}" :tabs="[1 => 'main.general_properties', 2 => 'main.list_menu_item']" :conditions="[2 => $object->exists]">
         <x-slot name="tab1">
-            <x-cms-form :url="$url" :method="$method" :objectId="$object->id">
+            <x-cms-form id="menu" :url="$url" :method="$method" :objectId="$object->id">
                 <x-slot name="sheet1">
-                    <x-cms::form.string name="name" type="text" width="6" maxlength="255" :label="__('cms::main.attr_name')" :value="old('name', $object->name)" :messages="$errors->get('name')" required autofocus />
-                    <x-cms::form.string name="slug" type="text" width="3" maxlength="255" :label="__('cms::main.attr_slug')" :value="old('slug', $object->slug)" :messages="$errors->get('slug')" required />
-                    <x-cms::form.select name="lang_id" width="3" :options="$reference['language']" :label="__('cms::main.attr_language')" :value="old('lang_id', $object->lang_id)" :messages="$errors->get('lang_id')" required />
-                    <x-cms::form.select name="menu_item_id" :options="$reference['menu_items']" :label="__('cms::main.attr_menu_item_id')" :value="old('menu_item_id', $object->menu_item_id)" :messages="$errors->get('menu_item_id')" />
+                    <x-cms::form.string name="name" width="6" maxlength="255"
+                        :label="__('main.attr_name')"
+                        :value="old('name', $object->getAttribute('name'))"
+                        :messages="$errors->get('name')"
+                        :required="true"
+                        :autofocus="true"
+                    />
+                    <x-cms::form.string name="slug" width="3" maxlength="255"
+                        :label="__('main.attr_slug')"
+                        :value="old('slug', $object->getAttribute('slug'))"
+                        :messages="$errors->get('slug')"
+                        :required="true"
+                    />
+                    <x-cms::form.select name="lang_id" width="3"
+                        :label="__('main.attr_language')"
+                        :value="old('lang_id', $object->getAttribute('lang_id'))"
+                        :messages="$errors->get('lang_id')"
+                        :options="$reference['language']"
+                        :required="true"
+                    />
+                    <x-cms::form.select name="menu_item_id"
+                        :label="__('main.attr_menu_item_id')"
+                        :value="old('menu_item_id', $object->getAttribute('menu_item_id'))"
+                        :messages="$errors->get('menu_item_id')"
+                        :options="$reference['menu_items']"
+                    />
                 </x-slot>
             </x-cms-form>
         </x-slot>
-        @if ($object->id)
+        @if ($object->exists)
             <x-slot name="tab2">
                 <x-cms::list
-                    :url="route('admin.menu.menuItem.list', ['menu' => $object], false)"
-                    id="menu-item-{{ $object->id }}"
+                    :url="route('admin.menu-item.list', ['menu' => $object])"
+                    id="menu-items-{{ $object->id }}"
                     :columns="[
-                        'id' => __('cms::main.attr_id'),
-                        'sort' => __('cms::main.attr_sort'),
-                        'name' => __('cms::main.attr_name'),
-                        'slug' => __('cms::main.attr_slug'),
-                        'link' => __('cms::main.attr_link'),
-                        'is_blank' => __('cms::main.attr_is_blank'),
+                        'id' => __('main.attr_id'),
+                        'sort' => __('main.attr_sort'),
+                        'name' => __('main.attr_name'),
+                        'slug' => __('main.attr_slug'),
+                        'link' => __('main.attr_link'),
+                        'is_blank' => __('main.attr_is_blank'),
                     ]"
                     :default="['sort', 'name']"
+                    :defaultSort="['sort' => 'asc']"
+                    :actions="[
+                        'create' => route('admin.menu-item.create', ['menu' => $object]),
+                        'delete' => route('admin.menu-item.delete'),
+                        'toggle' => route('admin.menu-item.toggle'),
+                    ]"
                 />
             </x-slot>
         @endif

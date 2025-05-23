@@ -1,38 +1,29 @@
 <?php
 return [
-    'location' => 'admin',
-    'default_language' => 'en',
+    'admin' => 'administrator',
+    'captcha' => [
+        'bias' => 11,
+        'multiplier' => 2,
+    ],
+    'default_language' => 'ru',
+    'image' => [
+        'width' => 150,
+        'height' => 150,
+        'quality' => 91,
+    ],
     'locales' => [],
-    'title_separator' => ' | ',
-    'album_max_width' => 150,
-    'album_max_height' => 150,
-    'default_email' => '',
-    'service_email' => '',
-    'timezone' => 'UTC',
-    'utf8suffix' => 'utf8',
-    'cdn' => [
-        'url' => '//cdn.nettoweb.ru',
+    'location' => 'admin',
+    'report_logs' => [
+        'email' => '',
         'files' => [
-            'ckeditor' => [
-                'js/ckeditor/ckeditor.js',
-                'js/ckeditor/translations/:langId.js',
-            ],
-            'jquery' => [
-                'js/jquery/3.7.1.min.js',
-            ],
-            'longpress' => [
-                'js/jquery.longpress/0.1.2.js',
-            ],
-            'ui' => [
-                'js/jquery.ui/1.13.2.js',
-                'css/jquery.ui/1.13.2.css'
-            ],
-            'normalize' => [
-                'css/normalize/normalize.css',
-            ],
-            'play' => [
-                'css/fonts/play.css',
-            ],
+            'laravel.log' => true,
         ],
     ],
+    'schedule' => [
+        'hourly' => 0,
+        'daily' => 1,
+        'weekly' => 2
+    ],
+    'title_separator' => ' | ',
+    'utf8suffix' => 'utf8',
 ];

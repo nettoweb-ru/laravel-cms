@@ -1,16 +1,26 @@
-<x-cms::layout.guest :title="$title">
-    <div class="guest-logo">
-        @include('cms::components.icons.logo')
-    </div>
+<x-cms::layout.guest :head="$head">
     <x-cms-form :url="['save' => route('admin.password.store')]" method="post" :apply="false" :save="false">
         <x-slot name="sheet1">
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
-            <x-cms::form.string name="email" type="text" :label="__('cms::auth.email')" :value="old('email', $request->email)" :messages="$errors->get('email')" required autofocus />
-            <x-cms::form.string name="password" type="password" :label="__('cms::auth.password')" :messages="$errors->get('password')" autocomplete="new-password" required />
-            <x-cms::form.string name="password_confirmation" type="password" :label="__('cms::auth.password_confirmation')" :messages="$errors->get('password_confirmation')" autocomplete="new-password" />
+            <x-cms::form.string name="email"
+                :label="__('auth.email')"
+                :value="old('email', $request->email)"
+                :messages="$errors->get('email')"
+                :required="true"
+                :autofocus="true"
+            />
+            <x-cms::form.string name="password" type="password" autocomplete="new-password"
+                :label="__('auth.password')"
+                :messages="$errors->get('password')"
+                :required="true"
+            />
+            <x-cms::form.string name="password_confirmation" type="password" autocomplete="new-password"
+                :label="__('auth.password_confirmation')"
+                :messages="$errors->get('password_confirmation')"
+            />
         </x-slot>
         <x-slot name="buttons">
-            <x-cms::form.button class="btn-form btn-normal">{{ $title }}</x-cms::form.button>
+            <x-cms::form.button class="btn-form btn-normal">{{ $btnTitle }}</x-cms::form.button>
         </x-slot>
     </x-cms-form>
 </x-cms::layout.guest>

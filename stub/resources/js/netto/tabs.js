@@ -5,22 +5,26 @@ class Tabs {
         switch: {},
         tab: {},
     }
-    storageIdTab = 'netto-admin-form-tab'
+    storageIdTab = 'netto-form-tab'
 
     constructor(object) {
-        this.id = object.data('id')
+        let id = object.data('id')
+        if (id.length) {
+            this.id = id
+            this.storageIdTab += ('-' + this.id)
+        }
 
         this.initObjects(object)
         this.initSwitch()
 
         this.checkErrors()
 
-        let id = localStorage.getItem(this.storageIdTab)
-        if ((id === null) || (typeof this.objects.tab[id] === 'undefined')) {
-            id = Object.keys(this.objects.tab)[0]
+        let tabId = localStorage.getItem(this.storageIdTab)
+        if ((tabId === null) || (typeof this.objects.tab[tabId] === 'undefined')) {
+            tabId = Object.keys(this.objects.tab)[0]
         }
 
-        this.show(id)
+        this.show(tabId)
     }
 
     checkErrors() {
@@ -68,6 +72,10 @@ class Tabs {
 
         this.objects.switch[this.current].addClass('active')
         this.objects.tab[this.current].show()
+
+        for (let key in window.lists) {
+            window.lists[key].setColumnsWidth()
+        }
     }
 }
 

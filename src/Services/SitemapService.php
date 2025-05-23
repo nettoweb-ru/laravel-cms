@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\File;
 abstract class SitemapService
 {
     /**
+     * Regenerate sitemap.xml
+     *
      * @return void
      */
     public function regenerate(): void

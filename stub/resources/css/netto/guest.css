@@ -98,7 +98,7 @@ textarea.textarea{
 }
 
 .inline .guest-logo svg{
-    width:120px;
+    width:150px;
     color:var(--color-main);
 }
 
@@ -122,5 +122,9 @@ button .text{
         --text-size-small:11px;
         --text-size-normal:14px;
         --text-size-large:18px;
+    }
+
+    .inline .guest-logo svg{
+        width: 120px;
     }
 }

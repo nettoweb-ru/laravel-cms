@@ -2,18 +2,17 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\{Collection, Relations\HasMany};
+use Netto\Models\Abstract\Model as BaseModel;
 
 /**
  * @property Collection $images
  */
 
-class Album extends Model
+class Album extends BaseModel
 {
     public $timestamps = false;
-    public $table = 'cms__albums';
+    public $table = 'cms__photo_albums';
 
     protected $attributes = [
         'sort' => 0,
@@ -26,7 +25,7 @@ class Album extends Model
     {
         parent::boot();
 
-        self::deleting(function($model) {
+        self::deleting(function(Album $model) {
             foreach ($model->images->all() as $image) {
                 $image->delete();
             }
@@ -38,6 +37,6 @@ class Album extends Model
      */
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class)->orderBy('sort')->with('translated');;
+        return $this->hasMany(Image::class)->orderBy('sort')->with('translated');
     }
 }

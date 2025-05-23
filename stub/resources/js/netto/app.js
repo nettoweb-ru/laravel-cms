@@ -5,15 +5,6 @@ window.App = {
     },
     lang: '',
     locale: '',
-    locales: {
-        'en': 'en-US',
-        'fr': 'fr-FR',
-        'es': 'es-ES',
-        'de': 'de-DE',
-        'pt': 'pt-PT',
-        'ru': 'ru-RU'
-    },
-    token: '',
     messages: {
         confirm: {
             toggle: '',
@@ -28,7 +19,9 @@ window.App = {
         },
     },
     url: {
-        setCookie: '/admin/setCookie'
+        cookie: '/admin/tools/cookie',
+        download: '/admin/tools/download',
+        transliterate: '/admin/tools/transliterate',
     },
     objects: {
         iconMenuOpen: null,
@@ -40,15 +33,11 @@ window.App = {
     langOpen: false,
 
     downloadFile: function(filename) {
-        window.open('/admin/download/?filename=' + filename)
+        window.open(this.url.download + '?filename=' + filename)
     },
 
-    formatCurrency: function(value, currency, precision) {
-        if (typeof precision === 'undefined') {
-            precision = 2
-        }
-
-        return new Intl.NumberFormat(this.locale, {style: 'currency', currency: currency, maximumFractionDigits: precision}).format(value)
+    formatCurrency: function(value, currency) {
+        return new Intl.NumberFormat('ru-RU', {style: 'currency', currency: currency}).format(value)
     },
 
     formatDate: function(value, options) {
@@ -80,8 +69,6 @@ window.App = {
     },
 
     init: function() {
-        this.locale = this.locales[this.lang]
-
         this.initObjects()
         this.initDropdowns()
         this.initResize()
@@ -89,6 +76,8 @@ window.App = {
         this.initLogoutLinks()
         this.initLanguageLinks()
         this.initLinks()
+
+        this.initTopLinks()
     },
 
     initDropdowns: function() {
@@ -111,7 +100,7 @@ window.App = {
         let self = this
         $('.js-set-language').click(function() {
             Overlay.showAnimation()
-            Ajax.post(self.url.setCookie, {
+            Ajax.post(self.url.cookie, {
                 key: 'netto-admin-lang',
                 value: $(this).data('code')
             }, function() {
@@ -135,9 +124,9 @@ window.App = {
 
     initLogoutLinks: function() {
         let self = this
-        $('.js-logout').click(async function() {
+        $('#js-logout, #js-logout-mobile').click(async function() {
             if (await Overlay.showConfirm(self.messages.confirm.logout)) {
-                $(this).find('form').submit();
+                $('#js-logout-form').submit();
             }
         })
     },
@@ -160,6 +149,12 @@ window.App = {
 
                 $(document).off('click.netto')
             }
+        })
+    },
+
+    initTopLinks: function() {
+        $('.js-top-link').click(function() {
+            Overlay.redirect($(this).data('url'))
         })
     },
 

@@ -2,25 +2,28 @@
 
 namespace Netto\Services;
 
-use Illuminate\Support\Facades\Mail;
-use Netto\Mail\ReportLogs;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
+use Netto\Notifications\ReportLogs;
+use App\Models\User;
 
 class ReportLogService
 {
-    private string $email;
+    private User $user;
     private array $files = [];
-    private bool $delete;
+    private string $zipPath = '';
 
     /**
      * @param string $email
      * @param array $files
-     * @param bool $delete
      */
-    public function __construct(string $email, array $files, bool $delete = true)
+    public function __construct(string $email, array $files)
     {
-        $this->email = $email;
+        $user = new User();
+        $user->setAttribute('email', $email);
+
+        $this->user = $user;
         $this->files = $files;
-        $this->delete = $delete;
     }
 
     /**
@@ -28,31 +31,47 @@ class ReportLogService
      */
     public function send(): void
     {
-        $package = new \ZipArchive();
-        $packagePath = storage_path('app/logs.zip');
+        Notification::send($this->user, new ReportLogs($this->createZip() ? $this->zipPath : array_keys($this->files)));
 
-        if ($package->open($packagePath, \ZipArchive::CREATE) === true) {
-            foreach ($this->files as $file) {
-                $package->addFile($file, basename($file));
-            }
-
-            $package->close();
-
-            Mail::to($this->email)->send(new ReportLogs($packagePath));
-
-            if (file_exists($packagePath)) {
-                unlink($packagePath);
-            }
-        } else {
-            foreach ($this->files as $file) {
-                Mail::to($this->email)->send(new ReportLogs($file));
+        $unlink = [];
+        foreach ($this->files as $file => $delete) {
+            if ($delete) {
+                $unlink[] = $file;
             }
         }
 
-        if ($this->delete) {
-            foreach ($this->files as $file) {
-                unlink($file);
-            }
+        if ($this->zipPath) {
+            $unlink[] = $this->zipPath;
         }
+
+        foreach ($unlink as $file) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function createZip(): bool
+    {
+        $archive = new \ZipArchive();
+        $zipPath = storage_path('app/'.Str::random(40).'.zip');
+
+        if ($archive->open($zipPath, \ZipArchive::CREATE) === true) {
+            foreach ($this->files as $file => $delete) {
+                if (!$archive->addFile($file, basename($file))) {
+                    return false;
+                }
+            }
+
+            if (!$archive->close()) {
+                return false;
+            }
+
+            $this->zipPath = $zipPath;
+            return true;
+        }
+
+        return false;
     }
 }

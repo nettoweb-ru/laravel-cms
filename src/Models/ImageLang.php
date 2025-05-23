@@ -2,10 +2,12 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Netto\Models\Abstract\Pivot as BaseModel;
 
-class ImageLang extends Pivot
+class ImageLang extends BaseModel
 {
     public $timestamps = false;
-    public $table = 'cms__images_lang';
+    public $table = 'cms__images__lang';
+
+    protected string $parentClass = Image::class;
 }

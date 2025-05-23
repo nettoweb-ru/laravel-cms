@@ -2,9 +2,7 @@
 
 namespace Netto\View\Components;
 
-use Illuminate\View\Component;
-use Illuminate\View\View;
-use Netto\Services\LanguageService;
+use Illuminate\View\{Component, View};
 
 class Form extends Component
 {
@@ -18,9 +16,7 @@ class Form extends Component
             return;
         }
 
-        $languages = LanguageService::getList();
-
-        foreach ($languages as $key => $value) {
+        foreach (get_language_list() as $key => $value) {
             $this->languages[] = [
                 'slug' => $key,
                 'name' => $value['name'],

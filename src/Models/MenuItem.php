@@ -2,20 +2,22 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Netto\Models\Abstract\Model as BaseModel;
+use Netto\Traits\HasAccessCheck;
 
 /**
  * @property Menu $menu
- * @property Collection $roles
  */
 
-class MenuItem extends Model
+class MenuItem extends BaseModel
 {
+    use HasAccessCheck;
+
     public $timestamps = false;
     public $table = 'cms__menu_items';
+
+    public string $permissionsTable = 'cms__menu_items__permissions';
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -25,9 +27,8 @@ class MenuItem extends Model
 
     protected $attributes = [
         'sort' => 0,
-        'is_active' => false,
-        'is_blank' => false,
-        'highlight' => null,
+        'is_active' => '0',
+        'is_blank' => '0',
     ];
 
     /**
@@ -35,14 +36,6 @@ class MenuItem extends Model
      */
     public function menu(): BelongsTo
     {
-        return $this->belongsTo(Menu::class, 'menu_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'cms__menu_item__role', 'menu_item_id', 'role_id');
+        return $this->belongsTo(Menu::class);
     }
 }

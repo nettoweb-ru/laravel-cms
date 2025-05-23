@@ -2,8 +2,8 @@
 
 namespace Netto\Http\Middleware;
 
-use App\Models\User;
 use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -1,64 +1,97 @@
 import ListWidget from './list.widget.js'
 
+window.lists = []
+
 class List extends ListWidget {
-    body = null
     columns = {}
-    iconCreate = null
-    iconDownload = null
-    iconFind = null
-    id = 'netto-admin-list'
+    defaultSort = {}
+    defaultWidth = 15
+    id = 'netto-list'
     objects = {
         head: null,
-        title: null,
-        page: null,
-        perPage: null,
-        total: null,
-        pages: null,
         dropdown: null,
         columns: null
     }
+    noSort = {}
 
     constructor(object) {
         super(object)
-        this.initObjects(object)
-        this.initIcons(object)
-        this.setObjectId(object)
-        this.initColumns(object)
 
+        this.defaultSort = object.data('default-sort')
+        this.noSort = object.data('no-sort')
+
+        this.setId(object)
+
+        this.initObjects(object)
+        this.initButtons()
+
+        this.initColumns()
         this.initParams()
+
         this.initDropdown()
         this.initSortColumns()
-        this.initPerPage()
-        this.initPage()
 
         this.load()
     }
 
     getDefaultParams() {
-        let k, codes = Array()
+        let k, codes = Array(), code
         for (k in this.columns) {
             if (this.columns[k].default) {
                 codes[codes.length] = k
             }
         }
 
-        let columns = {}, width = 100 - (codes.length - 1)
+        let columns = {},
+            width = 100,
+            names = ['name', 'title'],
+            nameColumn = null
+
         for (k in codes) {
-            columns[codes[k]] = (codes[k] === 'name') ? width : 1
+            code = codes[k]
+            if (this.isNarrowColumn(code)) {
+                columns[code] = 1
+                width -= 1
+            } else if (names.includes(code)) {
+                columns[code] = 0
+                nameColumn = code
+            } else {
+                columns[code] = this.defaultWidth
+                width -= this.defaultWidth
+            }
         }
+
+        if (!nameColumn) {
+            let keys = Object.keys(columns)
+            nameColumn = keys[keys.length - 1];
+        }
+
+        columns[nameColumn] = width
 
         return {
             page: 1,
             perPage: 10,
-            sort: 'id',
-            sortDir: 'asc',
             columns: columns,
+            sort: Object.keys(this.defaultSort)[0],
+            sortDir: Object.values(this.defaultSort)[0],
+            toggle: (typeof this.buttons.toggle === 'object') ? 1 : 0
         }
     }
 
-    initColumns(object) {
-        let self = this
+    initButtons() {
+        super.initButtons()
 
+        /*this.buttons.search.click(function() {
+
+        })
+
+        this.buttons.download.click(function() {
+
+        })*/
+    }
+
+    initColumns() {
+        let self = this
         this.objects.columns.each(function() {
             let id = $(this).data('id')
             self.columns[id] = {
@@ -86,7 +119,7 @@ class List extends ListWidget {
             let id = $(this).data('id'), columns = {}
             if (typeof self.params.columns[id] === 'undefined') {
                 columns = self.params.columns
-                columns[id] = 1
+                columns[id] = self.isNarrowColumn(id) ? 1 : self.defaultWidth
             } else {
                 let k, i = 0
                 for (k in self.params.columns) {
@@ -111,196 +144,102 @@ class List extends ListWidget {
         })
     }
 
-    initIcons(object) {
-        this.initToggleIcon(object)
-
-        this.iconFind = object.find('.js-icon-find')
-        this.iconDownload = object.find('.js-icon-download')
-
-        let self = this
-        this.iconCreate = object.find('.js-icon-create')
-        this.iconCreate.click(function() {
-            self.followUrl($(this))
-        })
-    }
-
-    initObjects(object) {
-        this.body = object.find('.js-body')
-
-        this.objects.head = object.find('.js-head')
-        this.objects.title = object.find('.js-title')
-        this.objects.page = object.find('.js-page')
-        this.objects.perPage = object.find('.js-per-page')
-        this.objects.total = object.find('.js-counter-items')
-        this.objects.pages = object.find('.js-counter-pages')
-        this.objects.dropdown = object.find('.js-dropdown-columns')
+    initObjects(parent) {
+        this.objects.head = parent.find('.js-head')
+        this.objects.dropdown = parent.find('.js-dropdown')
         this.objects.columns = this.objects.dropdown.children()
     }
 
-    initPage() {
-        let self = this
-        this.objects.page.change(function() {
-            self.params.page = parseInt($(this).val())
-            self.saveParams()
-            self.load()
-        })
-    }
-
-    initPerPage() {
-        let self = this
-        this.objects.perPage.change(function() {
-            self.params.page = 1
-            self.params.perPage = parseInt($(this).val())
-
-            self.saveParams()
-            self.load()
-        })
-    }
-
-    initWidget(data) {
-        this.objects.title.html(data.title)
-
-        if (typeof data.url.toggle === 'string') {
-            this.iconToggle.show()
-        }
-
-        super.initWidget(data)
-
-        if (typeof data.url.create === 'string') {
-            this.iconCreate.data('url', this.url.create).show()
-        }
-    }
-
-    lock() {
-        if (this.locked) {
-            return
-        }
-
-        this.disable(this.iconToggle)
-        this.disable(this.iconCreate)
-
-        this.disable(this.objects.page)
-
-        super.lock()
-    }
-
-    lockBulkButtons() {
-        this.disable(this.iconToggle)
-        super.lockBulkButtons()
+    isNarrowColumn(code) {
+        let narrow = ['id', 'sort']
+        return narrow.includes(code)
     }
 
     render(data) {
-        this.enable(this.iconCreate)
-        if (data.nav.total === 0) {
-            this.layers.empty.show()
-            return
-        }
+        if (data.total) {
+            let k1, k2, tr, attr = {}, self = this, th
+            for (k1 in this.params.columns) {
+                attr = {'data-code': k1, 'class': 'col-' + k1}
+                if (!this.noSort.includes(k1)) {
+                    attr.class += ' sortable'
+                }
 
-        this.enable(this.iconInvert)
+                th = $('<th />', attr).html($('<span />', {'class': 'text-small'}).html(this.columns[k1].label))
+                th.resizable({
+                    containment: "parent",
+                    handles: "e",
+                    stop: function() {
+                        let total = self.objects.head.width()
+                        self.objects.head.find('th').each(function() {
+                            let code = $(this).data('code'),
+                                abs = Math.round(parseFloat($(this).css('width')))
+                                    + parseInt($(this).css('padding-left'))
+                                    + parseInt($(this).css('padding-right'))
+                                    + parseInt($(this).css('border-right-width')),
+                                rel = Math.round(abs * 100 / total)
 
-        this.objects.total.html(App.formatNumber(data.nav.total))
-        this.objects.pages.html(App.formatNumber(data.nav.max))
+                            $(this).width($(this).css('width'))
+                            self.params.columns[code] = rel
+                        })
 
-        let a, params
-        for (a = 1; a <= data.nav.max; a++) {
-            params = {
-                value: a
+                        self.validateWidth()
+                        self.saveParams()
+                    }
+                })
+
+                this.objects.head.append(th)
             }
 
-            if (a === this.params.page) {
-                params.selected = true
-            }
-
-            this.objects.page.append($('<option />', params).html(App.formatNumber(a)))
-        }
-
-        if (data.nav.max > 1) {
-            this.enable(this.objects.page)
-        }
-
-        let k1, k2, tr, attr = {}, self = this, th
-
-        for (k1 in this.params.columns) {
-            th = $('<th />', {'data-code': k1, 'class': 'sortable'}).html($('<span />', {'class': 'text-small'}).html(this.columns[k1].label))
-            th.resizable({
-                containment: "parent",
-                handles: "e",
-                stop: function() {
-                    let total = self.objects.head.width()
-                    self.objects.head.find('th').each(function() {
-                        let code = $(this).data('code'),
-                            abs = Math.round(parseFloat($(this).css('width')))
-                                + parseInt($(this).css('padding-left'))
-                                + parseInt($(this).css('padding-right'))
-                                + parseInt($(this).css('border-right-width')),
-                            rel = Math.round(abs * 100 / total)
-
-                        $(this).width($(this).css('width'))
-                        self.params.columns[code] = rel
-                    })
-
-                    self.validateWidth()
-                    self.saveParams()
+            this.objects.columns.removeClass('selected').each(function() {
+                if (typeof self.params.columns[$(this).data('id')] === 'number') {
+                    $(this).addClass('selected')
                 }
             })
 
-            this.objects.head.append(th)
+            setTimeout(function() {
+                self.setColumnsWidth()
+            }, 10)
+
+            this.renderSortColumns()
+
+            for (k1 in data.items) {
+                attr = {
+                    'data-id': data.items[k1].id,
+                    'data-url': data.items[k1]._editUrl
+                }
+
+                if ((typeof data.items[k1].is_active === 'boolean') && !data.items[k1].is_active) {
+                    attr.class = 'inactive'
+                }
+
+                tr = $('<tr />', attr)
+                for (k2 in this.params.columns) {
+                    tr.append($('<td />', {'class': 'col-' + k2}).html($('<span />', {'class': 'text'}).html(data.items[k1][k2])))
+                }
+
+                this.setClickEvents(tr, function() {
+                    self.followUrl($(this))
+                })
+
+                this.body.append(tr)
+            }
         }
-
-        setTimeout(function() {
-            let width = self.objects.head.width()
-            self.objects.head.find('th').each(function() {
-                $(this).width((self.params.columns[$(this).data('code')] * width / 100) + 'px')
-            })
-        }, 10)
-
-        this.renderSortColumns()
-        this.objects.columns.removeClass('selected').each(function() {
-            if (typeof self.params.columns[$(this).data('id')] === 'number') {
-                $(this).addClass('selected')
-            }
-        })
-
-        for (k1 in data.items) {
-            attr = {
-                'data-id': data.items[k1].id,
-                'data-url': data.items[k1].url
-            }
-
-            if ((typeof data.items[k1].is_active === 'boolean') && !data.items[k1].is_active) {
-                attr.class = 'inactive'
-            }
-
-            tr = $('<tr />', attr)
-            for (k2 in this.params.columns) {
-                tr.append($('<td />').html($('<span />', {'class': 'text'}).html(data.items[k1][k2])))
-            }
-
-            this.setClickEvent(tr, function() {
-                self.followUrl($(this))
-            })
-
-            this.body.append(tr)
-        }
-
-        this.objects.perPage.find('option:selected').attr('selected', false)
-        this.objects.perPage.find('option[value="' + this.params.perPage + '"]').attr('selected', true)
 
         super.render(data)
     }
 
     reset() {
-        this.objects.page.html('')
-        this.objects.total.html('0')
-        this.objects.pages.html('0')
-        this.objects.head.html('')
-
         super.reset()
+        this.objects.head.html('')
     }
 
-    unlockBulkButtons() {
-        this.enable(this.iconToggle)
-        super.unlockBulkButtons()
+    setColumnsWidth() {
+        let width = this.objects.head.width(),
+            self = this
+
+        this.objects.head.find('th').each(function() {
+            $(this).width((self.params.columns[$(this).data('code')] * width / 100) + 'px')
+        })
     }
 
     validateWidth() {
@@ -323,6 +262,6 @@ class List extends ListWidget {
 
 $(document).ready(function() {
     $('.js-list').each(function() {
-        new List($(this))
+        window.lists[window.lists.length] = new List($(this))
     })
 })

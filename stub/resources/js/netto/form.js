@@ -5,17 +5,18 @@ class Form {
     languages = {
         active: null,
         default: null,
-        isMultiple: false,
         objects: [],
         switches: [],
-        storageId: 'netto-admin-form-lang'
+        storageId: 'netto-form-lang',
+        enabled: false,
+        multiple: false,
     }
     maxSizePost = 0
     maxSizeUpload = 0
     sheets = {
         active: null,
         default: null,
-        isMultiple: false,
+        multiple: false,
         objects: [],
         switches: [],
         storageId: 'netto-admin-form-sheet'
@@ -23,7 +24,7 @@ class Form {
     timeout = null
 
     constructor(object) {
-        this.languages.isMultiple = (parseInt(object.data('multilang')) === 1)
+        this.languages.enabled = (parseInt(object.data('multilang')) === 1)
 
         this.maxSizeUpload = parseInt(object.data('upload-max-filesize'))
         this.maxSizePost = parseInt(object.data('post-max-size'))
@@ -32,33 +33,44 @@ class Form {
         if (id.length) {
             this.id = id
             this.sheets.storageId += ('-' + this.id)
-
-            if (this.languages.isMultiple) {
-                this.languages.storageId += ('-' + this.id)
-            }
         }
 
         this.initDelete(object)
         this.initEditors(object)
         this.initFileInputs(object)
+        this.initImages(object)
         this.initAnimation(object)
         this.initJsonInputs(object)
         this.initTransliterateInputs(object)
         this.initAutocompleteInputs(object)
         this.initSheets(object)
 
-        if (this.languages.isMultiple) {
+        if (this.languages.enabled) {
             this.initLanguages(object)
         }
 
         this.checkErrors()
 
-        if (this.sheets.active === null) {
-            this.clickSheet(localStorage.getItem(this.sheets.storageId) ?? this.sheets.default)
+        let sheetId = localStorage.getItem(this.sheets.storageId) ?? this.sheets.default
+        if (typeof this.sheets.objects[sheetId] === 'undefined') {
+            sheetId = this.sheets.default
+            localStorage.setItem(this.sheets.storageId, sheetId)
         }
+        this.clickSheet(sheetId)
 
-        if (this.languages.isMultiple && (this.languages.active === null)) {
-            this.clickLanguage(localStorage.getItem(this.languages.storageId) ?? this.languages.default)
+        if (this.languages.enabled) {
+            let langId = localStorage.getItem(this.languages.storageId) ?? this.languages.default
+            if (typeof this.languages.switches[langId] === 'undefined') {
+                langId = this.languages.default
+                localStorage.setItem(this.languages.storageId, langId)
+            }
+            this.clickLanguage(langId)
+
+            if (!this.languages.multiple) {
+                for (let key in this.languages.switches) {
+                    this.languages.switches[key].hide()
+                }
+            }
         }
 
         this.initFocus()
@@ -84,10 +96,10 @@ class Form {
         }).append($('<div />', {
             'class': 'value-item-cell'
         }).append($('<span />', {
-            'class': 'text-small'
+            'class': 'text'
         }).html(object.label)).append($('<input />', {
             'type': 'hidden',
-            'name': parent.data('name') + '[]',
+            'name': parent.data('name'),
             'value': object.value
         })))))
 
@@ -101,7 +113,7 @@ class Form {
             parent.find('.js-autocomplete-multiple-hold').append($('<input />', {
                 'type': 'hidden',
                 'class': 'js-autocomplete-multiple-hidden',
-                'name': parent.data('name') + '[]',
+                'name': parent.data('name'),
                 'value': '',
             }))
         }
@@ -119,7 +131,7 @@ class Form {
             if (error.length) {
                 this.clickSheet(key)
 
-                if (this.languages.isMultiple) {
+                if (this.languages.enabled) {
                     let multiLang = error.closest('.js-multilang')
                     if (multiLang.length) {
                         this.clickLanguage(multiLang.data('code'))
@@ -156,7 +168,9 @@ class Form {
         }
 
         this.sheets.active = parseInt(id)
-        localStorage.setItem(this.sheets.storageId, this.sheets.active)
+        if (this.sheets.multiple) {
+            localStorage.setItem(this.sheets.storageId, this.sheets.active)
+        }
 
         this.sheets.switches[this.sheets.active].addClass('active')
         this.sheets.objects[this.sheets.active].show()
@@ -326,7 +340,7 @@ class Form {
     initFocus() {
         let focused = this.sheets.objects[this.sheets.active].find('*[autofocus]:first')
         if (focused.length) {
-            if (this.languages.isMultiple) {
+            if (this.languages.enabled) {
                 let parent = focused.parent()
                 if (parent.hasClass('js-multilang')) {
                     focused = parent.parent().find('.js-multilang[data-code="' + this.languages.active + '"] *[autofocus]:first')
@@ -334,6 +348,14 @@ class Form {
             }
 
             setTimeout(function() {focused.focus()}, 100)
+        }
+    }
+
+    initImages(object) {
+        if (object.find('.js-view-image').length > 0) {
+            Fancybox.bind("[data-fancybox]", {
+                hideScrollbar: false
+            });
         }
     }
 
@@ -390,7 +412,9 @@ class Form {
     }
 
     initLanguages(object) {
-        let self = this
+        let self = this,
+            count = 0
+
         object.find('.js-form-lang-switch').each(function() {
             self.languages.switches[$(this).data('id')] = $(this)
             self.languages.objects[$(this).data('id')] = []
@@ -402,7 +426,11 @@ class Form {
             $(this).click(function() {
                 self.clickLanguage($(this).data('id'))
             })
+
+            count++
         })
+
+        this.languages.multiple = (count > 1)
 
         object.find('.js-multilang').each(function() {
             self.languages.objects[$(this).data('code')][self.languages.objects[$(this).data('code')].length] = $(this)
@@ -436,7 +464,7 @@ class Form {
         })
 
         if (count > 1) {
-            this.sheets.isMultiple = true
+            this.sheets.multiple = true
         } else {
             this.sheets.objects[1].addClass('single')
         }
@@ -458,7 +486,7 @@ class Form {
 
     transliterate(source, target) {
         Overlay.showAnimation()
-        Ajax.get('/admin/transliterate', {
+        Ajax.get(App.url.transliterate, {
             string: source.val()
         }, function(data) {
             Overlay.hideAnimation()

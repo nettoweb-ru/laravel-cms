@@ -2,35 +2,18 @@
 
 namespace Netto\Services;
 
-use Illuminate\Support\Facades\Auth;
-use Netto\Models\Menu;
-use Netto\Models\MenuItem;
+use Netto\Models\{Menu, MenuItem};
 
 abstract class MenuService
 {
-    /**
-     * @param string $code
-     * @param string $language
-     * @return array|null
-     */
-    public static function getByCode(string $code, string $language): ?array
-    {
-        static $structure;
-
-        if (is_null($structure)) {
-            $structure = self::getStructure();
-        }
-
-        foreach ($structure as $item) {
-            if (($item['slug'] == $code) && ($item['language'] == $language)) {
-                return $item;
-            }
-        }
-
-        return null;
-    }
+    private static array $structure = [
+        1 => null,
+        0 => null,
+    ];
 
     /**
+     * Return the list of menu items, that can be used as parents for given menu ID.
+     *
      * @param int|null $id
      * @return array
      */
@@ -39,23 +22,28 @@ abstract class MenuService
         $skipId = [];
         if (!is_null($id)) {
             foreach (self::getStructure() as $menu) {
-                if (empty($menu->menu_item_id)) {
+                if (is_null($menu['menu_item_id'])) {
                     $skipId = array_merge($skipId, self::getChildrenId($id, $menu));
                 }
             }
         }
 
+        $builder = MenuItem::query()->orderBy('sort')->with('menu');
+        if ($skipId) {
+            $builder->whereNotIn('menu_id', $skipId);
+        }
+
         $list = [];
-        foreach (MenuItem::with('menu')->whereNotIn('menu_id', $skipId)->orderBy('sort')->get() as $item) {
+        foreach ($builder->get() as $item) {
             /** @var MenuItem $item */
-            if (!array_key_exists($item->menu_id, $list)) {
-                $list[$item->menu_id] = [
-                    'name' => $item->menu->name,
+            if (!array_key_exists($item->getAttribute('menu_id'), $list)) {
+                $list[$item->getAttribute('menu_id')] = [
+                    'name' => $item->menu->getAttribute('name'),
                     'options' => [],
                 ];
             }
 
-            $list[$item->menu_id]['options'][$item->id] = $item->name;
+            $list[$item->getAttribute('menu_id')]['options'][$item->getAttribute('id')] = $item->getAttribute('name');
         }
 
         $return = ['' => ''];
@@ -68,21 +56,25 @@ abstract class MenuService
     }
 
     /**
+     * Return public menu by given slug.
+     *
      * @param string $code
-     * @param string|null $lang
-     * @return array
+     * @param string|null $language
+     * @return array|null
      */
-    public static function getPublic(string $code, ?string $lang = null): array
+    public static function getPublic(string $code, ?string $language = null): ?array
     {
-        if (is_null($lang)) {
-            $lang = app()->getLocale();
+        if (is_null($language)) {
+            $language = app()->getLocale();
         }
 
-        if ($menu = self::getByCode($code, $lang)) {
-            return self::pullKidsPublic($menu['kids'], ($user = Auth::user()) ? $user->roles->pluck('id')->all() : []);
+        foreach (self::getStructure(true) as $menu) {
+            if (($menu['slug'] == $code) && ($menu['language'] == $language)) {
+                return $menu;
+            }
         }
 
-        return [];
+        return null;
     }
 
     /**
@@ -112,61 +104,86 @@ abstract class MenuService
     }
 
     /**
+     * @param bool $public
      * @return array
      */
-    private static function getStructure(): array
+    private static function getStructure(bool $public = false): array
     {
-        $items = [];
-        foreach (MenuItem::orderBy('sort')->with('roles')->get() as $item) {
-            /** @var MenuItem $item */
-            $items[$item->id] = [
-                'id' => $item->id,
-                'menu_id' => $item->menu_id,
-                'name' => $item->name,
-                'slug' => $item->slug,
-                'link' => $item->link,
-                'is_active' => $item->is_active,
-                'is_blank' => $item->is_blank,
-                'dropdown' => null,
-                'roles_id' => $item->roles->pluck('id')->all(),
-                'highlight' => $item->highlight,
-            ];
-        }
+        $key = (int) $public;
 
-        $return = [];
-        foreach (Menu::with('language')->get() as $menu) {
-            /** @var Menu $menu */
-            $return[$menu->id] = [
-                'id' => $menu->id,
-                'menu_item_id' => $menu->menu_item_id,
-                'name' => $menu->name,
-                'slug' => $menu->slug,
-                'language' => $menu->language->slug,
-                'kids' => [],
-            ];
-
-            if ($menu->menu_item_id) {
-                $items[$menu->menu_item_id]['dropdown'] = $menu->id;
+        if (is_null(self::$structure[$key])) {
+            $builder = MenuItem::query()->orderBy('sort');
+            if ($public) {
+                $builder->where('is_active', '1')->with('permissions');
             }
-        }
 
-        foreach ($return as $menu) {
-            foreach ($items as $itemId => $item) {
-                if ($item['menu_id'] == $menu['id']) {
-                    $return[$menu['id']]['kids'][$itemId] = $item;
+            $items = [];
+            foreach ($builder->get() as $item) {
+                /** @var MenuItem $item */
+                if ($public && !$item->isAccessible()) {
+                    continue;
+                }
+
+                $array = $item->toArray();
+                $array['dropdown'] = null;
+
+                if ($public) {
+                    $array['is_current'] = request()->routeIs(...array_filter(array_merge([$array['link']], (array) $array['highlight'])));
+                    $array['target'] = $array['is_blank'] ? '_blank' : '_self';
+                    if ($array['link']) {
+                        $array['link'] = route($array['link']);
+                    }
+
+                    unset($array['roles']);
+                }
+
+                $items[$item->getAttribute('id')] = $array;
+            }
+
+            $menus = [];
+            foreach (Menu::all() as $menu) {
+                /** @var Menu $menu */
+                $array = $menu->toArray();
+                $array['language'] = find_language_code($array['lang_id']);
+                $array['kids'] = [];
+
+                $menus[$array['id']] = $array;
+
+                if ($array['menu_item_id'] && isset($items[$array['menu_item_id']])) {
+                    $items[$array['menu_item_id']]['dropdown'] = $array['id'];
                 }
             }
-        }
 
-        foreach ($return as $menu) {
-            foreach ($menu['kids'] as $item) {
-                if (!is_null($item['dropdown'])) {
-                    $return[$menu['id']]['kids'][$item['id']]['dropdown'] = self::pullKids($item['dropdown'], $return);
+            foreach ($menus as $menu) {
+                foreach ($items as $id => $item) {
+                    if ($item['menu_id'] == $menu['id']) {
+                        $menus[$menu['id']]['kids'][$id] = $item;
+                    }
                 }
             }
+
+            foreach ($menus as $menu) {
+                foreach ($menu['kids'] as $item) {
+                    if (!is_null($item['dropdown'])) {
+                        $menus[$menu['id']]['kids'][$item['id']]['dropdown'] = self::pull($item['dropdown'], $menus);
+                    }
+                }
+            }
+
+            if ($public) {
+                $return = [];
+                foreach ($menus as $id => $menu) {
+                    if (is_null($menu['menu_item_id'])) {
+                        $return[$id] = $menu;
+                    }
+                }
+                $menus = $return;
+            }
+
+            self::$structure[$key] = $menus;
         }
 
-        return $return;
+        return self::$structure[$key];
     }
 
     /**
@@ -174,45 +191,14 @@ abstract class MenuService
      * @param array $menu
      * @return array
      */
-    private static function pullKids(int $menuId, array $menu): array
+    private static function pull(int $menuId, array $menu): array
     {
         $return = $menu[$menuId];
 
         foreach ($return['kids'] as $itemId => $item) {
             if (!empty($item['dropdown'])) {
-                $return['kids'][$itemId]['dropdown'] = self::pullKids($item['dropdown'], $menu);
+                $return['kids'][$itemId]['dropdown'] = self::pull($item['dropdown'], $menu);
             }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param array $kids
-     * @param array $rolesId
-     * @return array
-     */
-    private static function pullKidsPublic(array $kids, array $rolesId): array
-    {
-        $return = [];
-        foreach ($kids as $kid) {
-            if (!$kid['is_active']) {
-                continue;
-            }
-
-            if ($kid['roles_id'] && !array_intersect($kid['roles_id'], $rolesId)) {
-                continue;
-            }
-
-            if ($kid['dropdown']) {
-                $kid['dropdown']['kids'] = self::pullKidsPublic($kid['dropdown']['kids'], $rolesId);
-            }
-
-            $kid['target'] = $kid['is_blank'] ? '_blank' : '_self';
-            $kid['is_current'] = request()->routeIs($kid['link']) || ($kid['highlight'] && request()->routeIs(...$kid['highlight']));
-            $kid['link'] = $kid['link'] ? route($kid['link'], [], false) : '';
-
-            $return[] = $kid;
         }
 
         return $return;

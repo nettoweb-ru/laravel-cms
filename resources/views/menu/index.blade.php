@@ -1,13 +1,19 @@
-<x-cms::layout.admin :title="$title" :chain="$chain">
+<x-cms::layout.admin :head="$head" :url="$url" :chain="$chain">
     <x-cms::list
-        :url="route('admin.menu.list', [], false)"
         id="menu"
+        :url="route('admin.menu.list')"
         :columns="[
-            'id' => __('cms::main.attr_id'),
-            'name' => __('cms::main.attr_name'),
-            'slug' => __('cms::main.attr_slug'),
-            'lang_id' => __('cms::main.attr_language'),
+            'id' => __('main.attr_id'),
+            'name' => __('main.attr_name'),
+            'slug' => __('main.attr_slug'),
+            'language.name' => __('main.attr_language'),
         ]"
         :default="['name']"
+        :defaultSort="['name' => 'asc']"
+        :title="__('main.list_menu')"
+        :actions="[
+            'create' => route('admin.menu.create'),
+            'delete' => route('admin.menu.delete'),
+        ]"
     />
 </x-cms::layout.admin>

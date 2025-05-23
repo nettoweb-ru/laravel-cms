@@ -113,7 +113,7 @@
 
 .form .form-grid .grid-item.value .autocomplete-value .value-item{
     display: inline-block;
-    background-color:var(--color-light-gray-2);
+    background-color:var(--color-light-gray-1);
     border:1px solid var(--color-gray);
     margin: 0 5px 5px 0;
     -webkit-border-radius: 3px;
@@ -122,11 +122,11 @@
     cursor: default;
 }
 
-.form .form-grid .grid-item.value .autocomplete-value .value-item:hover{
+.form .form-grid .grid-item.value .autocomplete-value .value-item:not(.disabled):hover{
     cursor: pointer;
-    background-color: var(--color-main);
+    background-color:var(--color-main);
     border-color: var(--color-main);
-    color:#fff;
+    color:var(--color-reset);
 }
 
 .form .form-grid .grid-item.value .autocomplete-value .value-item .value-item-table{
@@ -135,11 +135,11 @@
 
 .form .form-grid .grid-item.value .autocomplete-value .value-item .value-item-table .value-item-cell{
     display: table-cell;
-    padding: 3px 8px;
+    padding: 2px 6px;
 }
 
 .form .form-grid .grid-item.value .grid-value-file{
-    width:inherit;
+    width:100%;
     display:table;
     height:10px;
 }
@@ -165,6 +165,10 @@ body.rtl .form .form-grid .grid-item.value .grid-value-file .cell.filename{
     white-space: nowrap;
 }
 
+.form .form-grid .grid-item.value .grid-value-file .cell.icons a{
+    display: inline-block;
+}
+
 .form .form-grid .grid-item.value .json-value-table{
     width:100%;
 }
@@ -174,11 +178,12 @@ body.rtl .form .form-grid .grid-item.value .grid-value-file .cell.filename{
 }
 
 .form .form-grid .grid-item.value .json-value-table .json-value-cell.control .btn{
-    margin-bottom:6px;
+
 }
 
 body.ltr .form .form-grid .grid-item.value .json-value-table .json-value-cell.control{
     padding-right: 10px;
+    padding-bottom: 6px;
 }
 
 body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.control{
@@ -213,7 +218,7 @@ body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.it
     margin: 6px 0;
 }
 
-.form .form-grid .grid-item.value .grid-value-option:hover{
+.form .form-grid .grid-item.value .grid-value-option:not(.disabled):hover{
     cursor:pointer;
     color:var(--color-main);
 }
@@ -349,6 +354,14 @@ body.rtl .form .form-grid .grid-item.label .required{
     .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
         display:block;
     }
+
+    .form .form-grid .grid-item.label{
+        margin-bottom: 1px;
+    }
+}
+
+.ui-widget{
+    font-family: 'Play', sans-serif;
 }
 
 .ui-autocomplete{
@@ -383,29 +396,18 @@ body.rtl .form .form-grid .grid-item.label .required{
     cursor:pointer;
 }
 
-.ui-helper-hidden-accessible,
-.ui-resizable-handle{
+.ui-helper-hidden-accessible{
     display:none;
 }
 
-.ui-resizable{
-    position:relative;
+.ui-widget.ui-widget-content{
+    border:none;
 }
 
-.ui-resizable-handle{
-    position:absolute;
-    font-size:.1px;
-    display:block;
-    -ms-touch-action:none;
-    touch-action:none;
-}
-
-.ui-resizable-e{
-    cursor:e-resize;
-    width:7px;
-    right:-5px;
-    top:0;
-    height:100%;
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover{
+    background:none;
+    border:none;
+    color:inherit;
 }
 
 body.ltr .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper{

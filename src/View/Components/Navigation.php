@@ -2,10 +2,9 @@
 
 namespace Netto\View\Components;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\View\Component;
-use Illuminate\View\View;
-use Netto\Models\Navigation as Model;
+use Illuminate\View\{Component, View};
+use Netto\Models\Navigation as WorkModel;
+use Netto\Models\NavigationGroup;
 
 class Navigation extends Component
 {
@@ -17,54 +16,37 @@ class Navigation extends Component
 
         if (is_null($return)) {
             $return = [];
-            $items = [];
 
-            foreach (Model::orderBy('group_id', 'asc')->orderBy('sort', 'asc')->with('permissions')->get() as $model) {
-                $allowed = true;
-                if ($model->permissions) {
-                    foreach ($model->permissions->all() as $permission) {
-                        if (!Gate::allows($permission->slug)) {
-                            $allowed = false;
-                            break;
-                        }
-                    }
-                }
+            foreach (NavigationGroup::query()->with('items')->orderBy('sort')->get() as $group) {
+                /** @var NavigationGroup $group */
 
-                if (!$allowed) {
-                    continue;
-                }
-
-                $items[$model->group_id][$model->id] = [
-                    'name' => $model->name,
-                    'url' => $model->url,
-                    'highlight' => $model->highlight,
-                    'access' => $model->access,
-                ];
-            }
-
-            foreach ($items as $groupId => $groupKids) {
+                $items = [];
                 $currentGroup = false;
-                $kids = [];
 
-                foreach ($groupKids as $item) {
-                    $currentItem = $item['highlight'] && request()->routeIs(...$item['highlight']);
+                foreach ($group->items as $item) {
+                    /** @var WorkModel $item */
+                    if (!$item->isAccessible()) {
+                        continue;
+                    }
 
-                    if (!$currentGroup && $currentItem) {
+                    if ($currentItem = request()->routeIs(...array_merge([$item->getAttribute('url')], $item->getAttribute('highlight')))) {
                         $currentGroup = true;
                     }
 
-                    $kids[] = [
-                        'name' => __($item['name']),
-                        'url' => route($item['url']),
+                    $items[] = [
+                        'name' => __($item->getAttribute('name')),
+                        'url' => route($item->getAttribute('url')),
                         'current' => $currentItem,
                     ];
                 }
 
-                $return[$groupId] = [
-                    'name' => __('cms::main.navigation_'.$groupId),
-                    'current' => $currentGroup,
-                    'items' => $kids,
-                ];
+                if ($items) {
+                    $return[$group->getAttribute('id')] = [
+                        'name' => __($group->getAttribute('name')),
+                        'current' => $currentGroup,
+                        'items' => $items,
+                    ];
+                }
             }
         }
 

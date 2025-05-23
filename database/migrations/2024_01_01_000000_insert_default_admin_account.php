@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (count(DB::table(self::TABLE)->where('email', self::DEFAULT_EMAIL)->get()) === 0) {
+        if (DB::table(self::TABLE)->where('email', self::DEFAULT_EMAIL)->get()->count() == 0) {
             DB::table(self::TABLE)->insert([
                 ['name' => 'Administrator', 'email' => self::DEFAULT_EMAIL, 'password' => '$2y$12$HK7LTQQQhqDyazG.0UrR4.xiXOGQeQ3gEv9jd4Kl35Qz3JG18OdLm', 'email_verified_at' => date('Y-m-d H:i:s')],
             ]);
         }
+
     }
 
     /**

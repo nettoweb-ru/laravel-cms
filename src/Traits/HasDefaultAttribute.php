@@ -9,10 +9,10 @@ trait HasDefaultAttribute
     /**
      * @return bool
      */
-    private function checkDeletingDefault(): bool
+    protected function checkDefault(): bool
     {
-        if ($this->is_default) {
-            Session::put('status', __('cms::main.error_deleting_default_model'));
+        if ($this->getAttribute('is_default')) {
+            Session::put('status', __('main.error_deleting_default_model'));
             return false;
         }
 
@@ -22,10 +22,10 @@ trait HasDefaultAttribute
     /**
      * @return void
      */
-    private function checkSavedDefault(): void
+    protected function saveDefault(): void
     {
-        if (!$this->original['is_default'] && $this->is_default) {
-            self::where('is_default', '1')->whereNot('id', $this->id)->update([
+        if (!$this->getOriginal('is_default') && $this->getAttribute('is_default')) {
+            self::query()->where('is_default', '1')->whereNot('id', $this->getAttribute('id'))->update([
                 'is_default' => '0',
             ]);
         }

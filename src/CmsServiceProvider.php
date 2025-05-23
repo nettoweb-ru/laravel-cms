@@ -2,149 +2,79 @@
 
 namespace Netto;
 
-use App\Http\Middleware\UserLocale;
+use App\Http\Middleware\LocalePublic;
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\{ResetPassword, VerifyEmail};
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\{Carbon, ServiceProvider};
+use Illuminate\Support\Facades\{Blade, Gate, Schedule, URL};
+use Illuminate\Routing\ResourceRegistrar as OriginalRegistrar;
 use Illuminate\Routing\Router;
-use Netto\Http\Middleware\Authenticate;
-use Netto\Http\Middleware\AdminLocale;
-use Netto\Http\Middleware\EnsureEmailIsVerified;
-use Netto\Http\Middleware\GuestLocale;
-use Netto\Http\Middleware\RedirectIfAuthenticated;
-use Netto\Http\Middleware\RequirePassword;
-use Netto\Http\Middleware\Permissions;
-use Netto\Http\Middleware\Roles;
+use Netto\Http\Middleware\{Authenticate, EnsureEmailIsVerified, LocaleAdmin, LocaleGuest, RedirectIfAuthenticated, RequirePassword, Permissions, Roles};
 use Netto\Models\Permission;
 use Netto\Registrars\ResourceRegistrar;
-use Netto\View\Components\Form;
-use Netto\View\Components\Languages;
-use Netto\View\Components\Navigation;
+use Netto\View\Components\{Captcha, Form, Languages, Navigation};
+use Netto\Console\Commands\{RefreshSearchIndex, RefreshSitemap, ReportLogs};
 
 class CmsServiceProvider extends ServiceProvider
 {
-    /**
-     * @return void
-     */
-    public function register(): void
-    {
-        $registrar = new ResourceRegistrar($this->app['router']);
-        $this->app->bind('Illuminate\Routing\ResourceRegistrar', function() use ($registrar) {
-            return $registrar;
-        });
-    }
-
     /**
      * @return void
      * @throws BindingResolutionException
      */
     public function boot(): void
     {
-        date_default_timezone_set(config('cms.timezone', 'UTC'));
-        define('CMS_ADMIN_ROLE', 'administrator');
+        date_default_timezone_set(config('app.timezone', 'UTC'));
+        define('NETTO_CDN_URL', 'https://cdn.nettoweb.ru');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Console\RefreshSitemapCommand::class,
-                Console\RefreshSearchDatabase::class,
-                Console\ReportLogsCommand::class,
+                RefreshSitemap::class,
+                RefreshSearchIndex::class,
+                ReportLogs::class,
             ]);
-
-            $this->publishes([
-                __DIR__.'/../stub/lang' => lang_path(),
-                __DIR__.'/../stub/public' => public_path(),
-                __DIR__.'/../stub/resources/css/netto' => resource_path('css/netto'),
-                __DIR__.'/../stub/resources/js/netto' => resource_path('js/netto'),
-            ], 'laravel-assets');
-
-            $this->publishes([
-                __DIR__.'/../config/cms.php' => config_path('cms.php'),
-                __DIR__.'/../stub/app' => app_path(),
-                __DIR__.'/../stub/resources/views' => resource_path('views'),
-                __DIR__.'/../stub/resources/css/styles.css' => resource_path('css/styles.css'),
-                __DIR__.'/../stub/resources/js/styles.js' => resource_path('js/styles.js'),
-                __DIR__.'/../stub/vite.config.js' => base_path('vite.config.js'),
-                __DIR__.'/../stub/storage' => storage_path('app'),
-                __DIR__.'/../stub/storage/auto' => storage_path('app/auto'),
-                __DIR__.'/../stub/storage/public/files' => storage_path('app/public/files'),
-                __DIR__.'/../stub/storage/public/images' => storage_path('app/public/images'),
-                __DIR__.'/../stub/storage/public/auto' => storage_path('app/public/auto'),
-            ], 'nettoweb-laravel-cms');
+            $this->registerPublishedPaths();
         }
 
-        /** @var Router $router */
-        $router = $this->app->make(Router::class);
+        $this->registerMiddleware();
+        $this->registerMailTemplates();
+        $this->registerScheduledTasks();
 
-        $router->aliasMiddleware('role', Roles::class);
-        $router->aliasMiddleware('permission', Permissions::class);
+        $this->registerUserAbilities();
+        $this->registerBladeDirectives();
 
-        $router->aliasMiddleware('locale.admin', AdminLocale::class);
-        $router->aliasMiddleware('locale.guest', GuestLocale::class);
-        $router->aliasMiddleware('locale.public', UserLocale::class);
-
-        $router->aliasMiddleware('guest.admin', RedirectIfAuthenticated::class);
-        $router->aliasMiddleware('auth.admin', Authenticate::class);
-
-        $router->aliasMiddleware('verified', EnsureEmailIsVerified::class);
-        $router->aliasMiddleware('password.confirm', RequirePassword::class);
-
-        $router->middlewareGroup('admin', ['web', 'auth.admin', 'locale.admin', 'role:'.CMS_ADMIN_ROLE]);
-        $router->middlewareGroup('admin.guest', ['web', 'guest.admin', 'locale.guest']);
-
-        VerifyEmail::createUrlUsing(function(User $user): string {
-            $route = $user->hasRole(CMS_ADMIN_ROLE)
-                ? 'admin.verification.verify'
-                : 'verification.verify';
-
-            return URL::temporarySignedRoute(
-                $route,
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                [
-                    'id' => $user->getKey(),
-                    'hash' => sha1($user->getEmailForVerification()),
-                ]
-            );
-        });
-
-        ResetPassword::createUrlUsing(function(User $user, string $token): string {
-            $route = $user->hasRole(CMS_ADMIN_ROLE)
-                ? 'admin.password.reset'
-                : 'password.reset';
-
-            return url(route($route, [
-                'token' => $token,
-                'email' => $user->getEmailForPasswordReset(),
-            ], false));
-        });
+        $this->setLoggingChannels();
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'cms');
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'cms');
+        $this->loadTranslationsFrom(__DIR__.'/../lang');
 
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'cms');
         $this->loadViewComponentsAs('cms', [
             Languages::class,
             Navigation::class,
             Form::class,
+            Captcha::class,
         ]);
+    }
 
-        try {
-            Permission::get()->map(function ($permission) {
-                Gate::define($permission->slug, function ($user) use ($permission) {
-                    return $user->hasPermissionTo($permission);
-                });
-            });
-        } catch (\Exception $e) {
-            report($e);
-        }
+    /**
+     * @return void
+     */
+    public function register(): void
+    {
+        $registrar = new ResourceRegistrar($this->app['router']);
+        $this->app->bind(OriginalRegistrar::class, function() use ($registrar) {
+            return $registrar;
+        });
 
+    }
+
+    /**
+     * @return void
+     */
+    private function registerBladeDirectives(): void
+    {
         Blade::directive('role', function ($role){
             return "<?php if (auth()->check() && auth()->user()->hasRole({$role})): ?>";
         });
@@ -158,5 +88,136 @@ class CmsServiceProvider extends ServiceProvider
         Blade::directive('endpermission', function () {
             return "<?php endif; ?>";
         });
+    }
+
+    /**
+     * @return void
+     */
+    private function registerMailTemplates(): void
+    {
+        VerifyEmail::createUrlUsing(function(User $user): string {
+            $route = $user->isAdministrator()
+                ? 'admin.verification.verify'
+                : 'verification.verify';
+
+            return URL::temporarySignedRoute(
+                $route,
+                Carbon::now()->addMinutes(config('auth.verification.expire', 60)),
+                [
+                    'id' => $user->getKey(),
+                    'hash' => sha1($user->getEmailForVerification()),
+                ]
+            );
+        });
+
+        ResetPassword::createUrlUsing(function(User $user, string $token): string {
+            $route = $user->isAdministrator()
+                ? 'admin.password.reset'
+                : 'password.reset';
+
+            return url(route($route, [
+                'token' => $token,
+                'email' => $user->getEmailForPasswordReset(),
+            ], false));
+        });
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    private function registerMiddleware(): void
+    {
+        /** @var Router $router */
+        $router = $this->app->make(Router::class);
+
+        foreach ([
+            'admin.auth' => Authenticate::class,
+            'admin.check' => RedirectIfAuthenticated::class,
+            'locale.admin' => LocaleAdmin::class,
+            'locale.guest' => LocaleGuest::class,
+            'locale.public' => LocalePublic::class,
+            'password.confirm' => RequirePassword::class,
+            'permission' => Permissions::class,
+            'role' => Roles::class,
+            'verified' => EnsureEmailIsVerified::class,
+         ] as $key => $value) {
+            $router->aliasMiddleware($key, $value);
+        }
+
+        foreach ([
+            'admin' => ['web', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
+            'admin.guest' => ['web', 'admin.check', 'locale.guest'],
+         ] as $key => $value) {
+            $router->middlewareGroup($key, $value);
+        }
+
+        $router->pushMiddlewareToGroup('public', LocalePublic::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function registerScheduledTasks(): void
+    {
+        Schedule::command(ReportLogs::class)->hourlyAt(config('cms.schedule.hourly', 0));
+        Schedule::command(RefreshSitemap::class)->dailyAt(config('cms.schedule.daily', 1));
+        Schedule::command(RefreshSearchIndex::class)->weeklyOn(config('cms.schedule.weekly', 2));
+    }
+
+    /**
+     * @return void
+     */
+    private function registerPublishedPaths(): void
+    {
+        $this->publishes([
+            __DIR__.'/../config/cms.php' => config_path('cms.php'),
+            __DIR__.'/../stub/app' => app_path(),
+            __DIR__.'/../stub/public/manifest.json' => public_path('manifest.json'),
+            __DIR__.'/../stub/resources/views' => resource_path('views'),
+            __DIR__.'/../stub/resources/css/styles.css' => resource_path('css/styles.css'),
+            __DIR__.'/../stub/resources/css/error.css' => resource_path('css/error.css'),
+            __DIR__.'/../stub/resources/js/styles.js' => resource_path('js/styles.js'),
+            __DIR__.'/../stub/vite.config.js' => base_path('vite.config.js'),
+            __DIR__.'/../stub/storage' => storage_path('app'),
+            __DIR__.'/../stub/storage/public' => storage_path('app/public'),
+            __DIR__.'/../stub/storage/public/files' => storage_path('app/public/files'),
+            __DIR__.'/../stub/storage/public/images' => storage_path('app/public/images'),
+            __DIR__.'/../stub/storage/public/auto' => storage_path('app/public/auto'),
+        ], 'nettoweb-laravel-cms');
+
+        $this->publishes([
+            __DIR__.'/../stub/lang' => lang_path(),
+            __DIR__.'/../stub/public/assets/css' => public_path('assets/css'),
+            __DIR__.'/../stub/resources/css/netto' => resource_path('css/netto'),
+            __DIR__.'/../stub/resources/js/netto' => resource_path('js/netto'),
+        ], 'laravel-assets');
+    }
+
+    /**
+     * @return void
+     */
+    private function registerUserAbilities(): void
+    {
+        try {
+            Permission::get()->map(function ($permission) { // @TODO check 2x
+                Gate::define($permission->slug, function ($user) use ($permission) {
+                    return $user->hasPermissionTo($permission);
+                });
+            });
+        } catch (\Exception $exception) {
+            report($exception);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function setLoggingChannels(): void
+    {
+        config()->set('logging.channels.sent', [
+            'driver' => 'single',
+            'path' => storage_path('logs/sent.log'),
+            'replace_placeholders' => true,
+        ]);
     }
 }

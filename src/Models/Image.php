@@ -2,52 +2,42 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Netto\Traits\HasMultiLangAttributes;
-use Netto\Traits\HasUploadedFiles;
+use Netto\Models\Abstract\Model as BaseModel;
+use Netto\Traits\{HasUploads, IsMultiLingual};
 
-class Image extends Model
+/**
+ * @property Album $album
+ */
+
+class Image extends BaseModel
 {
-    use HasMultiLangAttributes, HasUploadedFiles;
+    use HasUploads, IsMultiLingual;
 
     public $timestamps = false;
     public $table = 'cms__images';
 
-    protected $attributes = [
-        'sort' => 0,
-    ];
-
-    protected array $multiLang = [
+    public array $multiLingual = [
         'caption',
     ];
 
-    protected string $multiLangClass = ImageLang::class;
+    public string $multiLingualClass = ImageLang::class;
 
-    protected array $files = [
-        'filename' => 'public',
-        'thumb' => 'public',
+    public array $uploads = [
+        'filename' => [
+            'storage' => 'public',
+        ],
+        'thumb' => [
+            'storage' => 'public',
+            'width' => null,
+            'height' => null,
+            'auto' => 'filename',
+        ],
     ];
 
-    /**
-     * @return void
-     */
-    public static function boot(): void
-    {
-        parent::boot();
-
-        self::saving(function($model) {
-            $model->setAttribute('thumb', image_resize($model->filename, $model->files['thumb']));
-        });
-
-        self::updated(function($model) {
-            $model->checkUpdatedFiles();
-        });
-
-        self::deleted(function($model) {
-            $model->checkDeletedFiles();
-        });
-    }
+    protected $attributes = [
+        'sort' => 0,
+    ];
 
     /**
      * @return BelongsTo
@@ -55,25 +45,5 @@ class Image extends Model
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getPreview(): string
-    {
-        return $this->exists
-            ? '/storage/auto/'.basename($this->thumb)
-            : '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilename(): string
-    {
-        return $this->exists
-            ? '/storage/auto/'.basename($this->filename)
-            : '';
     }
 }

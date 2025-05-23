@@ -2,9 +2,8 @@
 
 namespace Netto\View\Components;
 
-use Illuminate\View\Component;
-use Illuminate\View\View;
-use Netto\Http\Middleware\AdminLocale;
+use Illuminate\View\{Component, View};
+use Netto\Http\Middleware\LocaleAdmin;
 
 class Languages extends Component
 {
@@ -14,7 +13,7 @@ class Languages extends Component
     {
         $language = app()->getLocale();
 
-        foreach (AdminLocale::LANGUAGES as $key => $value) {
+        foreach (LocaleAdmin::LANGUAGES as $key => $value) {
             $this->items[$key] = [
                 'title' => $value,
                 'current' => ($key == $language)

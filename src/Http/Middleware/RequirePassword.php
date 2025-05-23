@@ -2,10 +2,10 @@
 
 namespace Netto\Http\Middleware;
 
-use Illuminate\Auth\Middleware\RequirePassword as BaseMiddleware;
 use Closure;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use Illuminate\Auth\Middleware\RequirePassword as BaseMiddleware;
+use Illuminate\Http\{JsonResponse, RedirectResponse};
 
 class RequirePassword extends BaseMiddleware
 {
@@ -25,7 +25,9 @@ class RequirePassword extends BaseMiddleware
                 ], 423);
             }
 
-            $route = $request->user()->hasRole(CMS_ADMIN_ROLE)
+            /** @var User $user */
+            $user = $request->user();
+            $route = $user && $user->isAdministrator()
                 ? 'admin.password.confirm'
                 : 'password.confirm';
 

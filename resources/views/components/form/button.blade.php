@@ -1,6 +1,9 @@
-@props(['bg' => ''])
+@props([
+    'bg' => '',
+    'disabled' => false
+])
 
-<button {{ $attributes->merge(['type' => 'submit', 'class' => 'btn']) }}>
+<button @if ($disabled) disabled @endif {{ $attributes->merge(['type' => 'submit', 'class' => 'btn'.($disabled ? ' disabled' : '')]) }}>
     <span class="table table-btn">
         @if ($bg)
         <span class="cell cell-btn bg @if (!$slot->isEmpty()) align @endif">

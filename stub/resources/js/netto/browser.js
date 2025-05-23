@@ -1,34 +1,30 @@
 import ListWidget from './list.widget.js'
 
 class Browser extends ListWidget {
-    body = null
-    dirParent = null
-    iconFolderAdd = null
-    iconFolderUp = null
-    iconUpload = null
-    id = 'netto-admin-browser'
-    maxSizePost = 0
-    maxSizeUpload = 0
+    id = 'netto-browser'
+    parentDir = null
     objects = {
         head: null,
-        directory: null,
+        hold: null,
+        path: null,
         upload: null
     }
-    path = null
+    maxSizePost = 0
+    maxSizeUpload = 0
+    root = null
 
     constructor(object) {
         super(object)
+        this.setId(object)
+
         this.initObjects(object)
-        this.initIcons(object)
-        this.setObjectId(object)
-        this.setInitDirectory(object)
-        this.setUploadLimits(object)
-
+        this.initButtons()
         this.initParams()
-        this.params.dir = '/'
 
+        this.initBrowser(object)
         this.initSortColumns()
         this.initUpload()
+
         this.load()
     }
 
@@ -40,44 +36,56 @@ class Browser extends ListWidget {
         }
     }
 
-    initIcons(object) {
+    initBrowser() {
+        this.maxSizePost = this.objects.hold.data('post-max-size')
+        this.maxSizeUpload = this.objects.hold.data('upload-max-filesize')
+        this.params.dir = this.objects.hold.data('start-dir')
+        this.root = this.objects.hold.data('root')
+    }
+
+    initButtons() {
+        super.initButtons()
+
         let self = this
 
-        this.iconUpload = object.find('.js-icon-upload')
-        this.iconUpload.click(function() {
-            self.objects.upload.click()
-        })
-
-        this.iconFolderUp = object.find('.js-icon-folder-up')
-        this.iconFolderUp.click(function() {
-            self.params.dir = self.dirParent
+        this.buttons.up.click(function() {
+            self.params.dir = self.parentDir
             self.load()
         })
 
-        this.iconFolderAdd = object.find('.js-icon-folder-add')
-        this.iconFolderAdd.click(async function() {
-            let name = await Overlay.showPrompt($(this).data('message'))
-            if ((name === false) || (name.length === 0)) {
-                return
-            }
+        if (typeof this.buttons.directory === 'object') {
+            this.actions.directory = this.buttons.directory.data('url')
+            this.buttons.directory.click(async function () {
+                let name = await Overlay.showPrompt($(this).data('message'))
+                if ((name === false) || (name.length === 0)) {
+                    return
+                }
 
-            self.lock()
-            Ajax.put(self.url.directory, {
-                name: name,
-                dir: self.params.dir
-            }, function() {
-                self.load()
-            }, function() {
-                self.unlock()
+                self.lock()
+                Ajax.put(self.actions.directory, {
+                    name: name,
+                    dir: self.params.dir
+                }, function() {
+                    self.load()
+                }, function() {
+                    self.unlock()
+                })
             })
-        })
+        }
+
+        if (typeof this.buttons.upload === 'object') {
+            this.actions.upload = this.buttons.upload.data('url')
+            this.buttons.upload.click(function() {
+                self.objects.upload.click()
+            })
+        }
     }
 
-    initObjects(object) {
-        this.body = object.find('.js-body')
-        this.objects.head = object.find('.js-head')
-        this.objects.directory = object.find('.js-path')
-        this.objects.upload = object.find('.js-upload')
+    initObjects(parent) {
+        this.objects.head = parent.find('.js-head')
+        this.objects.hold = parent.find('.js-browser-hold')
+        this.objects.path = parent.find('.js-path')
+        this.objects.upload = parent.find('.js-upload')
     }
 
     initUpload() {
@@ -87,110 +95,81 @@ class Browser extends ListWidget {
         })
     }
 
-    initWidget(data) {
-        this.path = data.path
-        this.renderSortColumns()
-        super.initWidget(data)
-    }
-
-    lock() {
-        if (this.locked) {
-            return
-        }
-
-        this.disable(this.iconUpload)
-        this.disable(this.iconFolderUp)
-        this.disable(this.iconFolderAdd)
-
-        super.lock()
-    }
-
-    processClick(tr) {
-        if (tr.hasClass('dir')) {
-            this.params.dir = tr.data('id')
-            this.load()
-        } else {
-            App.downloadFile(this.path + tr.data('id'))
-        }
-    }
-
     render(data) {
-        this.objects.directory.val(data.dirCurrent)
+        this.objects.path.val(data.currentDir)
+        this.parentDir = data.parentDir
 
-        this.dirParent = data.dirParent
-        if (this.dirParent) {
-            this.enable(this.iconFolderUp)
-        }
+        if (data.total) {
+            let attr = {}, tr, self = this
+            for (let key in data.items) {
+                attr = {
+                    'data-id': data.currentDir + data.items[key].name
+                }
 
-        this.enable(this.iconFolderAdd)
-        this.enable(this.iconUpload)
+                if (data.items[key].dir) {
+                    attr['class'] = 'dir'
+                }
 
-        if (data.items.length === 0) {
-            this.layers.empty.show()
-            return
-        }
+                tr = $('<tr />', attr)
+                    .append(
+                        $('<td />', {
+                            'class': 'name'
+                        }).append($('<span />', {
+                            'class': 'text',
+                            'dir': 'ltr'
+                        }).html(data.items[key].name))
+                    ).append(
+                        $('<td />', {
+                            'class': 'size'
+                        }).append($('<span />', {
+                            'class': 'text',
+                            'dir': 'ltr'
+                        }).html(data.items[key].size))
+                    ).append(
+                        $('<td />', {
+                            'class': 'date'
+                        }).append($('<span />', {
+                            'class': 'text'
+                        }).html(data.items[key].date))
+                    )
 
-        this.enable(this.iconInvert)
+                this.setClickEvents(tr, function() {
+                    let id = $(this).data('id')
+                    if ($(this).hasClass('dir')) {
+                        self.params.dir = id
+                        self.load()
+                    } else {
+                        App.downloadFile(self.root + id)
+                    }
+                })
 
-        let attr = {}, tr, self = this
-        for (let key in data.items) {
-            attr = {
-                'data-id': data.dirCurrent + data.items[key].name
+                this.body.append(tr)
             }
 
-            if (data.items[key].dir) {
-                attr['class'] = 'dir'
-                attr['data-id'] += '/'
-            }
-
-            tr = $('<tr />', attr)
-                .append(
-                    $('<td />', {
-                        'class': 'name'
-                    }).append($('<span />', {
-                        'class': 'text',
-                        'dir': 'ltr'
-                    }).html(data.items[key].name))
-                ).append(
-                    $('<td />', {
-                        'class': 'size'
-                    }).append($('<span />', {
-                        'class': 'text',
-                        'dir': 'ltr'
-                    }).html(data.items[key].size))
-                ).append(
-                    $('<td />', {
-                        'class': 'date'
-                    }).append($('<span />', {
-                        'class': 'text'
-                    }).html(data.items[key].date))
-                )
-
-            this.setClickEvent(tr, function() {
-                self.processClick($(this))
-            })
-
-            this.body.append(tr)
+            this.renderSortColumns()
         }
 
         super.render(data)
     }
 
-    reset() {
-        this.dirParent = null
-        super.reset()
-    }
-
-    setInitDirectory(object) {
-        let dir = object.data('dir')
-        if (typeof dir === 'string') {
-            this.params.dir = dir
+    unlock() {
+        if (!this.locked) {
+            return
         }
-    }
 
-    setUploadLimits(object) {
-        this.maxSizeUpload = parseInt(object.data('upload-max-filesize'))
-        this.maxSizePost = parseInt(object.data('post-max-size'))
+        if (this.parentDir) {
+            this.enable(this.buttons.up)
+        }
+
+        if (typeof this.buttons.directory === 'object') {
+            this.enable(this.buttons.directory)
+        }
+
+        if (typeof this.buttons.upload === 'object') {
+            this.enable(this.buttons.upload)
+        }
+
+        super.unlock()
     }
 
     upload(files) {
@@ -217,7 +196,7 @@ class Browser extends ListWidget {
 
         let self = this
         Ajax.send({
-            url: this.url.upload,
+            url: this.actions.upload,
             method: 'post',
             data: form,
             contentType: false,

@@ -1,30 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Netto\Http\Controllers\AlbumController;
-use Netto\Http\Controllers\AuthenticatedSessionController;
-use Netto\Http\Controllers\BrowserController;
-use Netto\Http\Controllers\ConfirmablePasswordController;
-use Netto\Http\Controllers\DownloadController;
-use Netto\Http\Controllers\EmailVerificationNotificationController;
-use Netto\Http\Controllers\EmailVerificationPromptController;
-use Netto\Http\Controllers\ImageController;
-use Netto\Http\Controllers\LanguageController;
-use Netto\Http\Controllers\MenuController;
-use Netto\Http\Controllers\MenuItemController;
-use Netto\Http\Controllers\NewPasswordController;
-use Netto\Http\Controllers\PasswordController;
-use Netto\Http\Controllers\PasswordResetLinkController;
-use Netto\Http\Controllers\PermissionController;
-use Netto\Http\Controllers\ProfileController;
-use Netto\Http\Controllers\PublicationController;
-use Netto\Http\Controllers\RoleController;
-use Netto\Http\Controllers\ServiceController;
-use Netto\Http\Controllers\UserBalanceController;
 use App\Http\Controllers\Admin\UserController;
-use Netto\Http\Controllers\VerifyEmailController;
+use Netto\Http\Controllers\Admin\{
+    AlbumController,
+    AuthenticatedSessionController,
+    PublicDiskController,
+    ConfirmablePasswordController,
+    EmailVerificationNotificationController,
+    EmailVerificationPromptController,
+    HelperController,
+    ImageController,
+    LanguageController,
+    MenuController,
+    MenuItemController,
+    NavigationController,
+    NavigationItemController,
+    NewPasswordController,
+    PasswordController,
+    PasswordResetLinkController,
+    PermissionController,
+    ProfileController,
+    PublicationController,
+    RoleController,
+    UserBalanceController,
+    VerifyEmailController,
+};
 
-Route::prefix(config('cms.location', 'admin'))->name('admin.')->group(function() {
+Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(function() {
     Route::middleware('admin.guest')->group(function() {
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
@@ -49,41 +52,89 @@ Route::prefix(config('cms.location', 'admin'))->name('admin.')->group(function()
         Route::get('profile/password/confirm', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
         Route::post('profile/password/confirm', [ConfirmablePasswordController::class, 'store']);
 
-        Route::post('setCookie', [ServiceController::class, 'setCookie'])->name('cookie.set');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
         Route::middleware('verified')->group(function() {
-            Route::get('/', [PublicationController::class, 'index'])->name('home');
-            Route::resource('publication', PublicationController::class)->except(['toggle', 'index']);
+            Route::get('/', [HelperController::class, 'home'])->name('home');
 
-            Route::resource('language', LanguageController::class)->except('toggle');
-            Route::get('download', DownloadController::class)->name('download');
+            Route::middleware('permission:admin-publications')->group(function() {
+                Route::resource('publication', PublicationController::class)->except(['toggle']);
+            });
 
-            Route::middleware('permission:manage-menu')->group(function() {
+            Route::middleware('permission:admin-photo-albums')->group(function() {
+                Route::resource('album', AlbumController::class)->except('toggle');
+                Route::resource('album/image', ImageController::class)->names([
+                    'store' => 'album-image.store',
+                    'create' => 'album-image.create',
+                    'delete' => 'album-image.delete',
+                    'list' => 'album-image.list',
+                    'update' => 'album-image.update',
+                    'destroy' => 'album-image.destroy',
+                    'edit' => 'album-image.edit',
+                ])->except(['index', 'toggle']);
+            });
+
+            Route::middleware('permission:admin-languages')->group(function() {
+                Route::resource('language', LanguageController::class)->except('toggle');
+            });
+
+            Route::middleware('permission:admin-menu')->group(function() {
                 Route::resource('menu', MenuController::class)->except('toggle');
-                Route::resource('menu.menuItem', MenuItemController::class)->except('index');
+                Route::resource('menu/item', MenuItemController::class)->names([
+                    'store' => 'menu-item.store',
+                    'create' => 'menu-item.create',
+                    'delete' => 'menu-item.delete',
+                    'list' => 'menu-item.list',
+                    'toggle' => 'menu-item.toggle',
+                    'update' => 'menu-item.update',
+                    'destroy' => 'menu-item.destroy',
+                    'edit' => 'menu-item.edit',
+                ])->except('index');
             });
 
-            Route::middleware('permission:manage-users')->group(function() {
+            Route::middleware('permission:admin-navigation')->group(function() {
+                Route::resource('navigation', NavigationController::class);
+                Route::resource('navigation/item', NavigationItemController::class)->names([
+                    'store' => 'navigation-item.store',
+                    'create' => 'navigation-item.create',
+                    'delete' => 'navigation-item.delete',
+                    'list' => 'navigation-item.list',
+                    'toggle' => 'navigation-item.toggle',
+                    'update' => 'navigation-item.update',
+                    'destroy' => 'navigation-item.destroy',
+                    'edit' => 'navigation-item.edit',
+                ])->except('index');
+            });
+
+            Route::middleware('permission:admin-users')->group(function() {
                 Route::resource('user', UserController::class)->except(['toggle']);
-                Route::resource('user.balance', UserBalanceController::class)->except(['index', 'toggle']);
+                Route::resource('user/balance', UserBalanceController::class)->names([
+                    'store' => 'user-balance.store',
+                    'create' => 'user-balance.create',
+                    'delete' => 'user-balance.delete',
+                    'list' => 'user-balance.list',
+                    'update' => 'user-balance.update',
+                    'destroy' => 'user-balance.destroy',
+                    'edit' => 'user-balance.edit',
+                ])->except(['index', 'toggle']);
             });
 
-            Route::middleware('permission:manage-access')->group(function() {
+            Route::middleware('permission:admin-access')->group(function() {
                 Route::resource('role', RoleController::class)->except(['toggle']);
                 Route::resource('permission', PermissionController::class)->except(['toggle', 'index']);
             });
 
-            Route::get('browser', [BrowserController::class, 'create'])->name('browser');
-            Route::get('browser/list', [BrowserController::class, 'list'])->name('browser.list');
-            Route::post('browser/upload', [BrowserController::class, 'upload'])->name('browser.upload');
-            Route::put('browser/directory', [BrowserController::class, 'directory'])->name('browser.directory');
-            Route::post('browser/delete', [BrowserController::class, 'delete'])->name('browser.delete');;
+            Route::middleware('permission:admin-public-browser')->group(function() {
+                Route::get('browser', [PublicDiskController::class, 'index'])->name('browser');
+                Route::get('browser/list', [PublicDiskController::class, 'list'])->name('browser.list');
+                Route::post('browser/upload', [PublicDiskController::class, 'upload'])->name('browser.upload');
+                Route::put('browser/directory', [PublicDiskController::class, 'directory'])->name('browser.directory');
+                Route::post('browser/delete', [PublicDiskController::class, 'delete'])->name('browser.delete');;
+            });
 
-            Route::resource('album', AlbumController::class)->except('toggle');
-            Route::resource('album.image', ImageController::class)->except(['index', 'toggle']);
-
-            Route::get('transliterate', [ServiceController::class, 'transliterate']);
+            Route::get('tools/download', [HelperController::class, 'download']);
+            Route::get('tools/transliterate', [HelperController::class, 'transliterate']);
+            Route::post('tools/cookie', [HelperController::class, 'cookie']);
         });
     });
 });

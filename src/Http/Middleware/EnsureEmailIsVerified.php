@@ -5,8 +5,7 @@ namespace Netto\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\{Redirect, URL};
 
 class EnsureEmailIsVerified
 {
@@ -34,7 +33,7 @@ class EnsureEmailIsVerified
                 abort(403, 'Your email address is not verified.');
             }
 
-            $route = $user->hasRole(CMS_ADMIN_ROLE)
+            $route = $user && $user->isAdministrator()
                 ? 'admin.verification.notice'
                 : 'verification.notice';
 

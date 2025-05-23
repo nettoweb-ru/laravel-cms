@@ -1,80 +1,14 @@
-.list{
-    width:inherit;
-    margin-top: 30px;
-}
-
-.list:first-child{
-    margin-top: 0;
-}
-
-.list .list-block{
-    width:inherit;
-}
-
-.list .list-block.top .table.list-top{
-    width:inherit;
-    min-height: 25px;
-}
-
-.list .list-block.top .table.list-top .cell.list-top{
-    vertical-align: top;
-}
-
-.list .list-block.top .table.list-top .cell.list-top.title{
-    width:99%;
-}
-
-.list .list-block.top .table.list-top .cell.list-top.actions{
-    width:1%;
-    white-space: nowrap;
-}
-
-.list .list-block.content{
-    position: relative;
-    margin-top:20px;
-}
-
-.list .list-block.content .list-content-layer{
-    width:inherit;
-}
-
-.list .list-block.content .list-content-layer.animation{
-    background-color:var(--color-light-gray-2);
-    z-index: 5100;
-    min-height:200px;
-}
-
-.list .list-block.content .list-content-layer.animation .table{
-    height: inherit;
-    width: 100%;
-}
-
-.list .list-block.content .list-content-layer.animation .table .cell{
-    vertical-align: middle;
-    text-align: center;
-}
-
-.list .list-block.content .list-content-layer.results{
-    z-index: 5000;
-    display: none;
-}
-
-.list .list-block.content .list-content-layer.results .list-results{
-    width: inherit;
-    display: none;
-    position: relative;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-visible{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results{
     position: relative;
     width: inherit;
 }
 
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-data{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-visible{
+    position: relative;
     width: inherit;
 }
 
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown{
     position: absolute;
     top:0;
     left:0;
@@ -84,171 +18,31 @@
     border-width: 0 1px 1px;
     color:var(--color-gray);
     display: none;
+    z-index:100;
 }
 
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown .list-column-table{
     width:100%;
-    display:table;
 }
 
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table:hover{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown .list-column-table.selected{
+    background-color:var(--color-background);
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown .list-column-table:hover{
     cursor: pointer;
     color:var(--color-main);
 }
 
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table.selected{
-    background-color:var(--color-background);
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-dropdown .list-column-table .list-column-cell{
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown .list-column-table .list-column-cell{
     width: inherit;
-    display: table-cell;
     vertical-align: middle;
     padding:3px 8px;
 }
 
-.list .list-block.content table{
-    width:100%;
-    border-collapse: collapse;
-}
-
-.list .list-block.content table thead{
-    background-color: var(--color-background);
-}
-
-.list .list-block.content table thead th{
-    font-weight: 400;
-    padding:3px 6px;
-    border-style: solid;
-    border-color: var(--color-background-dark);
-    border-width: 0 1px;
-    color:var(--color-gray);
-    white-space: nowrap;
-}
-
-.list .list-block.content table thead th.sortable:hover{
-    cursor:pointer;
-}
-
-.list .list-block.content table thead th.sortable:hover span{
-    color:var(--color-main);
-}
-
-body.ltr .list .list-block.content table thead th:first-child{
-    border-left-width: 0;
-}
-
-body.ltr .list .list-block.content table thead th:last-child{
-    border-right-width: 0;
-}
-
-body.rtl .list .list-block.content table thead th:first-child{
-    border-right-width: 0;
-}
-
-body.rtl .list .list-block.content table thead th:last-child{
-    border-left-width: 0;
-}
-
-.list .list-block.content table thead th.sort.asc span:after{
-    content: '↑';
-}
-
-.list .list-block.content table thead th.sort.desc span:after{
-    content: '↓';
-}
-
-body.ltr .list .list-block.content table thead th.sort span:after{
-    padding-left:3px;
-}
-
-body.rtl .list .list-block.content table thead th.sort span:after{
-    padding-right:3px;
-}
-
-.list .list-block.content table tbody tr{
-    border-bottom: 1px solid var(--color-background);
-}
-
-.list .list-block.content table tbody tr:last-child{
-    border-bottom: none;
-}
-
-.list .list-block.content table tbody tr:hover{
-    background-color:var(--color-light-gray-1) !important;
-    cursor: pointer !important;
-    color:var(--color-main);
-}
-
-.list .list-block.content table tbody tr.selected{
-    background-color:var(--color-main) !important;
-    color:var(--color-reset) !important;
-}
-
-.list .list-block.content table tbody tr.inactive{
-    background-color:var(--color-light-gray-2);
-    color:var(--color-gray);
-}
-
-.list .list-block.content table tbody tr.selected:hover{
-    color:var(--color-border) !important;
-}
-
-.list .list-block.content table tbody td{
-    padding: 6px;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom{
-    width: inherit;
-    border-top:1px solid var(--color-background-dark);
-    color:var(--color-gray);
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom{
-    width:inherit;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom{
-    vertical-align: middle;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom select.narrow{
-    width: 65px;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total{
-    white-space: nowrap;
-    padding:0 20px;
-    width:100%;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block{
-    display: inline-block;
-}
-
-body.ltr .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block:first-child{
-    margin-right: 5px;
-}
-
-body.rtl .list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.total .list-total-block:first-child{
-    margin-left: 5px;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation{
-    width:100%;
-    position: relative;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation .list-nav .table.list-nav .cell{
-    vertical-align: middle;
-}
-
-.list .list-block.content .list-content-layer.results .list-results.found .list-results-bottom .table.list-bottom .cell.list-bottom.navigation .list-nav .table.list-nav .cell.padding{
-    padding:0 5px;
-}
-
-@media screen and (min-width: 1024px) {
-    .list .list-block.content{
-        margin-top:10px;
-    }
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table thead th.col-sort,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table thead th.col-id,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody td.col-sort,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody td.col-id{
+    text-align: center;
 }

@@ -15,12 +15,4 @@
             @endif
         </div>
     @endforeach
-    <div class="menu-item">
-        <div class="menu-item-block title js-logout">
-            <span class="text">{{ __('cms::auth.logout') }}</span>
-            <form method="POST" action="{{ route('admin.logout') }}">
-                @csrf
-            </form>
-        </div>
-    </div>
 </div>

@@ -27,19 +27,23 @@
     line-height: 0;
 }
 
-body.ltr .btn.btn-icon{
+body.ltr .btn.btn-icon,
+body.ltr a{
     margin-right: 8px;
 }
 
-body.ltr .btn.btn-icon:last-child{
+body.ltr .btn.btn-icon:last-child,
+body.ltr a:last-child{
     margin-right: 0;
 }
 
-body.rtl .btn.btn-icon{
+body.rtl .btn.btn-icon,
+body.rtl a{
     margin-left: 8px;
 }
 
-body.rtl .btn.btn-icon:last-child{
+body.rtl .btn.btn-icon:last-child,
+body.rtl a:last-child{
     margin-left: 0;
 }
 

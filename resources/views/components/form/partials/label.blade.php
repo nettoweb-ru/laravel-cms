@@ -1,19 +1,23 @@
 @props([
-    'id' => '',
-    'text' => '',
-    'required' => false,
+    'text',
+    'id',
+    'required',
     'dynamic' => false,
 ])
 
-@if (!empty($text))
+@php
+    $labelTag = $id && !$dynamic;
+@endphp
+
+@if ($text)
     <div class="grid-item label">
-        @if ($id && !$dynamic)
+        @if ($labelTag)
             <label for="{{ $id }}">
         @endif
 
         <span class="text-small">{{ $text }}@if ($required)<span class="required">*</span>@endif</span>
 
-        @if ($id && !$dynamic)
+        @if ($labelTag)
             </label>
         @endif
     </div>

@@ -69,16 +69,16 @@
             </div>
             <div class="form-block form-buttons">
                 @if ($save)
-                    <x-cms::form.button bg="icons.cloud-done" class="btn-form btn-success" name="button_save" value="1">{{ __('cms::main.action_save') }}</x-cms::form.button>
+                    <x-cms::form.button bg="icons.cloud-done" class="btn-form btn-success" name="button_save" value="1">{{ __('main.action_save') }}</x-cms::form.button>
                 @endif
                 @if ($apply)
-                    <x-cms::form.button bg="icons.done" class="btn-form btn-normal" name="button_apply" value="1">{{ __('cms::main.action_apply') }}</x-cms::form.button>
+                    <x-cms::form.button bg="icons.done" class="btn-form btn-normal" name="button_apply" value="1">{{ __('main.action_apply') }}</x-cms::form.button>
                 @endif
                 @if (!empty($url['index']))
-                    <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-link" type="button" data-url="{{ $url['index'] }}">{{ __('cms::main.action_cancel') }}</x-cms::form.button>
+                    <x-cms::form.button bg="icons.unavailable" class="btn-form btn-normal js-link" type="button" data-url="{{ $url['index'] }}">{{ __('main.action_cancel') }}</x-cms::form.button>
                 @endif
                 @if (!empty($url['destroy']))
-                    <x-cms::form.button bg="icons.remove" class="btn-form btn-warning js-item-destroy" type="button">{{ __('cms::main.action_delete') }}</x-cms::form.button>
+                    <x-cms::form.button bg="icons.remove" class="btn-form btn-warning js-item-destroy" type="button">{{ __('main.action_delete') }}</x-cms::form.button>
                 @endif
                 {!! $buttons !!}
             </div>

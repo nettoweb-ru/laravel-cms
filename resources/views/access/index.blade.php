@@ -1,22 +1,35 @@
-<x-cms::layout.admin :title="$title" :chain="$chain">
+<x-cms::layout.admin :head="$head" :url="$url" :chain="$chain">
     <x-cms::list
-        :url="route('admin.role.list', [], false)"
         id="role"
+        :url="route('admin.role.list')"
         :columns="[
-            'id' => __('cms::main.attr_id'),
-            'name' => __('cms::main.attr_name'),
-            'slug' => __('cms::main.attr_slug'),
+            'id' => __('main.attr_id'),
+            'name' => __('main.attr_name'),
+            'slug' => __('main.attr_slug'),
         ]"
         :default="['name']"
+        :defaultSort="['name' => 'asc']"
+        :title="__('main.list_role')"
+        :actions="[
+            'create' => route('admin.role.create'),
+            'delete' => route('admin.role.delete'),
+        ]"
     />
     <x-cms::list
-        :url="route('admin.permission.list', [], false)"
         id="permission"
+        :url="route('admin.permission.list')"
         :columns="[
-            'id' => __('cms::main.attr_id'),
-            'name' => __('cms::main.attr_name'),
-            'slug' => __('cms::main.attr_slug'),
+            'id' => __('main.attr_id'),
+            'name' => __('main.attr_name'),
+            'slug' => __('main.attr_slug'),
         ]"
         :default="['name']"
+        :defaultSort="['slug' => 'asc']"
+        :title="__('main.list_permission')"
+        :actions="[
+            'create' => route('admin.permission.create'),
+            'delete' => route('admin.permission.delete'),
+        ]"
+        :noSort="['name']"
     />
 </x-cms::layout.admin>

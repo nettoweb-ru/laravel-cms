@@ -2,15 +2,15 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Netto\Models\Abstract\Model as BaseModel;
 use Netto\Traits\HasDefaultAttribute;
 
-class Language extends Model
+class Language extends BaseModel
 {
     use HasDefaultAttribute;
 
     public $timestamps = false;
-    public $table = 'cms__languages';
+    public $table = 'cms__lang';
 
     protected $casts = [
         'is_default' => 'boolean',
@@ -18,22 +18,6 @@ class Language extends Model
 
     protected $attributes = [
         'sort' => 0,
-        'is_default' => false,
+        'is_default' => '0',
     ];
-
-    /**
-     * @return void
-     */
-    public static function boot(): void
-    {
-        parent::boot();
-
-        self::saved(function($model): void {
-            $model->checkSavedDefault();
-        });
-
-        self::deleting(function($model): bool {
-            return $model->checkDeletingDefault();
-        });
-    }
 }

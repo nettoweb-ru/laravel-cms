@@ -1,12 +1,18 @@
-<x-cms::layout.admin :title="$title" :chain="$chain">
+<x-cms::layout.admin :head="$head" :url="$url" :chain="$chain">
     <x-cms::list
-        :url="route('admin.album.list', [], false)"
         id="album"
+        :url="route('admin.album.list')"
         :columns="[
-            'id' => __('cms::main.attr_id'),
-            'sort' => __('cms::main.attr_sort'),
-            'name' => __('cms::main.attr_name'),
+            'id' => __('main.attr_id'),
+            'sort' => __('main.attr_sort'),
+            'name' => __('main.attr_name'),
         ]"
         :default="['sort', 'name']"
+        :defaultSort="['sort' => 'asc']"
+        :title="__('main.list_album')"
+        :actions="[
+            'create' => route('admin.album.create'),
+            'delete' => route('admin.album.delete'),
+        ]"
     />
 </x-cms::layout.admin>

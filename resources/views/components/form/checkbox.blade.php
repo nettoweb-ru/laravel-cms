@@ -1,32 +1,55 @@
 @props([
     'name',
+    'id' => $name,
+    'label' => '',
     'width' => 12,
     'required' => false,
     'disabled' => false,
-    'multilang' => false,
-    'id' => $name,
-    'label' => '',
     'messages' => [],
-    'options',
+    'value' => '',
+    'multilang' => false,
+    'options' => [],
     'multiple' => false,
-    'value' => [],
-    'type' => 'checkbox',
+    'type' => null,
 ])
 
-<div class="grid-cols-{{ $width }}">
-    @if ($label)
-        <x-cms::form.partials.label :text="$label" :required="$required" />
-    @endif
+<div class="grid-cols grid-cols-{{ $width }}">
+    <x-cms::form.partials.label
+        id=""
+        :text="$label"
+        :required="$required"
+    />
     <x-cms::form.partials.value>
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
                 <div class="js-multilang hidden" data-code="{{ $langCode }}">
-                    <x-cms::form.partials.checkbox :type="$type" :id="$id.'_'.$langCode" :value="$langValue" :disabled="$disabled" :options="$options[$langCode]" :name="$name.'|'.$langCode" :multiple="$multiple" />
+                    <x-cms::form.partials.checkbox
+                        :name="$name.'|'.$langCode"
+                        :id="$id.'_'.$langCode"
+                        :value="$langValue"
+                        :disabled="$disabled"
+                        :multiple="$multiple"
+                        :options="$options[$langCode]"
+                        :type="$type"
+                        {{ $attributes }}
+                    />
                 </div>
             @endforeach
         @else
-            <x-cms::form.partials.checkbox :type="$type" :id="$id" :options="$options" :value="$value" :disabled="$disabled"  :name="$name" :multiple="$multiple" />
+            <x-cms::form.partials.checkbox
+                :name="$name"
+                :id="$id"
+                :value="$value"
+                :disabled="$disabled"
+                :multiple="$multiple"
+                :options="$options"
+                :type="$type"
+                {{ $attributes }}
+            />
         @endif
     </x-cms::form.partials.value>
-    <x-cms::form.partials.errors :messages="$messages" :multilang="$multilang" />
+    <x-cms::form.errors
+        :messages="$messages"
+        :multilang="$multilang"
+    />
 </div>

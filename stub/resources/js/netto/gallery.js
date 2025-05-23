@@ -1,116 +1,56 @@
 import ListWidget from './list.widget.js'
 
 class Gallery extends ListWidget {
-    body = null
-    id = 'netto-admin-gallery'
-    objects = {
-        title: null,
-        total: null
-    }
-    iconCreate = null
+    id = 'netto-gallery'
 
     constructor(object) {
         super(object)
-        this.initObjects(object)
-        this.initIcons(object)
-        this.setObjectId(object)
+        this.setId(object)
+
+        this.initButtons()
         this.initParams()
+
         this.load()
     }
 
     getDefaultParams() {
         return {
-            sort: 'id',
-            sortDir: 'asc'
+            columns: {
+                id: 1,
+                sort: 1,
+                thumb: 98
+            },
+            sort: 'sort',
+            sortDir: 'asc',
+            toggle: (typeof this.buttons.toggle === 'object') ? 1 : 0
         }
-    }
-
-    initIcons(object) {
-        this.initToggleIcon(object)
-
-        let self = this
-        this.iconCreate = object.find('.js-icon-create')
-        this.iconCreate.click(function() {
-            self.followUrl($(this))
-        })
-    }
-
-    initObjects(object) {
-        this.body = object.find('.js-images')
-        this.objects.title = object.find('.js-title')
-        this.objects.total = object.find('.js-counter-items')
-    }
-
-    initWidget(data) {
-        this.objects.title.html(data.title)
-        
-        if (typeof data.url.toggle === 'string') {
-            this.iconToggle.show()
-        }
-
-        super.initWidget(data)
-
-        this.iconCreate.data('url', this.url.create)
-    }
-
-    lock() {
-        if (this.locked) {
-            return
-        }
-
-        this.disable(this.iconToggle)
-        this.disable(this.iconCreate)
-
-        super.lock()
-    }
-
-    lockBulkButtons() {
-        this.disable(this.iconToggle)
-        super.lockBulkButtons()
     }
 
     render(data) {
-        this.enable(this.iconCreate)
-        if (data.nav.total === 0) {
-            this.layers.empty.show()
-            return
-        }
+        if (data.total) {
+            let tr, k1, className, self = this
+            for (k1 in data.items) {
+                className = 'gallery-item'
 
-        this.enable(this.iconInvert)
-        this.objects.total.html(data.nav.total)
+                if ((typeof data.items[k1].is_active === 'boolean') && !data.items[k1].is_active) {
+                    className += ' inactive'
+                }
 
-        let tr, k1, className, self = this
-        for (k1 in data.items) {
-            className = 'gallery-item'
+                tr = $('<div />', {
+                    'class': className,
+                    'data-id': data.items[k1].id,
+                    'data-url': data.items[k1]._editUrl
+                }).append($('<img />', {'alt': '', 'src': data.items[k1].thumb}))
 
-            if ((typeof data.items[k1].is_active === 'boolean') && !data.items[k1].is_active) {
-                className += ' inactive'
+                this.setClickEvents(tr, function() {
+                    self.followUrl($(this))
+                })
+
+                this.body.append(tr)
             }
-
-            tr = $('<div />', {
-                'class': className,
-                'data-id': data.items[k1].id,
-                'data-url': data.items[k1].url
-            }).append($('<img />', {'alt': '', 'src': data.items[k1].thumb}))
-
-            this.setClickEvent(tr, function() {
-                self.followUrl($(this))
-            })
-
-            this.body.append(tr)
         }
 
         super.render(data)
-    }
-
-    reset() {
-        this.objects.total.html('0')
-        super.reset()
-    }
-
-    unlockBulkButtons() {
-        this.enable(this.iconToggle)
-        super.unlockBulkButtons()
     }
 }
 

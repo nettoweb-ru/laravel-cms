@@ -3,12 +3,10 @@
 namespace Netto\Services;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\{Cache, DB, Http, Log};
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
+use Netto\Exceptions\NettoException;
 
 abstract class SearchService
 {
@@ -17,6 +15,7 @@ abstract class SearchService
 
     private const TABLE = 'cms__search';
     private const MAX_NAME_LENGTH = 2048;
+    private const TTL = 600;
 
     protected int $delay;
     protected int $perPage;
@@ -37,6 +36,8 @@ abstract class SearchService
     }
 
     /**
+     * Find entry in search database.
+     *
      * @param string $query
      * @param int $page
      * @return array
@@ -44,71 +45,78 @@ abstract class SearchService
     public function find(string $query, int $page = 1): array
     {
         $query = urldecode(strip_tags($query));
-        $return = [
-            'query' => $query,
-            'list' => [],
-            'navigation' => [
-                'max' => 0,
-                'current' => $page,
-            ],
-        ];
 
-        if ($page < 1) {
-            return $return;
-        }
-
-        if (mb_strlen($query) < static::MIN_NEEDLE_LENGTH) {
-            return $return;
-        }
-
-        $collection = DB::table(self::TABLE)
-            ->where('content', 'like', '%'.$query.'%')
-            ->where('lang_id', LanguageService::getCurrentId())
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        $items = [];
-        $length = mb_strlen($query);
-        $cutLength = (int) floor(($this->maxPreviewLength - $length) / 2);
-        foreach ($collection as $item) {
-            $pos = mb_stripos($item->name, $query);
-
-            if ($pos === false) {
-                $relevance = self::MAX_NAME_LENGTH;
-            } else {
-                $relevance = $pos;
-            }
-
-            $items[$relevance][$item->id] = [
-                'title' => $item->name,
-                'link' => $item->url,
-                'date' => $item->updated_at ? format_date($item->updated_at, \IntlDateFormatter::NONE) : '',
-                'preview' => $this->preview($query, $length, $cutLength, $item->content),
+        if (($page < 1) || (mb_strlen($query) < static::MIN_NEEDLE_LENGTH)) {
+            return [
+                'query' => $query,
+                'results' => [
+                    'list' => [],
+                    'navigation' => [
+                        'max' => 0,
+                        'current' => $page,
+                    ],
+                ],
             ];
         }
 
-        ksort($items);
+        $items = Cache::remember(md5($query), self::TTL, function() use ($query): array {
+            Log::channel('search')->info($query);
 
-        $list = [];
-        foreach ($items as $value) {
-            $list = array_merge($list, $value);
-        }
+            $collection = DB::table(self::TABLE)
+                ->where('content', 'like', '%'.$query.'%')
+                ->where('lang_id', get_current_language_id())
+                ->orderBy('updated_at', 'desc')
+                ->get();
 
-        $list = array_slice($list, ($page - 1) * $this->perPage, $this->perPage);
+            $items = [];
+            $length = mb_strlen($query);
+            $cutLength = (int) floor(($this->maxPreviewLength - $length) / 2);
 
-        if (empty($list)) {
+            foreach ($collection as $item) {
+                $pos = mb_stripos($item->name, $query);
+
+                if ($pos === false) {
+                    $relevance = self::MAX_NAME_LENGTH;
+                } else {
+                    $relevance = $pos;
+                }
+
+                $items[$relevance][$item->id] = [
+                    'title' => $item->name,
+                    'link' => $item->url,
+                    'date' => $item->updated_at ? format_date($item->updated_at, \IntlDateFormatter::NONE) : '',
+                    'preview' => $this->preview($query, $length, $cutLength, $item->content),
+                ];
+            }
+
+            ksort($items);
+
+            $return = [];
+            foreach ($items as $value) {
+                $return = array_merge($return, $value);
+            }
+
             return $return;
-        }
+        });
 
-        $pagination = new LengthAwarePaginator($list, count($collection), $this->perPage, $page);
+        $list = array_slice($items, ($page - 1) * $this->perPage, $this->perPage);
+        $pagination = new LengthAwarePaginator($list, count($items), $this->perPage, $page);
 
-        $return['navigation']['max'] = $pagination->lastPage();
-        $return['list'] = $list;
-
-        return $return;
+        return [
+            'query' => $query,
+            'results' => [
+                'list' => $list,
+                'navigation' => [
+                    'max' => $pagination->lastPage(),
+                    'current' => $page,
+                ],
+            ],
+        ];
     }
 
     /**
+     * Reindex search database.
+     *
      * @return void
      */
     public function reindex(): void
@@ -189,23 +197,23 @@ abstract class SearchService
     /**
      * @param string $url
      * @return array
-     * @throws Exception
+     * @throws NettoException
      */
     private function parse(string $url): array
     {
         $response = Http::get($url);
         if ($response->failed()) {
-            throw new Exception("Request returned status {$response->status()}");
+            throw new NettoException("Request returned status {$response->status()}");
         }
 
         $headers = $response->headers();
         if (empty($headers['Content-Language'][0])) {
-            throw new Exception("Unable to detect language for url {$url}");
+            throw new NettoException("Unable to detect language for url {$url}");
         }
 
-        $languages = LanguageService::getList();
+        $languages = get_language_list();
         if (!array_key_exists($headers['Content-Language'][0], $languages)) {
-            throw new Exception("Language {$headers['Content-Language'][0]} is not configured for url {$url}");
+            throw new NettoException("Language {$headers['Content-Language'][0]} is not configured for url {$url}");
         }
 
         usleep($this->delay);

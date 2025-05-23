@@ -1,9 +1,8 @@
 export default class ListWidget {
-    iconDelete = null
-    iconInvert = null
-    iconToggle = null
-    id = 'netto-admin-widget'
-    init = false
+    id = null
+    actions = {}
+    body = null
+    buttons = {}
     layers = {
         results: null,
         animation: null,
@@ -11,15 +10,28 @@ export default class ListWidget {
         empty: null
     }
     locked = true
+    navigation = false
+    navObjects = {
+        perPage: null,
+        page: null,
+        pages: null,
+    }
+    objects = {}
     params = {}
     selected = []
-    url = {}
-    urlLoad = ''
+    total = null
+    url = null
 
     constructor(object) {
+        this.initArguments(object)
         this.initLayers(object)
-        this.initCommonIcons(object)
-        this.setLoadUrl(object)
+        this.findButtons(object)
+        this.initSharedObjects(object)
+
+        if (this.navigation) {
+            this.initPage()
+            this.initPerPage()
+        }
     }
 
     checkSelection() {
@@ -36,11 +48,15 @@ export default class ListWidget {
         }
     }
 
+    enable(object) {
+        object.removeAttr('disabled').removeClass('disabled')
+    }
+
     delete() {
         this.lock()
         let self = this
 
-        Ajax.post(this.url.delete, {id: this.selected}, function(data) {
+        Ajax.post(this.actions.delete, {id: this.selected}, function(data) {
             if (data.status) {
                 Overlay.showMessage(data.status)
             }
@@ -58,8 +74,11 @@ export default class ListWidget {
         object.attr('disabled', true).addClass('disabled')
     }
 
-    enable(object) {
-        object.removeAttr('disabled').removeClass('disabled')
+    findButtons(object) {
+        let self = this
+        object.find('.js-list-button').each(function() {
+            self.buttons[$(this).data('type')] = $(this)
+        })
     }
 
     followUrl(object) {
@@ -75,27 +94,51 @@ export default class ListWidget {
         return {}
     }
 
-    initCommonIcons(object) {
+    initArguments(object) {
+        this.url = object.data('url')
+        this.navigation = parseInt(object.data('show-navigation')) === 1
+    }
+
+    initButtons() {
         let self = this
 
-        this.iconInvert = object.find('.js-icon-invert')
-        this.iconInvert.click(function() {
+        this.buttons.invert.click(function() {
             self.invert()
         })
 
-        this.iconDelete = object.find('.js-icon-delete')
-        this.iconDelete.click(async function() {
-            if (await Overlay.showConfirmDelete()) {
-                self.delete()
-            }
-        })
+        if (typeof this.buttons.delete === 'object') {
+            this.actions.delete = this.buttons.delete.data('url')
+            this.buttons.delete.click(async function() {
+                if (await Overlay.showConfirmDelete()) {
+                    self.delete()
+                }
+            })
+        }
+
+        if (typeof this.buttons.toggle === 'object') {
+            this.actions.toggle = this.buttons.toggle.data('url')
+            this.buttons.toggle.click(async function() {
+                if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
+                    self.toggle()
+                }
+            })
+        }
     }
 
     initLayers(object) {
-        this.layers.animation = object.find('.js-animation')
-        this.layers.results = object.find('.js-results')
-        this.layers.found = object.find('.js-results-found')
-        this.layers.empty = object.find('.js-results-empty')
+        this.layers.animation = object.find('.js-layer-animation')
+        this.layers.results = object.find('.js-layer-results')
+        this.layers.found = object.find('.js-layer-results-found')
+        this.layers.empty = object.find('.js-layer-results-empty')
+    }
+
+    initPage() {
+        let self = this
+        this.navObjects.page.change(function() {
+            self.params.page = parseInt($(this).val())
+            self.saveParams()
+            self.load()
+        })
     }
 
     initParams() {
@@ -109,9 +152,31 @@ export default class ListWidget {
         }
     }
 
+    initPerPage() {
+        let self = this
+        this.navObjects.perPage.change(function() {
+            self.params.page = 1
+            self.params.perPage = parseInt($(this).val())
+
+            self.saveParams()
+            self.load()
+        })
+    }
+
+    initSharedObjects(parent) {
+        this.body = parent.find('.js-body')
+        this.total = parent.find('.js-total')
+
+        if (this.navigation) {
+            this.navObjects.perPage = parent.find('.js-per-page')
+            this.navObjects.page = parent.find('.js-page')
+            this.navObjects.pages = parent.find('.js-pages')
+        }
+    }
+
     initSortColumns() {
         let self = this
-        this.objects.head.on('click', 'th', function() {
+        this.objects.head.on('click', 'th.sortable', function() {
             let code = $(this).data('code')
 
             if (code === self.params.sort) {
@@ -127,27 +192,8 @@ export default class ListWidget {
         })
     }
 
-    initToggleIcon(object) {
-        let self = this
-
-        this.iconToggle = object.find('.js-icon-toggle')
-        this.iconToggle.click(async function() {
-            if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
-                self.toggle()
-            }
-        })
-    }
-
-    initWidget(data) {
-        this.url = data.url
-        this.init = true
-    }
-
     invert() {
-        this.body.children().each(function() {
-            $(this).toggleClass('selected')
-        })
-
+        this.body.children().toggleClass('selected')
         this.checkSelection()
     }
 
@@ -158,58 +204,111 @@ export default class ListWidget {
         let self = this,
             finish = function() {
                 self.unlock()
-            },
-            params = this.params
-
-        params.init = this.init ? 0 : 1
-
-        Ajax.get(this.urlLoad, params, function(data) {
-            if (!self.init) {
-                self.initWidget(data.init)
             }
 
-            self.render(data.results)
+        Ajax.get(this.url, this.params, function(data) {
+            self.render(data)
             finish()
         }, finish)
     }
 
     lock() {
-        this.disable(this.iconInvert)
-        this.disable(this.iconDelete)
+        if (this.locked) {
+            return
+        }
+
+        for (let key in this.buttons) {
+            this.disable(this.buttons[key])
+        }
 
         this.layers.results.hide()
         this.layers.animation.show()
+
+        if (this.navigation) {
+            this.disable(this.navObjects.page)
+            this.disable(this.navObjects.perPage)
+        }
 
         this.locked = true
     }
 
     lockBulkButtons() {
-        this.disable(this.iconDelete)
+        if (typeof this.buttons.delete === 'object') {
+            this.disable(this.buttons.delete)
+        }
+
+        if (typeof this.buttons.toggle === 'object') {
+            this.disable(this.buttons.toggle)
+        }
     }
 
     render(data) {
+        this.total.html(App.formatNumber(data.total))
+
+        if (data.total === 0) {
+            this.layers.empty.show()
+            return
+        }
+
+        this.enable(this.buttons.invert)
+
+        if (this.navigation) {
+            this.renderNavigation(data.maxPage)
+        }
+
         this.layers.found.show()
     }
 
+    renderNavigation(max) {
+        this.navObjects.pages.html(App.formatNumber(max))
+
+        let a, params
+        for (a = 1; a <= max; a++) {
+            params = {
+                value: a
+            }
+
+            if (a === this.params.page) {
+                params.selected = true
+            }
+
+            this.navObjects.page.append($('<option />', params).html(App.formatNumber(a)))
+        }
+
+        if (max > 1) {
+            this.enable(this.navObjects.page)
+        }
+
+        this.navObjects.perPage.find('option[value=' + this.params.perPage + ']').attr('selected', true);
+    }
+
     renderSortColumns() {
-        this.objects.head.find('th').removeClass('sort asc desc')
-        this.objects.head.find('th[data-code="' + this.params.sort + '"]').addClass('sort ' + ((this.params.sortDir === 'asc') ? 'asc' : 'desc'))
+        this.objects.head.find('th.sortable').removeClass('sort asc desc')
+        this.objects.head.find('th.sortable[data-code="' + this.params.sort + '"]').addClass('sort ' + ((this.params.sortDir === 'asc') ? 'asc' : 'desc'))
     }
 
     reset() {
+        let zero = App.formatNumber(0)
+
         this.selected = []
+        this.total.html(zero)
 
         this.layers.found.hide()
         this.layers.empty.hide()
 
         this.body.html('')
+
+        if (this.navigation) {
+            this.navObjects.pages.html(zero)
+            this.navObjects.page.html('')
+        }
     }
 
     saveParams() {
         localStorage.setItem(this.id, JSON.stringify(this.params))
     }
 
-    setClickEvent(tr, event) {
+    setClickEvents(tr, event) {
         let self = this
         tr.longpress(function(event) {
             if (("which" in event) && (event.which === 3)) {
@@ -225,15 +324,8 @@ export default class ListWidget {
         }, event)
     }
 
-    setLoadUrl(object) {
-        let url = object.data('url')
-        if (typeof url === 'string') {
-            this.urlLoad = url
-        }
-    }
-
-    setObjectId(object) {
-        let id = object.data('id')
+    setId(object) {
+        let id = object.attr('id')
         if (typeof id === 'undefined') {
             return
         }
@@ -245,7 +337,7 @@ export default class ListWidget {
         this.lock()
         let self = this
 
-        Ajax.post(this.url.toggle, {id: this.selected}, function(data) {
+        Ajax.post(this.actions.toggle, {id: this.selected}, function(data) {
             if (data.status) {
                 Overlay.showMessage(data.status)
             }
@@ -261,6 +353,14 @@ export default class ListWidget {
             return
         }
 
+        if (typeof this.buttons.create === 'object') {
+            this.enable(this.buttons.create)
+        }
+
+        if (this.navigation) {
+            this.enable(this.navObjects.perPage)
+        }
+
         this.layers.animation.hide()
         this.layers.results.show()
 
@@ -268,6 +368,12 @@ export default class ListWidget {
     }
 
     unlockBulkButtons() {
-        this.enable(this.iconDelete)
+        if (typeof this.buttons.delete === 'object') {
+            this.enable(this.buttons.delete)
+        }
+
+        if (typeof this.buttons.toggle === 'object') {
+            this.enable(this.buttons.toggle)
+        }
     }
 }

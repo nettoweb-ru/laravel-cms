@@ -2,39 +2,49 @@
 
 namespace Netto\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Netto\Models\Abstract\Model as BaseModel;
+use Netto\Traits\{HasAccessCheck, HasSystemAttribute};
 
 /**
- * @property Collection $permissions
+ * @property NavigationGroup $group
  */
 
-class Navigation extends Model
+class Navigation extends BaseModel
 {
+    use HasAccessCheck, HasSystemAttribute;
+
     public $table = 'cms__navigation';
     public $timestamps = false;
 
+    public string $permissionsTable = 'cms__navigation__permissions';
+
     protected $attributes = [
-        'group_id' => 1,
         'sort' => 0,
-        'url' => null,
-        'highlight' => null,
+        'is_active' => '1',
+        'is_system' => '0',
     ];
 
     protected $casts = [
-        'group_id' => 'integer',
-        'sort' => 'integer',
-        'name' => 'string',
-        'url' => 'string',
         'highlight' => 'array',
+        'is_active' => 'boolean',
+        'is_system' => 'boolean',
     ];
 
     /**
-     * @return BelongsToMany
+     * @return void
      */
-    public function permissions(): BelongsToMany
+    public static function boot(): void
     {
-        return $this->belongsToMany(Permission::class, 'cms__navigation__permission', 'navigation_id', 'permission_id');
+        parent::boot();
+        self::setSystemTraitEvents();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(NavigationGroup::class, 'group_id');
     }
 }
