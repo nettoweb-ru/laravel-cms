@@ -677,11 +677,11 @@ body.rtl .block.mobile-top .table .cell.right{
 }
 
 body.ltr .main-page .main-page-table .main-page-cell.right .main-page-block.params table tr.data td.title{
-    padding-right: 15px;
+    padding: 0 15px 0 30px;
 }
 
 body.rtl .main-page .main-page-table .main-page-cell.right .main-page-block.params table tr.data td.title{
-    padding-left: 15px;
+    padding: 0 30px 0 15px;
 }
 
 .main-page .main-page-table .main-page-cell.right .main-page-block.params table tr.data td.value{
