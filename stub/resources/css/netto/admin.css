@@ -695,6 +695,14 @@ body.rtl .main-page .main-page-table .main-page-cell.right .main-page-block.para
     width:38%;
 }
 
+body.ltr .main-page .main-page-table .main-page-cell.right .main-page-block.params table tr.data td.value{
+    padding-right: 10px;
+}
+
+body.rtl .main-page .main-page-table .main-page-cell.right .main-page-block.params table tr.data td.value{
+    padding-left: 10px;
+}
+
 .main-page .main-page-table .main-page-cell.left .menu{
     width: 100%;
 }
