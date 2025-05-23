@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasOne, Pi
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\{DB, Session};
+use Illuminate\Support\Facades\{DB, Log, Session};
 use Illuminate\Http\{JsonResponse, Request, Response};
 
 use Netto\Events\ModelSaved;
@@ -219,19 +219,27 @@ abstract class CrudController extends BaseController
         }
         $columnKeys = array_unique($columnKeys);
 
-        $multiLingual = is_multilingual($model) ? $model->multiLingual : [];
+        $multiLingualColumns = is_multilingual($model)
+            ? $model->multiLingual
+            : [];
+
+        $select = [];
+        $selectMainMultilingual = [];
+        $selectRaw = "";
+
+        $affectedRelations = [];
+        $affectedRelationObjects = [];
 
         $tableObj = $model->getTable();
         $builder = DB::table($tableObj);
 
-        $selectRaw = '';
-        $selectMl = [];
-        $sort = '';
-        $aliases = [];
-        $relations = [];
-        $relationsObj = [];
-        $qualified = [];
+        $groupBy = false;
+        $groupByColumn = null;
+        $sortColumn = null;
+
         $i = 1;
+        $aliases = [];
+        $qualified = [];
 
         foreach (array_unique(array_merge($columnKeys, array_keys($filter))) as $column) {
             $alias = "c{$i}";
@@ -240,157 +248,191 @@ abstract class CrudController extends BaseController
 
             if (str_contains($column, '.')) {
                 [$relationCode, $relationColumn] = explode('.', $column);
-                $relations[$relationCode][$relationColumn] = $alias;
-                $relationsObj[$relationCode] = $model->{$relationCode}();
-            } else if (in_array($column, $multiLingual)) {
-                $selectMl[$column] = $alias;
+                $affectedRelations[$relationCode][$relationColumn] = $alias;
+                $affectedRelationObjects[$relationCode] = $model->{$relationCode}();
+            } else if (in_array($column, $multiLingualColumns)) {
+                $selectMainMultilingual[$column] = $alias;
             } else {
-                $qualified[$alias] = "{$tableObj}.{$column}";
-                $selectRaw .= "`{$tableObj}`.`{$column}` as `{$alias}`, ";
-            }
+                $columnName = "{$tableObj}.{$column}";
+                $qualified[$alias] = $columnName;
 
-            if ($column == $params['sort']) {
-                $sort = $alias;
+                if ($column == 'id') {
+                    $select[$columnName] = $column;
+                    $groupByColumn = $columnName;
+                } else {
+                    $select[$columnName] = $alias;
+                }
+
+                if ($column == $params['sort']) {
+                    $sortColumn = $columnName;
+                }
             }
         }
 
-        $groupBy = [];
-
-        foreach ($relations as $relationCode => $relationColumns) {
+        foreach ($affectedRelations as $relationCode => $relationColumns) {
             /** @var Relation $relation */
-            $relation = $relationsObj[$relationCode];
+            $relation = $affectedRelationObjects[$relationCode];
             $relationClass = get_class($relation);
 
             switch ($relationClass) {
                 case BelongsTo::class:
                     /** @var BelongsTo $relation */
-                    $related = $relation->getModel();
-                    $tableRel = $related->getTable();
-                    $builder->leftJoin($tableRel, $relation->getQualifiedForeignKeyName(), '=', $relation->getQualifiedOwnerKeyName());
+                    $relatedModel = $relation->getModel();
+                    $relationTable = $relatedModel->getTable();
 
-                    $multiLingualRel = is_multilingual($related) ? $related->multiLingual : [];
-                    $selectMlRel = [];
+                    $builder->leftJoin($relationTable, $relation->getQualifiedForeignKeyName(), '=', $relation->getQualifiedOwnerKeyName());
+
+                    $selectRelatedMultilingual = [];
+                    $multiLingualColumns = is_multilingual($relatedModel)
+                        ? $relatedModel->multiLingual
+                        : [];
 
                     foreach (array_unique($relationColumns) as $column => $alias) {
-                        if (in_array($column, $multiLingualRel)) {
-                            $selectMlRel[$column] = $alias;
+                        if (in_array($column, $multiLingualColumns)) {
+                            $selectRelatedMultilingual[$column] = $alias;
                         } else {
-                            $qualified[$alias] = "{$tableRel}.{$column}";
-                            $selectRaw .= "`{$tableRel}`.`{$column}` as `{$alias}`, ";
+                            $columnName = "{$relationTable}.{$column}";
+                            $qualified[$alias] = $columnName;
+                            $select[$columnName] = $alias;
+
+                            if ("{$relationCode}.{$column}" == $params['sort']) {
+                                $sortColumn = $columnName;
+                            }
                         }
                     }
 
-                    if ($selectMlRel) {
-                        /** @var IsMultiLingual $related */
-                        $relationTranslated = $related->translated();
+                    if ($selectRelatedMultilingual) {
+                        /** @var IsMultiLingual $relatedModel */
+                        $relationTranslated = $relatedModel->translated();
 
                         /** @var Pivot $pivot */
                         $pivot = new ($relationTranslated->getPivotClass())();
-                        $tableMultilingualRel = $pivot->getTable();
+                        $relationTableMultilingual = $pivot->getTable();
 
-                        $builder->join($tableMultilingualRel, function(JoinClause $join) use ($relationTranslated, $tableMultilingualRel) {
+                        $builder->join($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
                             $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
-                            $join->where("{$tableMultilingualRel}.lang_id", '=', get_default_language_id());
+                            $join->where("{$relationTableMultilingual}.lang_id", '=', get_default_language_id());
                         });
 
-                        foreach ($selectMlRel as $column => $alias) {
-                            $qualified[$alias] = "{$tableMultilingualRel}.{$column}";
-                            $selectRaw .= "`{$tableMultilingualRel}`.`{$column}` as `{$alias}`, ";
+                        foreach ($selectRelatedMultilingual as $column => $alias) {
+                            $columnName = "{$relationTableMultilingual}.{$column}";
+                            $qualified[$alias] = $columnName;
+                            $select[$columnName] = $alias;
 
-                            if ($groupBy) {
-                                $groupBy[] = $alias;
+                            if ("{$relationCode}.{$column}" == $params['sort']) {
+                                $sortColumn = $columnName;
                             }
                         }
                     }
                     break;
                 case HasOne::class:
                     /** @var HasOne $relation */
-                    $related = $relation->getModel();
-                    $tableRel = $related->getTable();
-                    $builder->leftJoin($tableRel, $relation->getForeignKeyName(), '=', $relation->getQualifiedParentKeyName());
+                    $relatedModel = $relation->getModel();
+                    $relationTable = $relatedModel->getTable();
 
-                    $multiLingualRel = is_multilingual($related) ? $related->multiLingual : [];
-                    $selectMlRel = [];
+                    $builder->leftJoin($relationTable, $relation->getQualifiedForeignKeyName(), '=', $relation->getQualifiedParentKeyName());
+
+                    $selectRelatedMultilingual = [];
+                    $multiLingualColumns = is_multilingual($relatedModel)
+                        ? $relatedModel->multiLingual
+                        : [];
 
                     foreach (array_unique($relationColumns) as $column => $alias) {
-                        if (in_array($column, $multiLingualRel)) {
-                            $selectMlRel[$column] = $alias;
+                        if (in_array($column, $multiLingualColumns)) {
+                            $selectRelatedMultilingual[$column] = $alias;
                         } else {
-                            $qualified[$alias] = "{$tableRel}.{$column}";
-                            $selectRaw .= "`{$tableRel}`.`{$column}` as `{$alias}`, ";
-                        }
-                    }
+                            $columnName = "{$relationTable}.{$column}";
+                            $qualified[$alias] = $columnName;
+                            $select[$columnName] = $alias;
 
-                    if ($selectMlRel) {
-                        /** @var IsMultiLingual $related */
-                        $relationTranslated = $related->translated();
-
-                        /** @var Pivot $pivot */
-                        $pivot = new ($relationTranslated->getPivotClass())();
-                        $tableMultilingualRel = $pivot->getTable();
-
-                        $builder->join($tableMultilingualRel, function(JoinClause $join) use ($relationTranslated, $tableMultilingualRel) {
-                            $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
-                            $join->where("{$tableMultilingualRel}.lang_id", '=', get_default_language_id());
-                        });
-
-                        foreach ($selectMlRel as $column => $alias) {
-                            $qualified[$alias] = "{$tableMultilingualRel}.{$column}";
-                            $selectRaw .= "`{$tableMultilingualRel}`.`{$column}` as `{$alias}`, ";
-
-                            if ($groupBy) {
-                                $groupBy[] = $alias;
+                            if ("{$relationCode}.{$column}" == $params['sort']) {
+                                $sortColumn = $columnName;
                             }
                         }
                     }
+
+                    if ($selectRelatedMultilingual) {
+                        /** @var IsMultiLingual $relatedModel */
+                        $relationTranslated = $relatedModel->translated();
+
+                        /** @var Pivot $pivot */
+                        $pivot = new ($relationTranslated->getPivotClass())();
+                        $relationTableMultilingual = $pivot->getTable();
+
+                        $builder->join($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
+                            $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
+                            $join->where("{$relationTableMultilingual}.lang_id", '=', get_default_language_id());
+                        });
+
+                        foreach ($selectRelatedMultilingual as $column => $alias) {
+                            $columnName = "{$relationTableMultilingual}.{$column}";
+                            $qualified[$alias] = $columnName;
+                            $select[$columnName] = $alias;
+
+                            if ("{$relationCode}.{$column}" == $params['sort']) {
+                                $sortColumn = $columnName;
+                            }
+                        }
+                    }
+
                     break;
                 case BelongsToMany::class:
                     /** @var BelongsToMany $relation */
-                    $tableRel = $relation->getTable();
-                    $builder->join($tableRel, function(JoinClause $join) use ($relation) {
+                    $relationTable = $relation->getTable();
+
+                    $builder->join($relationTable, function(JoinClause $join) use ($relation) {
                         $join->on($relation->getQualifiedForeignPivotKeyName(), '=', $relation->getQualifiedParentKeyName());
                     });
 
                     foreach (array_unique($relationColumns) as $column => $alias) {
-                        $qualified[$alias] = $alias;
-                        $selectRaw .= "concat('-', group_concat(distinct `{$tableRel}`.`{$column}` order by `{$tableRel}`.`{$column}` separator '-'), '-') as `{$alias}`, ";
+                        $selectRaw .= "concat('-', group_concat(distinct `{$relationTable}`.`{$column}` order by `{$relationTable}`.`{$column}` separator '-'), '-') as `{$alias}`, ";
                     }
 
-                    $groupBy[] = $relation->getQualifiedParentKeyName();
+                    $groupBy = true;
                     break;
                 default:
                     throw new NettoException("This widget doesn't support relation class {$relationClass}");
             }
         }
 
-        if ($selectMl) {
+        if ($selectMainMultilingual) {
             /** @var IsMultiLingual $model */
-            $relation = $model->translated();
+            $relationTranslated = $model->translated();
 
             /** @var Pivot $pivot */
-            $pivot = new ($relation->getPivotClass())();
-            $tableMultilingual = $pivot->getTable();
+            $pivot = new ($relationTranslated->getPivotClass())();
+            $multilingualTable = $pivot->getTable();
 
-            $builder->join($tableMultilingual, function(JoinClause $join) use ($relation, $tableMultilingual) {
-                $join->on($relation->getQualifiedForeignPivotKeyName(), '=', $relation->getQualifiedParentKeyName());
-                $join->where("{$tableMultilingual}.lang_id", '=', get_default_language_id());
+            $builder->join($multilingualTable, function(JoinClause $join) use ($relationTranslated, $multilingualTable) {
+                $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
+                $join->where("{$multilingualTable}.lang_id", '=', get_default_language_id());
             });
 
-            foreach ($selectMl as $column => $alias) {
-                $qualified[$alias] = "{$tableMultilingual}.{$column}";
-                $selectRaw .= "`{$tableMultilingual}`.`{$column}` as `{$alias}`, ";
+            foreach ($selectMainMultilingual as $column => $alias) {
+                $columnName = "{$multilingualTable}.{$column}";
+                $qualified[$alias] = $columnName;
+                $select[$columnName] = $alias;
 
-                if ($groupBy) {
-                    $groupBy[] = $alias;
+                if ($column == $params['sort']) {
+                    $sortColumn = $columnName;
                 }
             }
+        }
+
+        foreach ($select as $column => $alias) {
+            $selectRaw .= ($groupBy ? "MIN({$column})" : "{$column}");
+            if ($alias) {
+                $selectRaw .= " as `{$alias}`";
+            }
+
+            $selectRaw .= ", ";
         }
 
         foreach ($filter as $column => $value) {
             $alias = $aliases[$column];
             if (str_contains($column, '.')) {
                 [$relationCode, $relationColumn] = explode('.', $column);
-                if (get_class($relationsObj[$relationCode]) == BelongsToMany::class) {
+                if (get_class($affectedRelationObjects[$relationCode]) == BelongsToMany::class) {
                     $builder->having($alias, 'LIKE', "%-{$value}-%");
                 } else {
                     $builder->where($qualified[$alias], '=', $value);
@@ -401,15 +443,17 @@ abstract class CrudController extends BaseController
         }
 
         if ($groupBy) {
-            $builder->groupBy($groupBy);
+            $builder->groupBy($groupByColumn);
+        }
+
+        if ($sortColumn) {
+            $builder->orderBy($sortColumn, $params['sortDir']);
+            if ($groupBy) {
+                $builder->groupBy($sortColumn);
+            }
         }
 
         $builder->selectRaw(rtrim($selectRaw, ', '));
-
-        if ($sort) {
-            $builder->orderBy($sort, $params['sortDir']);
-        }
-
         $collection = $builder->get();
 
         if (empty($params['perPage'])) {
@@ -429,14 +473,16 @@ abstract class CrudController extends BaseController
         foreach ($list as $obj) {
             $item = [
                 '_editUrl' => route($this->getRouteCrud('edit'), [
-                    $this->itemRouteId => $obj->{$aliases['id']}
+                    $this->itemRouteId => $obj->id
                 ])
             ];
 
             foreach ($columnKeys as $column) {
                 $alias = $aliases[$column];
 
-                if ($column == 'is_active') {
+                if ($column == 'id') {
+                    $item[$column] = $obj->id;
+                } elseif ($column == 'is_active') {
                     $item[$column] = (bool) $obj->{$alias};
                 } elseif (str_starts_with($column, 'is_')) {
                     $item[$column] = $obj->{$alias} ? __('main.general_yes') : __('main.general_no');

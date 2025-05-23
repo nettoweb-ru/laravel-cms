@@ -199,7 +199,7 @@ class CmsServiceProvider extends ServiceProvider
     private function registerUserAbilities(): void
     {
         try {
-            Permission::get()->map(function ($permission) { // @TODO check 2x
+            Permission::query()->get()->map(function ($permission) {
                 Gate::define($permission->slug, function ($user) use ($permission) {
                     return $user->hasPermissionTo($permission);
                 });
