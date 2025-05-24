@@ -4,6 +4,10 @@
 
 #### [Unreleased]
 
+##### Added
+
+- Default home page is published after installation
+
 ##### Fixed
 
 - Removed home links from fatal error pages by default

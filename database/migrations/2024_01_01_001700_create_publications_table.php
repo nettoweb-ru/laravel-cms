@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 
 return new class extends Migration
 {
@@ -30,6 +30,14 @@ return new class extends Migration
             $table->unique(['lang_id', 'slug']);
             $table->timestamps();
         });
+
+        $language = DB::table('cms__lang')->select('id')->where('is_default', '1')->get()->get(0);
+
+        DB::table(self::TABLE)->insert([
+            'name' => 'Home',
+            'lang_id' => $language->id,
+            'slug' => 'home',
+        ]);
     }
 
     /**

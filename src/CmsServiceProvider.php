@@ -177,6 +177,7 @@ class CmsServiceProvider extends ServiceProvider
             __DIR__.'/../stub/resources/css/styles.css' => resource_path('css/styles.css'),
             __DIR__.'/../stub/resources/css/error.css' => resource_path('css/error.css'),
             __DIR__.'/../stub/resources/js/styles.js' => resource_path('js/styles.js'),
+            __DIR__.'/../stub/routes/web.php' => base_path('routes/web.php'),
             __DIR__.'/../stub/vite.config.js' => base_path('vite.config.js'),
             __DIR__.'/../stub/storage' => storage_path('app'),
             __DIR__.'/../stub/storage/public' => storage_path('app/public'),
