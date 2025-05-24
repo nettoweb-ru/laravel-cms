@@ -21,10 +21,10 @@ class ReportLogs extends BaseCommand
         }
 
         $logs = [];
-        foreach (config('cms.report_logs.files', []) as $file => $delete) {
+        foreach (config('cms.report_logs.files', []) as $file) {
             $path = storage_path('logs/'.$file);
             if (file_exists($path)) {
-                $logs[$path] = $delete;
+                $logs[] = $path;
             }
         }
 

@@ -16,7 +16,7 @@ return [
     'report_logs' => [
         'email' => '',
         'files' => [
-            'laravel.log' => true,
+            'laravel.log',
         ],
     ],
     'schedule' => [

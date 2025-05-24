@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Fixed
+
+- Service logs email sending
+
 #### [2.0.2] - 2025-05-24
 
 ##### Added

@@ -2,7 +2,7 @@
 
 namespace Netto\Services;
 
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\{File, Notification};
 use Illuminate\Support\Str;
 use Netto\Notifications\ReportLogs;
 use App\Models\User;
@@ -31,22 +31,15 @@ class ReportLogService
      */
     public function send(): void
     {
-        Notification::send($this->user, new ReportLogs($this->createZip() ? $this->zipPath : array_keys($this->files)));
+        Notification::send($this->user, new ReportLogs($this->createZip() ? $this->zipPath : $this->files));
 
-        $unlink = [];
-        foreach ($this->files as $file => $delete) {
-            if ($delete) {
-                $unlink[] = $file;
-            }
-        }
+        $unlink = $this->files;
 
         if ($this->zipPath) {
             $unlink[] = $this->zipPath;
         }
 
-        foreach ($unlink as $file) {
-            unlink($file);
-        }
+        File::delete($unlink);
     }
 
     /**
@@ -58,7 +51,7 @@ class ReportLogService
         $zipPath = storage_path('app/'.Str::random(40).'.zip');
 
         if ($archive->open($zipPath, \ZipArchive::CREATE) === true) {
-            foreach ($this->files as $file => $delete) {
+            foreach ($this->files as $file) {
                 if (!$archive->addFile($file, basename($file))) {
                     return false;
                 }
