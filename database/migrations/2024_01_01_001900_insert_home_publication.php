@@ -12,13 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $language = DB::table('cms__lang')->select('id')->where('is_default', '1')->get()->get(0);
+        if (!DB::table(self::TABLE)->where('slug', 'home')->count()) {
+            $language = DB::table('cms__lang')->select('id')->where('is_default', '1')->get()->get(0);
 
-        DB::table(self::TABLE)->insert([
-            'name' => 'Home',
-            'lang_id' => $language->id,
-            'slug' => 'home',
-        ]);
+            DB::table(self::TABLE)->insert([
+                'name' => 'Home',
+                'lang_id' => $language->id,
+                'slug' => 'home',
+            ]);
+        }
     }
 
     /**
