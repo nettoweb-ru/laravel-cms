@@ -2,13 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### [Unreleased]
-
-##### Fixed
-
-- Service logs email sending
-
-#### [2.0.2] - 2025-05-24
+#### [2.0.3] - 2025-05-24
 
 ##### Added
 
@@ -17,6 +11,7 @@
 
 ##### Fixed
 
+- Service logs email sending
 - Removed home links from fatal error pages by default
 - Improved CSS for main admin page
 - Immutable language title alignment in admin menu
