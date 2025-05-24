@@ -23,6 +23,7 @@ class LocaleAdmin extends BaseLocale
         'tr' => 'Türkçe',
         'zh' => '中文',
         'ja' => '日本語',
+        'ko' => '한국인',
         'hi' => 'हिन्दी',
         'ar' => 'عربي',
         'fa' => 'فارسی',

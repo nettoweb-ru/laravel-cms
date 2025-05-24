@@ -160,6 +160,7 @@ if (!function_exists('get_admin_locales')) {
             'tr' => 'tr_TR',
             'zh' => 'zh_CN',
             'ja' => 'ja_JP',
+            'ko' => 'ko_KR',
             'hi' => 'hi_IN',
             'ar' => 'ar_AE',
             'fa' => 'fa_IR',

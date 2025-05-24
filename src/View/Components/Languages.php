@@ -16,7 +16,8 @@ class Languages extends Component
         foreach (LocaleAdmin::LANGUAGES as $key => $value) {
             $this->items[$key] = [
                 'title' => $value,
-                'current' => ($key == $language)
+                'current' => ($key == $language),
+                'text_dir' => get_text_direction($key),
             ];
         }
     }
