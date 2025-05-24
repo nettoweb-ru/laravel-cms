@@ -43,7 +43,6 @@ export default class Editor {
             },
             placeholder: '',
             link: {
-                addTargetToExternalLinks: true,
                 defaultProtocol: 'https://',
                 decorators: {
                     toggleDownloadable: {
@@ -51,6 +50,15 @@ export default class Editor {
                         label: 'Downloadable',
                         attributes: {
                             download: 'file'
+                        }
+                    },
+                    openInNewTab: {
+                        mode: 'manual',
+                        label: 'Open in a new tab',
+                        defaultValue: true,
+                        attributes: {
+                            target: '_blank',
+                            rel: 'noopener noreferrer'
                         }
                     }
                 }
