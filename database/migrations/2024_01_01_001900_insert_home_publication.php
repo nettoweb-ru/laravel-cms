@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         if (!DB::table(self::TABLE)->where('slug', 'home')->count()) {
-            $language = DB::table('cms__lang')->select('id')->where('is_default', '1')->get()->get(0);
+            $language = DB::table('cms__lang')->select('id')->where('is_default', '1')->first();
 
             DB::table(self::TABLE)->insert([
                 'name' => 'Home',
