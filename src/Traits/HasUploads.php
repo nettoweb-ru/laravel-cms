@@ -122,7 +122,12 @@ trait HasUploads
                 $quality = $this->uploads[$attribute]['quality'] ?? $qualityDefault;
 
                 try {
-                    $resized = Image::read($upload)->resize($width, $height);
+                    $image = Image::read($upload);
+
+                    $resized = ($width == $height)
+                        ? $image->coverDown($width, $height)
+                        : $image->scaleDown($width, $height);
+
                     $path = 'auto'.DIRECTORY_SEPARATOR.Str::random(40).'.'.$upload->getClientOriginalExtension();
 
                     $disk->put(

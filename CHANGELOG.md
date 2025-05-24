@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Fixed
+
+- Improved image scaling and resizing
+
 #### [2.0.3] - 2025-05-24
 
 ##### Added
