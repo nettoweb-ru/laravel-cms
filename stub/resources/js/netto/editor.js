@@ -43,9 +43,9 @@ export default class Editor {
             },
             placeholder: '',
             link: {
+                addTargetToExternalLinks: true,
+                defaultProtocol: 'https://',
                 decorators: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
                     toggleDownloadable: {
                         mode: 'manual',
                         label: 'Downloadable',
