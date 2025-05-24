@@ -7,6 +7,7 @@
 ##### Fixed
 
 - Improved image scaling and resizing
+- Some wrong page titles in admin section
 
 #### [2.0.3] - 2025-05-24
 

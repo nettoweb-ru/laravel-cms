@@ -19,7 +19,7 @@ class NavigationController extends BaseController
 
     protected array $crudTitle = [
         'list' => 'main.general_navigation',
-        'create' => 'main.create_menu_item',
+        'create' => 'main.create_navigation',
     ];
 
     protected string $itemRouteId = 'navigation';

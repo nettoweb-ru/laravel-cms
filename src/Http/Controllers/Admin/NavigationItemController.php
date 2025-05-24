@@ -23,7 +23,7 @@ class NavigationItemController extends BaseController
 
     protected array $crudTitle = [
         'list' => 'main.general_navigation',
-        'create' => 'main.create_navigation',
+        'create' => 'main.create_menu_item',
     ];
 
     protected string $itemParentRelation = 'group';
