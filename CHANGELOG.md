@@ -9,6 +9,7 @@
 - Improved image scaling and resizing
 - Some wrong page titles in admin section
 - External links in visual editor
+- UniqueSlug minor fixes
 
 #### [2.0.3] - 2025-05-24
 

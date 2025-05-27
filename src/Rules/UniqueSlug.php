@@ -4,6 +4,7 @@ namespace Netto\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Netto\Models\Abstract\Model;
 
 class UniqueSlug implements ValidationRule
 {
@@ -39,14 +40,15 @@ class UniqueSlug implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        /** @var Model $object */
         $object = new $this->className();
-        $builder = $object::select('id')->where($attribute, $value)->whereNot('id', $this->id);
+        $builder = $object::query()->select('id')->where($attribute, $value)->whereNot('id', $this->id);
 
         if (!is_null($this->langId)) {
             $builder->where('lang_id', $this->langId);
         }
 
-        if (count($builder->get())) {
+        if ($builder->count() > 0) {
             $fail(__('validation.unique'));
         }
     }
