@@ -2,7 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### [Unreleased]
+#### [2.0.4] - 2025-05-30
 
 ##### Fixed
 
