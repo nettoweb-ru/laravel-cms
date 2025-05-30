@@ -135,7 +135,7 @@ class Browser extends ListWidget {
 
                 this.setClickEvents(tr, function(event) {
                     if (self.isRightClick(event)) {
-                        return
+                        return false
                     }
 
                     let id = $(this).data('id')

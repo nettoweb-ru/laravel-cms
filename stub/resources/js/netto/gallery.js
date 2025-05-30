@@ -44,7 +44,7 @@ class Gallery extends ListWidget {
 
                 this.setClickEvents(tr, function(event) {
                     if (self.isRightClick(event)) {
-                        return
+                        return false
                     }
 
                     self.followUrl($(this))
