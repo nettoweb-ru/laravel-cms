@@ -197,6 +197,14 @@ export default class ListWidget {
         this.checkSelection()
     }
 
+    isRightClick(event) {
+        if (("which" in event) && (event.which === 3)) {
+            return true
+        }
+
+        return ("button" in event) && (event.button === 2);
+    }
+
     load() {
         this.reset()
         this.lock()
@@ -311,11 +319,7 @@ export default class ListWidget {
     setClickEvents(tr, event) {
         let self = this
         tr.longpress(function(event) {
-            if (("which" in event) && (event.which === 3)) {
-                return
-            }
-
-            if (("button" in event) && (event.button === 2)) {
+            if (self.isRightClick(event)) {
                 return
             }
 

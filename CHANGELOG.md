@@ -11,6 +11,7 @@
 - External links in visual editor
 - UniqueSlug minor fixes
 - Impoved background colors in text editor
+- Improved list mouse click event
 
 #### [2.0.3] - 2025-05-24
 

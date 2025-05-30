@@ -133,7 +133,11 @@ class Browser extends ListWidget {
                         }).html(data.items[key].date))
                     )
 
-                this.setClickEvents(tr, function() {
+                this.setClickEvents(tr, function(event) {
+                    if (self.isRightClick(event)) {
+                        return
+                    }
+
                     let id = $(this).data('id')
                     if ($(this).hasClass('dir')) {
                         self.params.dir = id

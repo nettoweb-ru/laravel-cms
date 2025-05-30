@@ -217,7 +217,11 @@ class List extends ListWidget {
                     tr.append($('<td />', {'class': 'col-' + k2}).html($('<span />', {'class': 'text'}).html(data.items[k1][k2])))
                 }
 
-                this.setClickEvents(tr, function() {
+                this.setClickEvents(tr, function(event) {
+                    if (self.isRightClick(event)) {
+                        return
+                    }
+
                     self.followUrl($(this))
                 })
 

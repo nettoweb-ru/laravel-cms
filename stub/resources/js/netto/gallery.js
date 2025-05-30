@@ -42,7 +42,11 @@ class Gallery extends ListWidget {
                     'data-url': data.items[k1]._editUrl
                 }).append($('<img />', {'alt': '', 'src': data.items[k1].thumb}))
 
-                this.setClickEvents(tr, function() {
+                this.setClickEvents(tr, function(event) {
+                    if (self.isRightClick(event)) {
+                        return
+                    }
+
                     self.followUrl($(this))
                 })
 
