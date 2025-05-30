@@ -74,7 +74,7 @@
     --ck-color-shadow-inner: 									hsla(0, 0%, 0%, 0.1);
     --ck-inner-shadow:                                          transparent;
     --ck-color-button-default-background: 						transparent;
-    --ck-color-button-default-hover-background: 				#e2e4ff;
+    --ck-color-button-default-hover-background: 				#f0f0f0;
     --ck-color-button-default-active-background: 				#e2e4ff;
     --ck-color-button-default-disabled-background: 				transparent;
     --ck-focus-outer-shadow:                                    transparent;
@@ -126,4 +126,3 @@
     --ck-color-highlight-background:							#faffbd;
     --ck-color-light-red:										hsl(0, 100%, 90%);
 }
-

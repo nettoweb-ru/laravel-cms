@@ -10,6 +10,7 @@
 - Some wrong page titles in admin section
 - External links in visual editor
 - UniqueSlug minor fixes
+- Impoved background colors in text editor
 
 #### [2.0.3] - 2025-05-24
 
