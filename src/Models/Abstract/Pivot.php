@@ -48,6 +48,6 @@ abstract class Pivot extends BaseModel
      */
     public function parent(): HasOne
     {
-        return $this->hasOne($this->parentClass, 'id', 'object_id');
+        return $this->hasOne($this->parentClass, 'id', 'object_id')->with('translated');
     }
 }

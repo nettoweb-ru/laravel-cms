@@ -6,7 +6,8 @@
 
 ##### Fixed
 
-- OpenGraph data check 
+- OpenGraph data check
+- Setting multilanguage value to NULL
 
 #### [2.0.5] - 2025-05-30
 

@@ -78,15 +78,22 @@ trait IsMultiLingual
             return;
         }
 
+        foreach ($this->translated->all() as $item) {
+            /** @var Language $item */
+            foreach ($this->multiLingual as $column) {
+                $this->multiLingualSaveData[$item->getAttribute('slug')][$column] = $item->pivot->getAttribute($column);
+            }
+        }
+
+        $attributes = $this->toArray();
+
         foreach (get_language_list() as $code => $language) {
             foreach ($this->multiLingual as $column) {
                 $key = "{$column}|{$code}";
-                $value = $this->getAttribute($key);
-                if (!is_null($value)) {
-                    $this->multiLingualSaveData[$code][$column] = $value;
+                if (array_key_exists($key, $attributes)) {
+                    $this->multiLingualSaveData[$code][$column] = $attributes[$key];
+                    unset($this->{$key});
                 }
-
-                unset($this->{$key});
             }
         }
     }
