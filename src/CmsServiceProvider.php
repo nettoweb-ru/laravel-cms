@@ -157,16 +157,6 @@ class CmsServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-    private function registerScheduledTasks(): void
-    {
-        Schedule::command(ReportLogs::class)->hourlyAt(config('cms.schedule.hourly', 0));
-        Schedule::command(RefreshSitemap::class)->dailyAt(config('cms.schedule.daily', 1));
-        Schedule::command(RefreshSearchIndex::class)->weeklyOn(config('cms.schedule.weekly', 2));
-    }
-
-    /**
-     * @return void
-     */
     private function registerPublishedPaths(): void
     {
         $this->publishes([
@@ -192,6 +182,16 @@ class CmsServiceProvider extends ServiceProvider
             __DIR__.'/../stub/resources/css/netto' => resource_path('css/netto'),
             __DIR__.'/../stub/resources/js/netto' => resource_path('js/netto'),
         ], 'laravel-assets');
+    }
+
+    /**
+     * @return void
+     */
+    private function registerScheduledTasks(): void
+    {
+        Schedule::command(ReportLogs::class)->hourlyAt(config('cms.schedule.hourly', 0));
+        Schedule::command(RefreshSitemap::class)->dailyAt(config('cms.schedule.daily', 1));
+        Schedule::command(RefreshSearchIndex::class)->weeklyOn(config('cms.schedule.weekly', 2));
     }
 
     /**
