@@ -4,6 +4,10 @@
 
 #### [Unreleased]
 
+##### Added
+
+- Scrollbar colors
+
 ##### Fixed
 
 - OpenGraph data check
