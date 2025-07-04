@@ -168,11 +168,11 @@ abstract class Controller extends BaseController
 
         $data['head']['title'] = $data['head']['meta_title'] ?: $this->getTitle();
 
-        if (empty($data['head']['og_title']) && $data['head']['meta_title']) {
-            $data['head']['og_title'] = $data['head']['meta_title'];
+        if (empty($data['head']['og_title'])) {
+            $data['head']['og_title'] = $data['head']['title'];
         }
 
-        if (empty($data['head']['og_description']) && $data['head']['meta_description']) {
+        if (empty($data['head']['og_description'])) {
             $data['head']['og_description'] = $data['head']['meta_description'];
         }
 

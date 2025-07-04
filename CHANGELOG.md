@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Fixed
+
+- OpenGraph data check 
+
 #### [2.0.5] - 2025-05-30
 
 ##### Fixed
