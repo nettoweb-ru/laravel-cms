@@ -19,8 +19,13 @@ if (!function_exists('errors_multilingual')) {
     function errors_multilingual(string $attribute, ViewErrorBag $errorBag): array
     {
         $return = [];
-        foreach (get_language_list() as $lang => $value) {
-            $return[$lang] = ($errors = $errorBag->get("{$attribute}|{$lang}")) ? $errors : [];
+
+        foreach (get_language_list() as $code => $language) {
+            $return[$code] = ($errors = $errorBag->get("{$attribute}|{$code}")) ? $errors : [];
+
+            foreach ($return[$code] as $key => $value) {
+                $return[$code][$key] = "[{$language['name']}] {$value}";
+            }
         }
 
         return $return;

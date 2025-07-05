@@ -7,6 +7,7 @@
 ##### Added
 
 - Scrollbar colors
+- Language name to multilanguage error messages
 
 ##### Fixed
 
