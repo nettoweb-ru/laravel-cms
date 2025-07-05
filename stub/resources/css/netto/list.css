@@ -40,6 +40,10 @@
     padding:3px 8px;
 }
 
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result .list-results .list-results-dropdown .list-column-table .list-column-cell span{
+    white-space: nowrap;
+}
+
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table thead th.col-sort,
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table thead th.col-id,
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody td.col-sort,

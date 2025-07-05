@@ -31,6 +31,7 @@
     $(document).ready(function () {
         App.lang = '{{ app()->getLocale() }}'
         App.locale = '{{ config('locale_js') }}'
+        App.textDir = '{{ config('text_dir') }}'
         App.messages.confirm.toggle = '{{ __('main.confirmation_toggle') }}'
         App.messages.confirm.logout = '{{ __('main.confirmation_logout') }}'
         App.messages.labels.delete = '{{ __('main.action_delete') }}'

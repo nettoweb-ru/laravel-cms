@@ -104,10 +104,23 @@ class List extends ListWidget {
     initDropdown() {
         let self = this
         this.objects.head.bind('contextmenu', function(event) {
-            let w1 = $(window).width(),
-                w2 = self.objects.head.width()
+            let wHead = self.objects.head.width(),
+                wPopup = self.objects.dropdown.width(),
+                left = event.pageX - ($(window).width() - wHead) / 2
 
-            self.objects.dropdown.css('left', Math.round((event.pageX - ((w1 - w2) / 2)) * 100 / w2) + '%').show()
+            if (App.textDir === 'ltr') {
+                left += 8
+                if ((left + wPopup) > wHead) {
+                    left = wHead - wPopup
+                }
+            } else {
+                left -= (wPopup + 8)
+                if (left < 0) {
+                    left = 0
+                }
+            }
+
+            self.objects.dropdown.css('left', left).show()
             $(window).one('click.netto', function() {
                 self.objects.dropdown.hide()
             })

@@ -12,6 +12,7 @@
 
 - OpenGraph data check
 - Setting multilanguage value to NULL
+- List dropdown position
 
 #### [2.0.5] - 2025-05-30
 
