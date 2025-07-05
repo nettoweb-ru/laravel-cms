@@ -14,6 +14,7 @@
 - OpenGraph data check
 - Setting multilanguage value to NULL
 - List dropdown position
+- Grid items for mobile view
 
 #### [2.0.5] - 2025-05-30
 

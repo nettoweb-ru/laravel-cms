@@ -37,51 +37,7 @@
     row-gap: 10px;
 }
 
-.form .form-grid .grid-cols-1{
-    grid-column: span 1;
-}
-
-.form .form-grid .grid-cols-2{
-    grid-column: span 2;
-}
-
-.form .form-grid .grid-cols-3{
-    grid-column: span 3;
-}
-
-.form .form-grid .grid-cols-4{
-    grid-column: span 4;
-}
-
-.form .form-grid .grid-cols-5{
-    grid-column: span 5;
-}
-
-.form .form-grid .grid-cols-6{
-    grid-column: span 6;
-}
-
-.form .form-grid .grid-cols-7{
-    grid-column: span 7;
-}
-
-.form .form-grid .grid-cols-8{
-    grid-column: span 8;
-}
-
-.form .form-grid .grid-cols-9{
-    grid-column: span 9;
-}
-
-.form .form-grid .grid-cols-10{
-    grid-column: span 10;
-}
-
-.form .form-grid .grid-cols-11{
-    grid-column: span 11;
-}
-
-.form .form-grid .grid-cols-12{
+.form .form-grid .grid-cols{
     grid-column: span 12;
 }
 
@@ -344,6 +300,52 @@ body.rtl .form .form-grid .grid-item.value .grid-value-option .table.value-optio
 
 body.rtl .form .form-grid .grid-item.label .required{
     padding-right:2px;
+}
+
+@media screen and (min-width: 480px) {
+    .form .form-grid .grid-cols-1 {
+        grid-column: span 1;
+    }
+
+    .form .form-grid .grid-cols-2 {
+        grid-column: span 2;
+    }
+
+    .form .form-grid .grid-cols-3 {
+        grid-column: span 3;
+    }
+
+    .form .form-grid .grid-cols-4 {
+        grid-column: span 4;
+    }
+
+    .form .form-grid .grid-cols-5 {
+        grid-column: span 5;
+    }
+
+    .form .form-grid .grid-cols-6 {
+        grid-column: span 6;
+    }
+
+    .form .form-grid .grid-cols-7 {
+        grid-column: span 7;
+    }
+
+    .form .form-grid .grid-cols-8 {
+        grid-column: span 8;
+    }
+
+    .form .form-grid .grid-cols-9 {
+        grid-column: span 9;
+    }
+
+    .form .form-grid .grid-cols-10 {
+        grid-column: span 10;
+    }
+
+    .form .form-grid .grid-cols-11 {
+        grid-column: span 11;
+    }
 }
 
 @media screen and (min-width: 1024px) {
