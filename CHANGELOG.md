@@ -8,6 +8,7 @@
 
 - Scrollbar colors
 - Language name to multilanguage error messages
+- Logs viewer
 
 ##### Fixed
 
