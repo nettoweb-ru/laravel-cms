@@ -9,7 +9,6 @@
     'class' => 'js-logs',
     'id' => 'logs',
     'url',
-    'actions' => [],
 ])
 
 <x-cms::ajaxlist :id="$id" :url="$url" :class="$class" :showTotal="false">
