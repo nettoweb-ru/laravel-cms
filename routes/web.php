@@ -12,6 +12,7 @@ use Netto\Http\Controllers\Admin\{
     HelperController,
     ImageController,
     LanguageController,
+    LogController,
     MenuController,
     MenuItemController,
     NavigationController,
@@ -130,6 +131,12 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
                 Route::post('browser/upload', [PublicDiskController::class, 'upload'])->name('browser.upload');
                 Route::put('browser/directory', [PublicDiskController::class, 'directory'])->name('browser.directory');
                 Route::post('browser/delete', [PublicDiskController::class, 'delete'])->name('browser.delete');;
+            });
+
+            Route::middleware('permission:admin-logs')->group(function() {
+                Route::get('log', [LogController::class, 'index'])->name('log.index');
+                Route::get('log/list', [LogController::class, 'list'])->name('log.list');
+                Route::post('log/delete', [LogController::class, 'delete'])->name('log.delete');
             });
 
             Route::get('tools/download', [HelperController::class, 'download']);

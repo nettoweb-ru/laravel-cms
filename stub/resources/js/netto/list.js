@@ -7,6 +7,11 @@ class List extends ListWidget {
     defaultSort = {}
     defaultWidth = 15
     id = 'netto-list'
+    navObjects = {
+        perPage: null,
+        page: null,
+        pages: null,
+    }
     objects = {
         head: null,
         dropdown: null,
@@ -30,6 +35,9 @@ class List extends ListWidget {
 
         this.initDropdown()
         this.initSortColumns()
+
+        this.initPage()
+        this.initPerPage()
 
         this.load()
     }
@@ -161,11 +169,42 @@ class List extends ListWidget {
         this.objects.head = parent.find('.js-head')
         this.objects.dropdown = parent.find('.js-dropdown')
         this.objects.columns = this.objects.dropdown.children()
+
+        this.navObjects.perPage = parent.find('.js-per-page')
+        this.navObjects.page = parent.find('.js-page')
+        this.navObjects.pages = parent.find('.js-pages')
+    }
+
+    initPage() {
+        let self = this
+        this.navObjects.page.change(function() {
+            self.params.page = parseInt($(this).val())
+            self.saveParams()
+            self.load()
+        })
+    }
+
+    initPerPage() {
+        let self = this
+        this.navObjects.perPage.change(function() {
+            self.params.page = 1
+            self.params.perPage = parseInt($(this).val())
+
+            self.saveParams()
+            self.load()
+        })
     }
 
     isNarrowColumn(code) {
         let narrow = ['id', 'sort']
         return narrow.includes(code)
+    }
+
+    lock() {
+        super.lock()
+
+        this.disable(this.navObjects.page)
+        this.disable(this.navObjects.perPage)
     }
 
     render(data) {
@@ -240,14 +279,42 @@ class List extends ListWidget {
 
                 this.body.append(tr)
             }
+
+            this.renderNavigation(data.maxPage)
         }
 
         super.render(data)
     }
 
+    renderNavigation(max) {
+        this.navObjects.pages.html(App.formatNumber(max))
+
+        let a, params
+        for (a = 1; a <= max; a++) {
+            params = {
+                value: a
+            }
+
+            if (a === this.params.page) {
+                params.selected = true
+            }
+
+            this.navObjects.page.append($('<option />', params).html(App.formatNumber(a)))
+        }
+
+        if (max > 1) {
+            this.enable(this.navObjects.page)
+        }
+
+        this.navObjects.perPage.find('option[value=' + this.params.perPage + ']').attr('selected', true);
+    }
+
     reset() {
         super.reset()
         this.objects.head.html('')
+
+        this.navObjects.pages.html(App.formatNumber(0))
+        this.navObjects.page.html('')
     }
 
     setColumnsWidth() {
@@ -257,6 +324,12 @@ class List extends ListWidget {
         this.objects.head.find('th').each(function() {
             $(this).width((self.params.columns[$(this).data('code')] * width / 100) + 'px')
         })
+    }
+
+    unlock() {
+        super.unlock()
+
+        this.enable(this.navObjects.perPage)
     }
 
     validateWidth() {

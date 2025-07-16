@@ -11,24 +11,27 @@
     'id',
     'class',
     'head' => '',
-    'buttons',
+    'buttons' => '',
     'showNav' => false,
+    'showTotal' => true,
     'url',
     'noSort' => [],
     'defaultSort' => [],
 ])
 
-<div class="ajax-list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-show-navigation="{{ (int) $showNav }}" data-default-sort="{{ json_encode($defaultSort) }}">
-    <div class="ajax-list-block top">
-        <div class="table block-top-table">
-            <div class="cell block-top-cell head">
-                {{ $head }}
-            </div>
-            <div class="cell block-top-cell buttons">
-                {{ $buttons }}
+<div class="ajax-list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-default-sort="{{ json_encode($defaultSort) }}">
+    @if ($head || $buttons)
+        <div class="ajax-list-block top">
+            <div class="table block-top-table">
+                <div class="cell block-top-cell head">
+                    {{ $head }}
+                </div>
+                <div class="cell block-top-cell buttons">
+                    {{ $buttons }}
+                </div>
             </div>
         </div>
-    </div>
+    @endif
     <div class="ajax-list-block content">
         <div class="ajax-content-layer animation js-layer-animation">
             <div class="table">
@@ -56,14 +59,16 @@
                                 </label>
                             </div>
                         @endif
-                        <div class="cell result-bottom-cell total">
-                            <div>
-                                <span class="text">{{ __('main.general_list_total') }}:</span>
+                        @if ($showTotal)
+                            <div class="cell result-bottom-cell total">
+                                <div>
+                                    <span class="text">{{ __('main.general_list_total') }}:</span>
+                                </div>
+                                <div>
+                                    <span class="text js-total">0</span>
+                                </div>
                             </div>
-                            <div>
-                                <span class="text js-total">0</span>
-                            </div>
-                        </div>
+                        @endif
                         @if ($showNav)
                             <div class="cell result-bottom-cell navigation">
                                 <div class="table result-bottom-nav-table">

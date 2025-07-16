@@ -13,10 +13,19 @@ return [
     ],
     'locales' => [],
     'location' => 'admin',
-    'report_logs' => [
-        'email' => '',
-        'files' => [
-            'laravel.log',
+    'logs' => [
+        'read' => [
+            'max' => 10,
+            'files' => [
+                'laravel.log',
+                'sent.log',
+            ],
+        ],
+        'send' => [
+            'email' => '',
+            'files' => [
+                'laravel.log',
+            ],
         ],
     ],
     'schedule' => [

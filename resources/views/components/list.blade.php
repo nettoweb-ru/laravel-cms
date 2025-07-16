@@ -33,7 +33,7 @@
         <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal hidden disabled js-list-button"
                             data-type="search" title="{{ __('main.title_find') }}"/>
         <x-cms::form.button type="button" bg="icons.download" class="btn-icon btn-normal hidden disabled js-list-button"
-                            data-type="download" title="{{ __('main.title_download') }}"/>
+                            data-type="download" title="{{ __('main.title_download_excel') }}"/>
         <x-cms::form.button type="button" bg="icons.invert-selection"
                             class="btn-icon btn-normal disabled js-list-button" data-type="invert"
                             title="{{ __('main.title_invert') }}"/>

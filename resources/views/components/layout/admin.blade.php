@@ -112,7 +112,9 @@
                                     {{ $header }}
                                 </p>
                             @endif
-                            {{ $slot }}
+                            <div>
+                                {{ $slot }}
+                            </div>
                         </div>
                     </div>
                 </div>

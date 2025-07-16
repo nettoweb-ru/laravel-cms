@@ -409,6 +409,18 @@ if (!function_exists('get_public_uploaded_path')) {
     }
 }
 
+if (!function_exists('get_relative_path')) {
+    /**
+     * Return relative path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function get_relative_path(string $path): string {
+        return str_replace(base_path(), '', $path);
+    }
+}
+
 if (!function_exists('get_storage_path')) {
     /**
      * Return relative path for configured disk storage.
@@ -418,7 +430,7 @@ if (!function_exists('get_storage_path')) {
      */
     function get_storage_path(string $storage): string
     {
-        return str_replace(base_path(), '', config("filesystems.disks.{$storage}.root"));
+        return get_relative_path(config("filesystems.disks.{$storage}.root"));
     }
 }
 
@@ -565,6 +577,31 @@ if (!function_exists('set_language_default')) {
         }
 
         set_language($language, $locales[$language]);
+    }
+}
+
+if (!function_exists('soft_break_string')) {
+    /**
+     * Insert soft breaks into string.
+     *
+     * @param string $string
+     * @param int $interval
+     * @return string
+     */
+    function soft_break_string(string $string, int $interval = 10): string {
+        $string = html_entity_decode($string);
+        $strlen = mb_strlen($string);
+
+        if ($strlen > $interval) {
+            $array = [];
+            for ($a = 0; $a < $strlen; $a += $interval) {
+                $array[] = mb_substr($string, $a, $interval);
+            }
+
+            $string = implode('<wbr />', $array);
+        }
+
+        return $string;
     }
 }
 

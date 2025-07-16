@@ -1,0 +1,100 @@
+.logs{
+    width:100%;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody tr.log-header:hover{
+    background-color: var(--color-reset) !important;
+    cursor: default !important;
+    color: #000 !important;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody tr.log-entry:hover{
+    cursor: default !important;
+    color: #000 !important;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header:first-child td{
+    padding-top: 0;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td{
+    padding: 30px 0 10px;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head{
+    width:100%;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head{
+    vertical-align: top;
+}
+
+body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head.left{
+    text-align: left;
+    padding-right: 10px;
+}
+
+body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head.left{
+    text-align: right;
+    padding-left: 10px;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head.right{
+    white-space: nowrap;
+}
+
+body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head.right{
+    text-align: right;
+}
+
+body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-header td .table-log-head .cell-log-head.right{
+    text-align: left;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry{
+    vertical-align: top;
+}
+
+body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date{
+    padding:5px 20px 5px 0;
+}
+
+body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date{
+    padding:5px 0 5px 20px;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span{
+    width: 20%;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-message{
+    width: 80%;
+    padding:5px 0;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-message .log-message-hold{
+    width: 100%;
+    text-align: left;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.notice,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.warning{
+    font-weight: 700;
+    color: var(--color-main);
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.error,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.critical{
+    color: var(--color-red);
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.alert,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.emergency{
+    color: var(--color-red);
+    font-weight: 700;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.info,
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table .log-entry .log-date span.debug{
+    color: var(--color-gray);
+}

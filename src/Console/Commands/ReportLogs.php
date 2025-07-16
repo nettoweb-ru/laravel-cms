@@ -15,13 +15,13 @@ class ReportLogs extends BaseCommand
      */
     protected function action(): void
     {
-        $email = config('cms.report_logs.email');
+        $email = config('cms.logs.send.email');
         if (empty($email)) {
             return;
         }
 
         $logs = [];
-        foreach (config('cms.report_logs.files', []) as $file) {
+        foreach (config('cms.logs.send.files', []) as $file) {
             $path = storage_path('logs/'.$file);
             if (file_exists($path)) {
                 $logs[] = $path;
