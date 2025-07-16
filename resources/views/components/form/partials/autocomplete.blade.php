@@ -33,7 +33,7 @@
     <div class="autocomplete-input">
         <label for="{{ $id }}">
             <input type="text"
-                value="@if (!$multiple && $value){{ $options[$value] }}@endif"
+                value="@if (!$multiple && $value){{ $options[$value] ?? $value }}@endif"
                 id="{{ $id }}"
                 placeholder="…"
                 @if ($disabled) disabled @endif

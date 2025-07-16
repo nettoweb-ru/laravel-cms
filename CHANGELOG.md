@@ -16,6 +16,7 @@
 - Setting multilanguage value to NULL
 - List dropdown position
 - Grid items for mobile view
+- Validation fail with new autocomplete value
 
 #### [2.0.5] - 2025-05-30
 
