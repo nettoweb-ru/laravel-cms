@@ -18,6 +18,7 @@
 - Grid items for mobile view
 - Validation fail with new autocomplete value
 - Language in search caching
+- Text direction for main page parameters
 
 #### [2.0.5] - 2025-05-30
 

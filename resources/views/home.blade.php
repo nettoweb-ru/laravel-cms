@@ -24,7 +24,7 @@
                                         <span class="text">{{ $title }}</span>
                                     </td>
                                     <td class="value">
-                                        <span class="text">{!! $value !!}</span>
+                                        <span class="text" dir="ltr">{!! $value !!}</span>
                                     </td>
                                 </tr>
                             @endforeach
