@@ -17,6 +17,7 @@
 - List dropdown position
 - Grid items for mobile view
 - Validation fail with new autocomplete value
+- Language in search caching
 
 #### [2.0.5] - 2025-05-30
 

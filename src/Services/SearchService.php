@@ -59,7 +59,7 @@ abstract class SearchService
             ];
         }
 
-        $items = Cache::remember(md5($query), self::TTL, function() use ($query): array {
+        $items = Cache::remember(app()->getLocale().'|'.md5($query), self::TTL, function() use ($query): array {
             Log::channel('search')->info($query);
 
             $collection = DB::table(self::TABLE)
