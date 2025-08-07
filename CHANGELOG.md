@@ -7,6 +7,7 @@
 ##### Fixed
 
 - Minor helpers change
+- English captcha messages
 
 #### [2.1.0] - 2025-07-27
 
