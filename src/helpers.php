@@ -173,7 +173,9 @@ if (!function_exists('get_admin_locales')) {
         ];
 
         foreach (config('cms.locales', []) as $key => $value) {
-            $return[$key] = $value;
+            if (array_key_exists($key, $return)) {
+                $return[$key] = $value;
+            }
         }
 
         return $return;
@@ -438,10 +440,10 @@ if (!function_exists('get_text_direction')) {
     /**
      * Return text direction for given language code.
      *
-     * @param string|null $language
+     * @param string $language
      * @return string
      */
-    function get_text_direction(?string $language): string
+    function get_text_direction(string $language): string
     {
         return in_array($language, ['ar', 'fa', 'he']) ? 'rtl' : 'ltr';
     }

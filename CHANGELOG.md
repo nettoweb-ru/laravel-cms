@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### Unreleased
+
+##### Fixed
+
+- Minor helpers change
+
 #### [2.1.0] - 2025-07-27
 
 ##### Added
