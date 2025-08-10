@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasOne, Pi
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\{DB, Log, Session};
+use Illuminate\Support\Facades\{DB, Session};
 use Illuminate\Http\{JsonResponse, Request, Response};
 
 use Netto\Events\ModelSaved;
