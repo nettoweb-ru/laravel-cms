@@ -153,6 +153,8 @@ abstract class SearchService
                         'content' => $content,
                         'updated_at' => $updatedAt,
                     ]);
+
+                    usleep($this->delay);
                 }
             });
 
@@ -176,6 +178,8 @@ abstract class SearchService
                 'content' => $content,
                 'updated_at' => $updatedAt,
             ]);
+
+            usleep($this->delay);
         }
     }
 
@@ -215,8 +219,6 @@ abstract class SearchService
         if (!array_key_exists($headers['Content-Language'][0], $languages)) {
             throw new NettoException("Language {$headers['Content-Language'][0]} is not configured for url {$url}");
         }
-
-        usleep($this->delay);
 
         $body = html_entity_decode($response->body());
         preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
