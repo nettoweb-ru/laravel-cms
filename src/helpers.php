@@ -354,6 +354,33 @@ if (!function_exists('get_language_route')) {
     }
 }
 
+if (!function_exists('get_public_uploaded_path')) {
+    /**
+     * Return relative public path for automatic upload file.
+     *
+     * @param string $path
+     * @return string
+     */
+    function get_public_uploaded_path(string $path): string
+    {
+        return $path
+            ? '/storage/auto/'.basename($path)
+            : '';
+    }
+}
+
+if (!function_exists('get_relative_path')) {
+    /**
+     * Return relative path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function get_relative_path(string $path): string {
+        return str_replace(base_path(), '', $path);
+    }
+}
+
 if (!function_exists('get_rules_multilingual')) {
     /**
      * Convert the list of rules to multilingual rules.
@@ -393,33 +420,6 @@ if (!function_exists('get_rules_upload')) {
         }
 
         return $return;
-    }
-}
-
-if (!function_exists('get_public_uploaded_path')) {
-    /**
-     * Return relative public path for automatic upload file.
-     *
-     * @param string $path
-     * @return string
-     */
-    function get_public_uploaded_path(string $path): string
-    {
-        return $path
-            ? '/storage/auto/'.basename($path)
-            : '';
-    }
-}
-
-if (!function_exists('get_relative_path')) {
-    /**
-     * Return relative path.
-     *
-     * @param string $path
-     * @return string
-     */
-    function get_relative_path(string $path): string {
-        return str_replace(base_path(), '', $path);
     }
 }
 
