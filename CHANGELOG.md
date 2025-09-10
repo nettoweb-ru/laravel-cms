@@ -4,6 +4,8 @@
 
 #### Unreleased
 
+- Added language code to search log
+
 ##### Fixed
 
 - Minor helpers change

@@ -59,8 +59,9 @@ abstract class SearchService
             ];
         }
 
-        $items = Cache::remember(app()->getLocale().'|'.md5($query), self::TTL, function() use ($query): array {
-            Log::channel('search')->info($query);
+        $locale = app()->getLocale();
+        $items = Cache::remember($locale.'|'.md5($query), self::TTL, function() use ($query, $locale): array {
+            Log::channel('search')->info("[{$locale}] ".$query);
 
             $collection = DB::table(self::TABLE)
                 ->where('content', 'like', '%'.$query.'%')
