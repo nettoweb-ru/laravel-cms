@@ -37,7 +37,7 @@ window.App = {
     },
 
     formatCurrency: function(value, currency) {
-        return new Intl.NumberFormat('ru-RU', {style: 'currency', currency: currency}).format(value)
+        return new Intl.NumberFormat(this.locale, {style: 'currency', currency: currency}).format(value)
     },
 
     formatDate: function(value, options) {
