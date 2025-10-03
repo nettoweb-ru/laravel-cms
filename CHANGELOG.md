@@ -10,6 +10,7 @@
 
 - Minor helpers change
 - English captcha messages
+- Inline height CSS fix
 
 #### [2.1.0] - 2025-07-27
 

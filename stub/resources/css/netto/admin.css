@@ -494,8 +494,6 @@ body.rtl .block.mobile-languages .menu .menu-item-kid.ltr{
 .block.content .inline{
     display: inline-block;
     width: 100%;
-    min-height: inherit;
-    height: inherit;
 }
 
 .block.menu{
