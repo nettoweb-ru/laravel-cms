@@ -4,7 +4,10 @@
 
 #### Unreleased
 
-- Added language code to search log
+##### Added
+
+- Language code to search log
+- Currency precision argument
 
 ##### Fixed
 

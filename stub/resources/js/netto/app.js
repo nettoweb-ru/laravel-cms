@@ -36,12 +36,16 @@ window.App = {
         window.open(this.url.download + '?filename=' + filename)
     },
 
-    formatCurrency: function(value, currency) {
-        return new Intl.NumberFormat(this.locale, {style: 'currency', currency: currency}).format(value)
+    formatCurrency: function(value, currency, precision) {
+        if (typeof precision === 'undefined') {
+            precision = 0
+        }
+
+        return new Intl.NumberFormat(this.locale, {style: 'currency', currency: currency, maximumFractionDigits: precision}).format(value)
     },
 
     formatDate: function(value, options) {
-        if (typeof options == 'undefined') {
+        if (typeof options === 'undefined') {
             options = {}
         }
 
