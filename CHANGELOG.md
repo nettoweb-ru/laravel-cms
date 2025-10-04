@@ -2,7 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### Unreleased
+#### [2.1.1] - 2025-10-04
 
 ##### Added
 
