@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### Unreleased
+
+##### Fixed
+
+- Main window bottom border
+
 #### [2.1.1] - 2025-10-04
 
 ##### Added

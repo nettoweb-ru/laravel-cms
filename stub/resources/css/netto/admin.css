@@ -918,6 +918,6 @@ body.rtl .anti-align{
         width: 1600px;
         border-style: solid;
         border-color: var(--color-background-dark);
-        border-width: 0 1px;
+        border-width: 0 1px 1px;
     }
 }
