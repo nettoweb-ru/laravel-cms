@@ -130,7 +130,7 @@ abstract class CDNService
         }
 
         if (str_starts_with($file, 'js/')) {
-            self::$tags['js'][] = '<script src="'.NETTO_CDN_URL.'/'.$file.'"></script>';
+            self::$tags['js'][] = '<script defer src="'.NETTO_CDN_URL.'/'.$file.'"></script>';
         } else if (str_starts_with($file, 'css/')) {
             self::$tags['css'][] = '<link href="'.NETTO_CDN_URL.'/'.$file.'" rel="stylesheet" type="text/css">';
         }

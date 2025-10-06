@@ -7,6 +7,7 @@
 ##### Fixed
 
 - Main window bottom border
+- CDN JS deferred
 
 #### [2.1.1] - 2025-10-04
 

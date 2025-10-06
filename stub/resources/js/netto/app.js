@@ -5,19 +5,7 @@ window.App = {
     },
     lang: '',
     locale: '',
-    messages: {
-        confirm: {
-            toggle: '',
-            logout: '',
-        },
-        labels: {
-            delete: '',
-        },
-        errors: {
-            uploadMaxFileSize: '',
-            postMaxSize: '',
-        },
-    },
+    messages: {},
     url: {
         cookie: '/admin/tools/cookie',
         download: '/admin/tools/download',
@@ -72,7 +60,11 @@ window.App = {
         this.objects.blockMenu.hide()
     },
 
-    init: function() {
+    init: function(data) {
+        for (let key in data) {
+            this[key] = data[key]
+        }
+
         this.initObjects()
         this.initDropdowns()
         this.initResize()
@@ -194,5 +186,5 @@ window.App = {
 }
 
 $(document).ready(function() {
-    App.init()
+    App.init(appData)
 })

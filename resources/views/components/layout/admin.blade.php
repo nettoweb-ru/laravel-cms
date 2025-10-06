@@ -14,7 +14,25 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @include('cms::components.favicons')
 <script>
-    let autocomplete = {}
+    let autocomplete = {},
+        appData = {
+            lang: '{{ app()->getLocale() }}',
+            locale: '{{ config('locale_js') }}',
+            textDir: '{{ config('text_dir') }}',
+            messages: {
+                confirm: {
+                    toggle: '{{ __('main.confirmation_toggle') }}',
+                    logout: '{{ __('main.confirmation_logout') }}'
+                },
+                labels: {
+                    delete: '{{ __('main.action_delete') }}'
+                },
+                errors: {
+                    uploadMaxFileSize: '{{ __('main.error_upload_max_size_exceeded') }}',
+                    postMaxSize: '{{ __('main.error_post_max_size_exceeded') }}'
+                }
+            }
+        }
 </script>
 @php echo \Netto\Services\CDNService::tags(); @endphp
 @vite([
@@ -27,18 +45,6 @@
 ])
 
 @stack('head')
-<script>
-    $(document).ready(function () {
-        App.lang = '{{ app()->getLocale() }}'
-        App.locale = '{{ config('locale_js') }}'
-        App.textDir = '{{ config('text_dir') }}'
-        App.messages.confirm.toggle = '{{ __('main.confirmation_toggle') }}'
-        App.messages.confirm.logout = '{{ __('main.confirmation_logout') }}'
-        App.messages.labels.delete = '{{ __('main.action_delete') }}'
-        App.messages.errors.uploadMaxFileSize = '{{ __('main.error_upload_max_size_exceeded') }}'
-        App.messages.errors.postMaxSize = '{{ __('main.error_post_max_size_exceeded') }}'
-    })
-</script>
 </head>
 <body class="{{ $head['text_dir'] }}">
 <div class="wrapper">
