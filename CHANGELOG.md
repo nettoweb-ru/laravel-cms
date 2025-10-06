@@ -2,14 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### [2.1.2] - 2025-10-06
-
-##### Fixed
-
-- Main window bottom border
-- CDN JS deferred
-
-#### [2.1.1] - 2025-10-04
+#### [2.1.3] - 2025-10-06
 
 ##### Added
 
@@ -22,6 +15,8 @@
 - English captcha messages
 - Inline height CSS fix
 - Currency format locale fix
+- Main window bottom border
+- CDN JS deferred
 
 #### [2.1.0] - 2025-07-27
 
