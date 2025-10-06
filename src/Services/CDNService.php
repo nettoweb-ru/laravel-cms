@@ -7,6 +7,7 @@ abstract class CDNService
     private const DIRECT = [
         'js/ckeditor/ckeditor.js',
         'js/ckeditor/translations/:langId.js',
+        'js/fancybox/5.0.min.js',
     ];
 
     private const FILES = [
