@@ -131,12 +131,12 @@ abstract class CDNService
      */
     private static function tag(string $file): void
     {
-        $defer = in_array($file, self::DIRECT) ? '' : ' defer';
-        if (str_contains($file, ':langId')) {
-            $file = str_replace(':langId', app()->getLocale(), $file);
-        }
-
         if (str_starts_with($file, 'js/')) {
+            $defer = in_array($file, self::DIRECT) ? '' : ' defer';
+            if (str_contains($file, ':langId')) {
+                $file = str_replace(':langId', app()->getLocale(), $file);
+            }
+
             self::$tags['js'][] = '<script'.$defer.' src="'.NETTO_CDN_URL.'/'.$file.'"></script>';
         } else if (str_starts_with($file, 'css/')) {
             self::$tags['css'][] = '<link href="'.NETTO_CDN_URL.'/'.$file.'" rel="stylesheet" type="text/css">';
