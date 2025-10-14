@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### Unreleased
+
+##### Added
+
+- App name in admin window title
+
 #### [2.1.4] - 2025-10-06
 
 ##### Added
