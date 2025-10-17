@@ -29,7 +29,10 @@ abstract class Controller extends BaseController
      */
     protected function getTitleLead(): string
     {
-        return __('main.general_management');
+        return implode($this->getTitleSeparator(), [
+            __('main.general_management'),
+            config('app.name'),
+        ]);
     }
 
     /**

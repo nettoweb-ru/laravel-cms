@@ -45,17 +45,21 @@ abstract class AbstractController extends BaseController
         $title = $this->title;
         $title[] = $this->getTitleLead();
 
-        if ($appName = config('app.name')) {
-            $title[] = $appName;
-        }
-
-        return implode(config('cms.title_separator', ' | '), $title);
+        return implode($this->getTitleSeparator(), $title);
     }
 
     /**
      * @return string
      */
     abstract protected function getTitleLead(): string;
+
+    /**
+     * @return string
+     */
+    protected function getTitleSeparator(): string
+    {
+        return config('cms.title_separator', ' | ');
+    }
 
     /**
      * @return array
