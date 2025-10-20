@@ -222,16 +222,19 @@ class List extends ListWidget {
 
         let params = this.params,
             self = this,
-            open = false
+            open = false,
+            saveParams = false
 
         if (typeof params.filter === 'undefined') {
             params.filter = {}
+            saveParams = true
         }
 
         this.objects.searchInputs.each(function() {
             let key = $(this).data('id')
             if (typeof params.filter[key] === 'undefined') {
                 params.filter[key] = ''
+                saveParams = true
             }
 
             if (params.filter[key].length) {
@@ -247,8 +250,10 @@ class List extends ListWidget {
             })
         })
 
-        this.params = params
-        this.saveParams()
+        if (saveParams) {
+            this.params = params
+            this.saveParams()
+        }
 
         if (open) {
             this.openSearchPanel()
