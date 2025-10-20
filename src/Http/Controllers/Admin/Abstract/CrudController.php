@@ -156,6 +156,20 @@ abstract class CrudController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getCustomListFilter(Request $request): array
+    {
+        return array_filter(array_map(function ($value) {
+            return $value ? [
+                'value' => $value,
+                'strict' => false,
+            ] : [];
+        }, $request->get('filter', [])));
+    }
+
+    /**
      * @param Model $model
      * @return string
      */
@@ -428,17 +442,25 @@ abstract class CrudController extends BaseController
             $selectRaw .= ", ";
         }
 
-        foreach ($filter as $column => $value) {
+        foreach ($filter as $column => $filterValue) {
+            if ($column == 'id') {
+                $filterValue['strict'] = true;
+            }
+
             $alias = $aliases[$column];
             if (str_contains($column, '.')) {
                 [$relationCode, $relationColumn] = explode('.', $column);
                 if (get_class($affectedRelationObjects[$relationCode]) == BelongsToMany::class) {
-                    $builder->having($alias, 'LIKE', "%-{$value}-%");
+                    $builder->having($alias, 'LIKE', "%-{$filterValue['value']}-%");
                 } else {
-                    $builder->where($qualified[$alias], '=', $value);
+                    $filterValue['strict']
+                        ? $builder->where($qualified[$alias], '=', $filterValue['value'])
+                        : $builder->where($qualified[$alias], 'LIKE', "%{$filterValue['value']}%");
                 }
             } else {
-                $builder->where($qualified[$alias], '=', $value);
+                $filterValue['strict']
+                    ? $builder->where($qualified[$alias], '=', $filterValue['value'])
+                    : $builder->where($qualified[$alias], 'LIKE', "%{$filterValue['value']}%");
             }
         }
 

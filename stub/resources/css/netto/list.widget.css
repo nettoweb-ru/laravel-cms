@@ -193,11 +193,11 @@ body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-r
 }
 
 body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.per-page{
-    padding-right:20px;
+    padding-right:10px;
 }
 
 body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.per-page{
-    padding-left:20px;
+    padding-left:10px;
 }
 
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.total{
@@ -218,11 +218,11 @@ body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-r
 }
 
 body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.navigation{
-    padding-left:20px;
+    padding-left:10px;
 }
 
 body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.navigation{
-    padding-right:20px;
+    padding-right:10px;
 }
 
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.navigation .result-bottom-nav-table .result-bottom-nav-cell{
@@ -236,5 +236,21 @@ body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-r
 @media screen and (min-width: 1024px) {
     .ajax-list .ajax-list-block.content{
         margin-top:10px;
+    }
+
+    body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.per-page{
+        padding-right:20px;
+    }
+
+    body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.per-page{
+        padding-left:20px;
+    }
+
+    body.ltr .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.navigation{
+        padding-left:20px;
+    }
+
+    body.rtl .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.bottom .result-bottom-table .result-bottom-cell.navigation{
+        padding-right:20px;
     }
 }

@@ -14,6 +14,8 @@
             'create' => route('admin.role.create'),
             'delete' => route('admin.role.delete'),
         ]"
+        :noSort="['name']"
+        :search="false"
     />
     <x-cms::list
         id="permission"
@@ -31,5 +33,6 @@
             'delete' => route('admin.permission.delete'),
         ]"
         :noSort="['name']"
+        :search="false"
     />
 </x-cms::layout.admin>

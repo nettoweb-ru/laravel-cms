@@ -6,7 +6,9 @@ class List extends ListWidget {
     columns = {}
     defaultSort = {}
     defaultWidth = 15
+    hasSearch = false
     id = 'netto-list'
+    isSearchOpen = false
     navObjects = {
         perPage: null,
         page: null,
@@ -18,6 +20,7 @@ class List extends ListWidget {
         columns: null
     }
     noSort = {}
+    searchTimeout = null
 
     constructor(object) {
         super(object)
@@ -33,6 +36,8 @@ class List extends ListWidget {
         this.initColumns()
         this.initParams()
 
+        this.initSearch()
+
         this.initDropdown()
         this.initSortColumns()
 
@@ -40,6 +45,17 @@ class List extends ListWidget {
         this.initPerPage()
 
         this.load()
+    }
+
+    closeSearchPanel() {
+        this.objects.searchInputs.each(function() {
+            $(this).val('')
+        })
+        this.filter()
+
+        this.objects.searchPanel.hide()
+        this.buttons.search.removeClass('active')
+        this.isSearchOpen = false
     }
 
     getDefaultParams() {
@@ -82,20 +98,21 @@ class List extends ListWidget {
             columns: columns,
             sort: Object.keys(this.defaultSort)[0],
             sortDir: Object.values(this.defaultSort)[0],
-            toggle: (typeof this.buttons.toggle === 'object') ? 1 : 0
+            toggle: (typeof this.buttons.toggle === 'object') ? 1 : 0,
+            filter: {},
         }
     }
 
     initButtons() {
         super.initButtons()
 
-        /*this.buttons.search.click(function() {
-
-        })
-
-        this.buttons.download.click(function() {
-
-        })*/
+        if (typeof this.buttons.search === 'object') {
+            this.hasSearch = true
+            let self = this
+            this.buttons.search.click(function() {
+                self.toggleSearchPanel()
+            })
+        }
     }
 
     initColumns() {
@@ -170,6 +187,9 @@ class List extends ListWidget {
         this.objects.dropdown = parent.find('.js-dropdown')
         this.objects.columns = this.objects.dropdown.children()
 
+        this.objects.searchPanel = parent.find('.js-list-search')
+        this.objects.searchInputs = this.objects.searchPanel.find('.js-list-search-input')
+
         this.navObjects.perPage = parent.find('.js-per-page')
         this.navObjects.page = parent.find('.js-page')
         this.navObjects.pages = parent.find('.js-pages')
@@ -195,6 +215,69 @@ class List extends ListWidget {
         })
     }
 
+    initSearch() {
+        if (!this.hasSearch) {
+            return
+        }
+
+        let params = this.params,
+            self = this,
+            open = false
+
+        if (typeof params.filter === 'undefined') {
+            params.filter = {}
+        }
+
+        this.objects.searchInputs.each(function() {
+            let key = $(this).data('id')
+            if (typeof params.filter[key] === 'undefined') {
+                params.filter[key] = ''
+            }
+
+            if (params.filter[key].length) {
+                $(this).val(params.filter[key])
+                open = true
+            }
+
+            $(this).on('change keyup', function() {
+                clearTimeout(self.searchTimeout)
+                self.searchTimeout = setTimeout(function() {
+                    self.filter()
+                }, 1000)
+            })
+        })
+
+        this.params = params
+        this.saveParams()
+
+        if (open) {
+            this.openSearchPanel()
+        }
+    }
+
+    filter() {
+        let update = false,
+            params = this.params
+
+        this.objects.searchInputs.each(function() {
+            let id = $(this).data('id'),
+                value = $(this).val()
+
+            if (params.filter[id] !== value) {
+                params.filter[id] = value
+                update = true
+            }
+        })
+
+        if (update) {
+            params.page = 1
+            this.params = params
+
+            this.saveParams()
+            this.load()
+        }
+    }
+
     isNarrowColumn(code) {
         let narrow = ['id', 'sort']
         return narrow.includes(code)
@@ -205,6 +288,12 @@ class List extends ListWidget {
 
         this.disable(this.navObjects.page)
         this.disable(this.navObjects.perPage)
+    }
+
+    openSearchPanel() {
+        this.objects.searchPanel.show()
+        this.buttons.search.addClass('active')
+        this.isSearchOpen = true
     }
 
     render(data) {
@@ -326,10 +415,23 @@ class List extends ListWidget {
         })
     }
 
+    toggleSearchPanel() {
+        if (this.isSearchOpen) {
+            this.closeSearchPanel()
+            return
+        }
+
+        this.openSearchPanel()
+    }
+
     unlock() {
         super.unlock()
 
         this.enable(this.navObjects.perPage)
+
+        if (this.hasSearch) {
+            this.enable(this.buttons.search)
+        }
     }
 
     validateWidth() {

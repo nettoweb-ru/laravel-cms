@@ -73,14 +73,18 @@ trait AdminActionsKid
     public function list(Request $request): JsonResponse
     {
         if ($parentId = $request->get($this->itemRouteParentId)) {
-            $return = $this->getList($this->createModel($parentId), [
-                "{$this->itemParentRelation}.id" => $parentId
-            ]);
+            $filter = $this->getCustomListFilter($request);
+            $filter["{$this->itemParentRelation}.id"] = [
+                'value' => $parentId,
+                'strict' => true,
+            ];
+
+            $return = $this->getList($this->createModel($parentId), $filter);
 
             return response()->json($return);
-        } else {
-            abort(400);
         }
+
+        abort(400);
     }
 
     /**

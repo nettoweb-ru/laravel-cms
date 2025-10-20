@@ -3,7 +3,7 @@
 namespace Netto\Traits\Crud;
 
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\{JsonResponse, RedirectResponse, Response};
+use Illuminate\Http\{JsonResponse, RedirectResponse, Request, Response};
 use Illuminate\Database\Eloquent\Model as Model;
 
 use Netto\Exceptions\NettoException;
@@ -65,12 +65,13 @@ trait AdminActions
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
      * @throws NettoException
      */
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
-        $return = $this->getList($this->createModel());
+        $return = $this->getList($this->createModel(), $this->getCustomListFilter($request));
         return response()->json($return);
     }
 

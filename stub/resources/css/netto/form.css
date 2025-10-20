@@ -45,18 +45,6 @@
     width: 100%;
 }
 
-.form .form-grid .grid-item.label{
-    margin-bottom:2px;
-    color:var(--color-gray);
-    height: 15px;
-    white-space: nowrap;
-    overflow-x: hidden;
-}
-
-.form .form-grid .grid-item.label .required{
-    color:var(--color-red);
-}
-
 .form .form-grid .grid-item.value .autocomplete-input{
     width:100%;
     background-color: yellow;
@@ -238,7 +226,7 @@ body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.it
     background-color:var(--color-background);
 }
 
-.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt .desktop{
     display:none;
 }
 
@@ -270,6 +258,26 @@ body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.it
     margin-top:20px;
 }
 
+.form .form-grid .grid-item.label{
+    margin-bottom:2px;
+    color:var(--color-gray);
+    height: 15px;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+.form .form-grid .grid-item.label .required{
+    color:var(--color-red);
+}
+
+body.ltr .form .form-grid .grid-item.label .required{
+    padding-left:2px;
+}
+
+body.rtl .form .form-grid .grid-item.label .required{
+    padding-right:2px;
+}
+
 body.ltr .form .form-grid .grid-item.value .grid-value-option{
     margin-right: 12px;
 }
@@ -282,10 +290,6 @@ body.ltr .form .form-grid .grid-item.value .grid-value-option .table.value-optio
     padding-left:5px;
 }
 
-body.ltr .form .form-grid .grid-item.label .required{
-    padding-left:2px;
-}
-
 body.rtl .form .form-grid .grid-item.value .grid-value-option{
     margin-left: 12px;
 }
@@ -296,10 +300,6 @@ body.rtl .form .form-grid .grid-item.value .grid-value-option:last-child{
 
 body.rtl .form .form-grid .grid-item.value .grid-value-option .table.value-option .cell.label{
     padding-right:5px;
-}
-
-body.rtl .form .form-grid .grid-item.label .required{
-    padding-right:2px;
 }
 
 @media screen and (min-width: 480px) {
@@ -348,15 +348,17 @@ body.rtl .form .form-grid .grid-item.label .required{
     }
 }
 
-@media screen and (min-width: 1024px) {
-    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .default{
+@media screen and (min-width: 560px) {
+    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt .mobile{
         display:none;
     }
 
-    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang .mobile{
+    .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt .desktop{
         display:block;
     }
+}
 
+@media screen and (min-width: 1024px){
     .form .form-grid .grid-item.label{
         margin-bottom: 1px;
     }

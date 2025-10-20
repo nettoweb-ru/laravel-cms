@@ -50,3 +50,18 @@
 .ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results .ajax-result.data table tbody td.col-id{
     text-align: center;
 }
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results.search{
+    width:inherit;
+    margin: 10px 0 15px;
+    border:1px solid var(--color-border);
+    padding-bottom: 10px;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results.search .list-column-table{
+    width: 100%;
+}
+
+.ajax-list .ajax-list-block.content .ajax-content-layer.results .ajax-results.search .list-column-table .list-column-cell{
+    padding: 10px 10px 0;
+}

@@ -39,7 +39,8 @@
                         @foreach ($sheets as $key => $value)
                             @if (!array_key_exists($key, $conditions) || $conditions[$key])
                                 <div class="cell sheet-nav-cell txt label js-form-sheet-switch" data-id="{{ $key }}">
-                                    <span class="text-small">{{ __($value) }}</span>
+                                    <span class="text-small mobile" title="{{ __($value) }}">{{ $loop->iteration }}</span>
+                                    <span class="text-small desktop">{{ __($value) }}</span>
                                 </div>
                                 @if (!$loop->last)
                                     <div class="cell sheet-nav-cell space">
@@ -55,8 +56,8 @@
                     @if ($multiLang)
                         @foreach ($languages as $language)
                             <div class="cell sheet-nav-cell txt lang js-form-lang-switch" data-id="{{ $language['slug'] }}">
-                                <span class="text-small default">{{ $language['slug'] }}</span>
-                                <span class="text-small mobile">{{ $language['name'] }}</span>
+                                <span class="text-small mobile">{{ $language['slug'] }}</span>
+                                <span class="text-small desktop">{{ $language['name'] }}</span>
                             </div>
                             @if (!$loop->last)
                                 <div class="cell sheet-nav-cell space">

@@ -12,6 +12,7 @@
     'class',
     'head' => '',
     'buttons' => '',
+    'search' => '',
     'showNav' => false,
     'showTotal' => true,
     'url',
@@ -41,6 +42,7 @@
             </div>
         </div>
         <div class="ajax-content-layer results js-layer-results">
+            {{ $search }}
             <div class="ajax-results found js-layer-results-found">
                 <div class="ajax-result data">
                     {{ $slot }}

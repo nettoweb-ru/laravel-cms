@@ -85,7 +85,8 @@ body.rtl .btn.btn-form:last-child{
     color:var(--color-main);
 }
 
-.btn.btn-normal:not(.disabled):hover{
+.btn.btn-normal:not(.disabled):hover,
+.btn.btn-normal.active{
     background-color:var(--color-main);
     color:var(--color-background);
 }

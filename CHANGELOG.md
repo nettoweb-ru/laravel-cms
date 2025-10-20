@@ -7,6 +7,10 @@
 ##### Added
 
 - App name in admin window title
+- Quick search in AJAX lists
+
+##### Fixed
+- Minor UI improvements
 
 #### [2.1.4] - 2025-10-06
 

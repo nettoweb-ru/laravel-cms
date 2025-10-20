@@ -474,7 +474,7 @@ class Form {
         let self = this
         object.find('.js-transliterate').each(function() {
             let target = $('#' + $(this).data('transliterate-code'))
-            $(this).on('change', function() {
+            $(this).on('change keyup', function() {
                 let source = $(this)
                 clearTimeout(self.timeout)
                 self.timeout = setTimeout(function() {

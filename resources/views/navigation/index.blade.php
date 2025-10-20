@@ -15,5 +15,6 @@
             'delete' => route('admin.navigation.delete'),
         ]"
         :noSort="['name']"
+        :search="false"
     />
 </x-cms::layout.admin>
