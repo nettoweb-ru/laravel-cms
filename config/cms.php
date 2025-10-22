@@ -5,6 +5,7 @@ return [
         'bias' => 11,
         'multiplier' => 2,
     ],
+    'cdn_host' => 'https://cdn.nettoweb.ru',
     'default_language' => 'ru',
     'image' => [
         'width' => 150,

@@ -8,6 +8,7 @@
 
 - App name in admin window title
 - Quick search in AJAX lists
+- CDN host config setting
 
 ##### Fixed
 - Minor UI improvements
