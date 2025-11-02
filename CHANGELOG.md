@@ -2,19 +2,20 @@
 
 ### nettoweb/laravel-cms
 
-#### Unreleased
+#### [2.2.0] - 2025-11-02
 
 ##### Added
 
 - App name in admin window title
 - Quick search in AJAX lists
 - CDN host config setting
-- Merge config with default values
 - Data CSV export
 
 ##### Fixed
+
 - Minor UI improvements
 - Deprected JS event
+- Merge config with default values
 
 #### [2.1.4] - 2025-10-06
 
