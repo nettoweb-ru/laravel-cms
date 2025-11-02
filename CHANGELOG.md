@@ -10,7 +10,7 @@
 - Quick search in AJAX lists
 - CDN host config setting
 - Merge config with default values
-- Data CSV expport
+- Data CSV export
 
 ##### Fixed
 - Minor UI improvements
