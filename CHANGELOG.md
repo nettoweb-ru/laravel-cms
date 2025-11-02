@@ -13,6 +13,7 @@
 
 ##### Fixed
 - Minor UI improvements
+- Deprected JS event
 
 #### [2.1.4] - 2025-10-06
 

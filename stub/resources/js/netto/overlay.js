@@ -186,7 +186,7 @@ window.Overlay = {
         this.showAnimation()
 
         let self = this
-        $(window).one('unload.netto', function() {
+        $(window).one('pagehide.netto', function() {
             self.hideOverlay()
         })
     },
