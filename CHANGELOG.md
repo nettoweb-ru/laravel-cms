@@ -14,7 +14,7 @@
 ##### Fixed
 
 - Minor UI improvements
-- Deprected JS event
+- Deprecated JS event
 - Merge config with default values
 
 #### [2.1.4] - 2025-10-06
