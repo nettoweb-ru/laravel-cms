@@ -68,6 +68,8 @@ class CmsServiceProvider extends ServiceProvider
             return $registrar;
         });
 
+        $this->mergeConfigFrom(__DIR__ . '/../config/cms.php', 'cms');
+
     }
 
     /**

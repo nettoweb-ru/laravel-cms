@@ -9,6 +9,7 @@
 - App name in admin window title
 - Quick search in AJAX lists
 - CDN host config setting
+- Merge config with default values
 
 ##### Fixed
 - Minor UI improvements
