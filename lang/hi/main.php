@@ -110,6 +110,7 @@ return [
     "title_create" => "नया ऑब्जेक्ट बनाएं",
     "title_delete" => "निर्दिष्ट ऑब्जेक्ट हटाएं",
     "title_download" => "डाउनलोड फ़ाइल",
+    "title_download_csv" => "CSV के रूप में डाउनलोड करें",
     "title_download_excel" => "एक्सेल के रूप में डाउनलोड करें",
     "title_find" => "वस्तुएं खोजें",
     "title_folder_new" => "नई निर्देशिका बनाएँ",

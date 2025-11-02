@@ -7,6 +7,15 @@ return [
     ],
     'cdn_host' => 'https://cdn.nettoweb.ru',
     'default_language' => 'ru',
+    'export' => [
+        'csv' => [
+            'separator' => ',',
+            'enclosure' => '"',
+            'escape' => "\\",
+            'eol' => PHP_EOL,
+            'encoding' => '',
+        ],
+    ],
     'image' => [
         'width' => 150,
         'height' => 150,

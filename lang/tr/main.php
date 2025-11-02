@@ -110,6 +110,7 @@ return [
     "title_create" => "Yeni nesne oluştur",
     "title_delete" => "Belirtilen nesneleri sil",
     "title_download" => "Dosyayı indir",
+    "title_download_csv" => "CSV olarak indir",
     "title_download_excel" => "Excel olarak indir",
     "title_find" => "Nesneleri bul",
     "title_folder_new" => "Yeni dizin oluştur",

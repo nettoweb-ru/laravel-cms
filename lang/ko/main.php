@@ -110,6 +110,7 @@ return [
     "title_create" => "새로운 객체를 생성합니다",
     "title_delete" => "지정된 객체 삭제",
     "title_download" => "파일 다운로드",
+    "title_download_csv" => "CSV로 다운로드",
     "title_download_excel" => "Excel로 다운로드",
     "title_find" => "객체 찾기",
     "title_folder_new" => "새 디렉토리 만들기",

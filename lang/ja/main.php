@@ -110,6 +110,7 @@ return [
     "title_create" => "新しいオブジェクトを作成する",
     "title_delete" => "指定されたオブジェクトを削除する",
     "title_download" => "ファイルをダウンロード",
+    "title_download_csv" => "CSVとしてダウンロード",
     "title_download_excel" => "Excelとしてダウンロード",
     "title_find" => "オブジェクトを見つける",
     "title_folder_new" => "新しいディレクトリを作成する",

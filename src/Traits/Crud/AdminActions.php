@@ -65,17 +65,6 @@ trait AdminActions
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws NettoException
-     */
-    public function list(Request $request): JsonResponse
-    {
-        $return = $this->getList($this->createModel(), $this->getCustomListFilter($request));
-        return response()->json($return);
-    }
-
-    /**
      * @param Model|null $model
      * @return void
      */
@@ -93,6 +82,19 @@ trait AdminActions
     protected function createModel(): Model
     {
         return new $this->className();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws NettoException
+     */
+    protected function getListArray(Request $request): array
+    {
+        return $this->getList(
+            $this->createModel(),
+            $this->getListFilter($request)
+        );
     }
 
     /**

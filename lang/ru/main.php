@@ -110,6 +110,7 @@ return [
     "title_create" => "Создать новый объект",
     "title_delete" => "Удалить выделенные объекты",
     "title_download" => "Скачать файл",
+    "title_download_csv" => "Скачать в CSV",
     "title_download_excel" => "Скачать в Excel",
     "title_find" => "Найти объекты",
     "title_folder_new" => "Создать новую директорию",

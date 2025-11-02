@@ -110,6 +110,7 @@ return [
     "title_create" => "ایجاد شیء جدید",
     "title_delete" => "حذف اشیاء مشخص شده",
     "title_download" => "دانلود فایل",
+    "title_download_csv" => "دانلود به صورت CSV",
     "title_download_excel" => "دانلود به صورت اکسل",
     "title_find" => "اشیاء را پیدا کنید",
     "title_folder_new" => "دایرکتوری جدید ایجاد کنید",

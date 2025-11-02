@@ -51,6 +51,7 @@
                         'create' => route('admin.menu-item.create', ['menu' => $object]),
                         'delete' => route('admin.menu-item.delete'),
                         'toggle' => route('admin.menu-item.toggle'),
+                        'downloadCsv' => route('admin.menu-item.download-csv', ['menu' => $object]),
                     ]"
                 />
             </x-slot>

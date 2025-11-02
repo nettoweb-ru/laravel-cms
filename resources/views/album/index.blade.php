@@ -13,6 +13,7 @@
         :actions="[
             'create' => route('admin.album.create'),
             'delete' => route('admin.album.delete'),
+            'downloadCsv' => route('admin.album.download-csv'),
         ]"
     />
 </x-cms::layout.admin>

@@ -14,6 +14,7 @@
         :actions="[
             'create' => route('admin.menu.create'),
             'delete' => route('admin.menu.delete'),
+            'downloadCsv' => route('admin.menu.download-csv'),
         ]"
     />
 </x-cms::layout.admin>

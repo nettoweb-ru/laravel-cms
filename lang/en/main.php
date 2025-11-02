@@ -110,6 +110,7 @@ return [
     "title_create" => "Create new object",
     "title_delete" => "Delete specified objects",
     "title_download" => "Download file",
+    "title_download_csv" => "Download as CSV",
     "title_download_excel" => "Download as Excel",
     "title_find" => "Find objects",
     "title_folder_new" => "Create new directory",

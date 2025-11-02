@@ -19,6 +19,9 @@ abstract class CrudController extends BaseController
 {
     protected const DEFAULT_SORT_STEP = 10;
 
+    protected const DOWNLOAD_CSV = 1;
+    protected const DOWNLOAD_XLS = 2;
+
     protected string $className;
 
     protected string $baseRoute;
@@ -27,6 +30,17 @@ abstract class CrudController extends BaseController
     protected array $syncRelations = [];
 
     protected array $viewId;
+
+    /**
+     * @param Request $request
+     * @return void
+     * @throws NettoException
+     */
+    public function csv(Request $request): void
+    {
+        $return = $this->getListArray($request);
+        $this->download($request->get('columns', []), $return['items'], self::DOWNLOAD_CSV);
+    }
 
     /**
      * @param Request $request
@@ -69,6 +83,17 @@ abstract class CrudController extends BaseController
     {
         $this->addCrumbs();
         return $this->view($this->viewId['list']);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws NettoException
+     */
+    public function list(Request $request): JsonResponse
+    {
+        $return = $this->getListArray($request);
+        return response()->json($return);
     }
 
     /**
@@ -126,10 +151,77 @@ abstract class CrudController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return void
+     * @throws NettoException
+     */
+    /*public function xls(Request $request): void
+    {
+        $return = $this->getListArray($request);
+        $this->download($request->get('columns', []), $return['items'], self::DOWNLOAD_XLS);
+    }*/
+
+    /**
      * @param Model|null $model
      * @return void
      */
     abstract protected function addCrumbs(?Model $model = null): void;
+
+    /**
+     * @param array $columns
+     * @param array $items
+     * @param int $mode
+     * @return void
+     * @throws NettoException
+     */
+    protected function download(array $columns, array $items, int $mode): void
+    {
+        $list = [array_keys($columns)];
+
+        foreach ($items as $item) {
+            $string = [];
+            foreach ($columns as $column => $columnWidth) {
+                $string[] = $item[$column];
+            }
+
+            $list[] = $string;
+        }
+
+        switch ($mode) {
+            case self::DOWNLOAD_CSV:
+                if ($encoding = config('cms.export.csv.encoding')) {
+                    foreach ($list as $key => $item) {
+                        foreach ($item as $key2 => $string) {
+                            $list[$key][$key2] = mb_convert_encoding($string, $encoding);
+                        }
+                    }
+                }
+
+                header('Content-Type: text/csv');
+                header('Content-Disposition: attachment;filename=download.csv');
+
+                $handler = fopen('php://output', 'w');
+
+                foreach ($list as $item) {
+                    fputcsv(
+                        $handler,
+                        $item,
+                        config('cms.export.csv.separator'),
+                        config('cms.export.csv.enclosure'),
+                        config('cms.export.csv.escape'),
+                        config('cms.export.csv.eol'),
+                    );
+                }
+
+                fclose($handler);
+                break;
+            /*case self::DOWNLOAD_XLS:
+
+                break;*/
+            default:
+                throw new NettoException("Unsupported download mode: {$mode}");
+        }
+    }
 
     /**
      * @param Model $model
@@ -158,8 +250,15 @@ abstract class CrudController extends BaseController
     /**
      * @param Request $request
      * @return array
+     * @throws NettoException
+ */
+    abstract protected function getListArray(Request $request): array;
+
+    /**
+     * @param Request $request
+     * @return array
      */
-    protected function getCustomListFilter(Request $request): array
+    protected function getListFilter(Request $request): array
     {
         return array_filter(array_map(function ($value) {
             return $value ? [

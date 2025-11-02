@@ -110,6 +110,7 @@ return [
     "title_create" => "Crea nuovo oggetto",
     "title_delete" => "Elimina gli oggetti specificati",
     "title_download" => "Scarica il file",
+    "title_download_csv" => "Scarica come CSV",
     "title_download_excel" => "Scarica come Excel",
     "title_find" => "Trova oggetti",
     "title_folder_new" => "Crea una nuova directory",

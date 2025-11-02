@@ -6,6 +6,8 @@ class List extends ListWidget {
     columns = {}
     defaultSort = {}
     defaultWidth = 15
+    hasDownloadCsv = false
+    hasDownloadXls = false
     hasSearch = false
     id = 'netto-list'
     isSearchOpen = false
@@ -108,11 +110,56 @@ class List extends ListWidget {
 
         if (typeof this.buttons.search === 'object') {
             this.hasSearch = true
+
             let self = this
             this.buttons.search.click(function() {
                 self.toggleSearchPanel()
             })
         }
+
+        if (typeof this.buttons.downloadCsv === 'object') {
+            this.hasDownloadCsv = true
+
+            let self = this
+            this.buttons.downloadCsv.click(function() {
+                self.download(self.buttons.downloadCsv.data('url'))
+            })
+        }
+
+        if (typeof this.buttons.downloadXls === 'object') {
+            this.hasDownloadXls = true
+
+            let self = this
+            this.buttons.downloadXls.click(function() {
+                self.download(self.buttons.downloadXls.data('url'))
+            })
+        }
+    }
+
+    download(route) {
+        let urlObj = new URL(route),
+            url = urlObj.origin + urlObj.pathname,
+            qParams = {},
+            k1, k2
+
+        for (let [k, v] of new URLSearchParams(urlObj.search)) {
+            qParams[k] = v
+        }
+
+        for (k1 in this.params) {
+            if (typeof this.params[k1] === 'object') {
+                for (k2 in this.params[k1]) {
+                    qParams[k1 + "[" + k2 + "]"] = this.params[k1][k2]
+                }
+            } else {
+                qParams[k1] = this.params[k1]
+            }
+        }
+
+        qParams.page = 1
+        qParams.perPage = 0
+
+        window.open(url + '?' + (new URLSearchParams(qParams)).toString())
     }
 
     initColumns() {
@@ -375,6 +422,14 @@ class List extends ListWidget {
             }
 
             this.renderNavigation(data.maxPage)
+
+            if (this.hasDownloadCsv) {
+                this.enable(this.buttons.downloadCsv)
+            }
+
+            if (this.hasDownloadXls) {
+                this.enable(this.buttons.downloadXls)
+            }
         }
 
         super.render(data)

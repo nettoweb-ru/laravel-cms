@@ -32,7 +32,9 @@
         @if ($search)
             <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal disabled js-list-button" data-type="search" title="{{ __('main.title_find') }}"/>
         @endif
-        <x-cms::form.button type="button" bg="icons.download" class="btn-icon btn-normal hidden disabled js-list-button" data-type="download" title="{{ __('main.title_download_excel') }}"/>
+        @if (!empty($actions['downloadCsv']))
+            <x-cms::form.button type="button" bg="icons.file-type-csv" class="btn-icon btn-normal disabled js-list-button" data-type="downloadCsv" data-url="{{ $actions['downloadCsv'] }}" title="{{ __('main.title_download_csv') }}"/>
+        @endif
         <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal disabled js-list-button" data-type="invert" title="{{ __('main.title_invert') }}"/>
         @if (!empty($actions['toggle']))
             <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal disabled js-list-button" data-type="toggle" data-url="{{ $actions['toggle'] }}" title="{{ __('main.title_toggle') }}"/>

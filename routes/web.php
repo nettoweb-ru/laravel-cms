@@ -60,10 +60,13 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
 
             Route::middleware('permission:admin-publications')->group(function() {
                 Route::resource('publication', PublicationController::class)->except(['toggle']);
+                Route::get('publication/csv', [PublicationController::class, 'csv'])->name('publication.download-csv');
             });
 
             Route::middleware('permission:admin-photo-albums')->group(function() {
                 Route::resource('album', AlbumController::class)->except('toggle');
+                Route::get('album/csv', [AlbumController::class, 'csv'])->name('album.download-csv');
+
                 Route::resource('album/image', ImageController::class)->names([
                     'store' => 'album-image.store',
                     'create' => 'album-image.create',
@@ -77,10 +80,13 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
 
             Route::middleware('permission:admin-languages')->group(function() {
                 Route::resource('language', LanguageController::class)->except('toggle');
+                Route::get('language/csv', [LanguageController::class, 'csv'])->name('language.download-csv');
             });
 
             Route::middleware('permission:admin-menu')->group(function() {
                 Route::resource('menu', MenuController::class)->except('toggle');
+                Route::get('menu/csv', [MenuController::class, 'csv'])->name('menu.download-csv');
+
                 Route::resource('menu/item', MenuItemController::class)->names([
                     'store' => 'menu-item.store',
                     'create' => 'menu-item.create',
@@ -91,6 +97,8 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
                     'destroy' => 'menu-item.destroy',
                     'edit' => 'menu-item.edit',
                 ])->except('index');
+
+                Route::get('menu/item/csv', [MenuItemController::class, 'csv'])->name('menu-item.download-csv');
             });
 
             Route::middleware('permission:admin-navigation')->group(function() {
@@ -109,6 +117,8 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
 
             Route::middleware('permission:admin-users')->group(function() {
                 Route::resource('user', UserController::class)->except(['toggle']);
+                Route::get('user/csv', [UserController::class, 'csv'])->name('user.download-csv');
+
                 Route::resource('user/balance', UserBalanceController::class)->names([
                     'store' => 'user-balance.store',
                     'create' => 'user-balance.create',

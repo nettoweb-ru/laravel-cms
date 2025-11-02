@@ -110,6 +110,7 @@ return [
     "title_create" => "Nieuw object maken",
     "title_delete" => "Gespecificeerde objecten verwijderen",
     "title_download" => "Bestand downloaden",
+    "title_download_csv" => "Downloaden als CSV",
     "title_download_excel" => "Downloaden als Excel",
     "title_find" => "Objecten vinden",
     "title_folder_new" => "Nieuwe map aanmaken",

@@ -110,6 +110,7 @@ return [
     "title_create" => "إنشاء كائن جديد",
     "title_delete" => "حذف الكائنات المحددة",
     'title_download' => 'تنزيل الملف',
+    "title_download_csv" => "تنزيل بصيغة CSV",
     "title_download_excel" => "تنزيل كملف Excel",
     "title_find" => "البحث عن الأشياء",
     "title_folder_new" => "إنشاء دليل جديد",

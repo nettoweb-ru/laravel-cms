@@ -66,28 +66,6 @@ trait AdminActionsKid
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws NettoException
-     */
-    public function list(Request $request): JsonResponse
-    {
-        if ($parentId = $request->get($this->itemRouteParentId)) {
-            $filter = $this->getCustomListFilter($request);
-            $filter["{$this->itemParentRelation}.id"] = [
-                'value' => $parentId,
-                'strict' => true,
-            ];
-
-            $return = $this->getList($this->createModel($parentId), $filter);
-
-            return response()->json($return);
-        }
-
-        abort(400);
-    }
-
-    /**
      * @param Model|null $model
      * @return void
      */
@@ -123,6 +101,28 @@ trait AdminActionsKid
         $return->setRelation($this->itemParentRelation, $parent);
 
         return $return;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws NettoException
+     */
+    protected function getListArray(Request $request): array
+    {
+        if ($parentId = $request->get($this->itemRouteParentId)) {
+            return $this->getList(
+                $this->createModel($parentId),
+                array_merge([
+                    "{$this->itemParentRelation}.id" => [
+                        'value' => $parentId,
+                        'strict' => true,
+                    ]
+                ], $this->getListFilter($request))
+            );
+        }
+
+        abort(400);
     }
 
     /**

@@ -110,6 +110,7 @@ return [
     "title_create" => "צור אובייקט חדש",
     "title_delete" => "מחיקת אובייקטים שצוינו",
     "title_download" => "הורדת קובץ",
+    "title_download_csv" => "הורד כקובץ CSV",
     "title_download_excel" => "הורד כ-Excel",
     "title_find" => "מצא חפצים",
     "title_folder_new" => "צור ספרייה חדשה",
