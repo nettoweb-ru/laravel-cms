@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Added
+
+- Configuration for asset service
+
 #### [2.2.0] - 2025-11-02
 
 ##### Added

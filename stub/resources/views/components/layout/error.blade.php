@@ -1,5 +1,5 @@
 @php
-    \Netto\Services\CDNService::load(['normalize']);
+    \Netto\Services\AssetService::load('normalize', false);
     set_language_default();
 @endphp
 @props([
@@ -14,8 +14,8 @@
 <title>{{ __($title) }}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+@include('cms::components.assets')
 @include('components.favicons')
-@php echo \Netto\Services\CDNService::tags(); @endphp
 @vite([
     'resources/css/netto/layers.css',
     'resources/css/error.css',

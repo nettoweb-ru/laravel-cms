@@ -25,7 +25,6 @@ class CmsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         date_default_timezone_set(config('app.timezone', 'UTC'));
-        define('NETTO_CDN_URL', config('cms.cdn_host', 'https://cdn.nettoweb.ru'));
 
         if ($this->app->runningInConsole()) {
             $this->commands([

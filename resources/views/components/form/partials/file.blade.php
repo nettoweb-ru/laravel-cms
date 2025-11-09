@@ -10,7 +10,7 @@
 if ($value && str_starts_with(DIRECTORY_SEPARATOR.$value, get_storage_path('public')) && in_array(\Illuminate\Support\Facades\File::mimeType(base_path($value)), [
     'image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'
 ])) {
-    \Netto\Services\CDNService::load('fancybox');
+    \Netto\Services\AssetService::load('fancybox', false);
     $image = get_public_uploaded_path($value);
 }
 @endphp

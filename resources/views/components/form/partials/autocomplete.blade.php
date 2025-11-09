@@ -17,7 +17,7 @@
 @endif
 
 @if (!$disabled)
-    @php \Netto\Services\CDNService::load('jquery.ui') @endphp
+    @php \Netto\Services\AssetService::load('jquery.ui') @endphp
     @push('head')
 <script>
     autocomplete['{{ $name }}'] = [

@@ -1,4 +1,7 @@
-@php \Netto\Services\CDNService::load(['normalize', 'jquery']) @endphp
+@php
+\Netto\Services\AssetService::load('normalize', false);
+\Netto\Services\AssetService::load('jquery');
+@endphp
 @props([
     'head',
     'content',
@@ -37,8 +40,8 @@
 <link rel="alternate" hreflang="{{ $item['locale'] }}" href="{{ $item['link'] }}" />
 @endforeach
 @endif
+@include('cms::components.assets')
 @include('components.favicons')
-@php echo \Netto\Services\CDNService::tags(); @endphp
 @vite([
     'resources/css/netto/layers.css',
     'resources/css/app.css',

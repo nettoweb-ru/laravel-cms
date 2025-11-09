@@ -1,4 +1,7 @@
-@php \Netto\Services\CDNService::load(['normalize', 'font.play', 'jquery']) @endphp
+@php
+    \Netto\Services\AssetService::load('normalize', false);
+    \Netto\Services\AssetService::load(['jquery', 'font.play']);
+@endphp
 @props([
     'head',
     'content',
@@ -10,8 +13,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+@include('cms::components.assets')
 @include('cms::components.favicons')
-@php echo \Netto\Services\CDNService::tags(); @endphp
 @vite([
     'resources/css/netto/layers.css',
     'resources/css/netto/buttons.css',

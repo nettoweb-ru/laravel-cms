@@ -5,7 +5,7 @@
     ])
 @endpushonce
 
-@php \Netto\Services\CDNService::load('jquery.ui') @endphp
+@php \Netto\Services\AssetService::load('jquery.ui') @endphp
 
 @props([
     'class' => 'js-list',

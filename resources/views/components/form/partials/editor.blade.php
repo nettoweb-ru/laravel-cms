@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/editor.css') }}">
 @endpushonce
 
-@php \Netto\Services\CDNService::load('ckeditor') @endphp
+@php \Netto\Services\AssetService::load('ckeditor', false) @endphp
 
 <div class="editor h{{ $height }} js-editor" data-language="{{ $language }}">
     <div class="js-editor-object" id="{{ $id }}">{!! $value !!}</div>

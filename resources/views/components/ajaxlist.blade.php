@@ -5,7 +5,7 @@
     ])
 @endpushonce
 
-@php \Netto\Services\CDNService::load('jquery.longpress') @endphp
+@php \Netto\Services\AssetService::load('jquery.longpress') @endphp
 
 @props([
     'id',
