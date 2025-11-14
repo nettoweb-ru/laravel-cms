@@ -17,11 +17,9 @@ class LocalePublic extends BaseLocale
     public function handle(Request $request, Closure $next): Response
     {
         $language = get_default_language_code();
-
-        $locales = [];
-        foreach (get_language_list() as $key => $value) {
-            $locales[$key] = $value['locale'];
-        }
+        $locales = array_map(function ($value) {
+            return $value['locale'];
+        }, get_language_list());
 
         set_language($language, $locales[$language]);
         return $this->setContentHeader($next($request), $language);

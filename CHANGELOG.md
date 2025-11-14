@@ -11,6 +11,7 @@
 ##### Fixed
 
 - Deprecated JS event
+- Public locale middleware minor fix
 
 #### [2.2.0] - 2025-11-02
 
