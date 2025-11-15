@@ -23,6 +23,7 @@ use Netto\Http\Controllers\Admin\{
     PermissionController,
     ProfileController,
     PublicationController,
+    RedirectController,
     RoleController,
     UserBalanceController,
     VerifyEmailController,
@@ -147,6 +148,11 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
                 Route::get('log', [LogController::class, 'index'])->name('log.index');
                 Route::get('log/list', [LogController::class, 'list'])->name('log.list');
                 Route::post('log/delete', [LogController::class, 'delete'])->name('log.delete');
+            });
+
+            Route::middleware('permission:admin-redirects')->group(function() {
+                Route::resource('redirect', RedirectController::class);
+                Route::get('redirect/csv', [RedirectController::class, 'csv'])->name('redirect.download-csv');
             });
 
             Route::get('tools/download', [HelperController::class, 'download']);

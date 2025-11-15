@@ -7,6 +7,7 @@
 ##### Added
 
 - Configuration for asset service
+- Redirect service
 
 ##### Fixed
 

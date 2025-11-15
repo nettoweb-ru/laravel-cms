@@ -85,6 +85,14 @@ return [
             ],
         ],
     ],
+    'redirects' => [
+        'www' => env('NETTO_REDIRECT_ENABLE_WWW', false),
+        'https' => env('NETTO_REDIRECT_ENABLE_HTTPS', false),
+        'statuses' => [
+            'redirect' => [301, 302, 303, 307, 308],
+            'error' => [403, 410],
+        ],
+    ],
     'schedule' => [
         'hourly' => 0,
         'daily' => 1,

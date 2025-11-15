@@ -4,17 +4,31 @@ namespace Netto;
 
 use App\Http\Middleware\LocalePublic;
 use App\Models\User;
+use Illuminate\Foundation\Exceptions\Handler;
+use Illuminate\Http\Request;
 use Illuminate\Auth\Notifications\{ResetPassword, VerifyEmail};
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\{Carbon, ServiceProvider};
 use Illuminate\Support\Facades\{Blade, Gate, Schedule, URL};
 use Illuminate\Routing\ResourceRegistrar as OriginalRegistrar;
 use Illuminate\Routing\Router;
-use Netto\Http\Middleware\{Authenticate, EnsureEmailIsVerified, LocaleAdmin, LocaleGuest, RedirectIfAuthenticated, RequirePassword, Permissions, Roles};
+use Netto\Http\Middleware\{
+    Authenticate,
+    EnsureEmailIsVerified,
+    LocaleAdmin,
+    LocaleGuest,
+    Redirect,
+    RedirectIfAuthenticated,
+    RequirePassword,
+    Permissions,
+    Roles
+};
 use Netto\Models\Permission;
+use Netto\Services\RedirectService;
 use Netto\Registrars\ResourceRegistrar;
 use Netto\View\Components\{Captcha, Form, Languages, Navigation};
 use Netto\Console\Commands\{RefreshSearchIndex, RefreshSitemap, ReportLogs};
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -38,6 +52,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerMiddleware();
         $this->registerMailTemplates();
         $this->registerScheduledTasks();
+        $this->registerExceptionsHandler();
 
         $this->registerUserAbilities();
         $this->registerBladeDirectives();
@@ -94,6 +109,18 @@ class CmsServiceProvider extends ServiceProvider
     /**
      * @return void
      */
+    private function registerExceptionsHandler(): void
+    {
+        $this->app->afterResolving(Handler::class, function(Handler $handler) {
+            $handler->renderable(function(NotFoundHttpException $exception, Request $request) {
+                return RedirectService::exception($request);
+            });
+        });
+    }
+
+    /**
+     * @return void
+     */
     private function registerMailTemplates(): void
     {
         VerifyEmail::createUrlUsing(function(User $user): string {
@@ -139,6 +166,7 @@ class CmsServiceProvider extends ServiceProvider
             'locale.public' => LocalePublic::class,
             'password.confirm' => RequirePassword::class,
             'permission' => Permissions::class,
+            'redirect' => Redirect::class,
             'role' => Roles::class,
             'verified' => EnsureEmailIsVerified::class,
          ] as $key => $value) {
@@ -153,6 +181,7 @@ class CmsServiceProvider extends ServiceProvider
         }
 
         $router->pushMiddlewareToGroup('public', LocalePublic::class);
+        $router->pushMiddlewareToGroup('public', Redirect::class);
     }
 
     /**
