@@ -2,16 +2,11 @@
 
 ### nettoweb/laravel-cms
 
-#### [Unreleased]
+#### [2.3.2]
 
 ##### Added
 
 - 40x status logging
-
-#### [2.3.1] - 2025-11-15
-
-##### Added
-
 - Configuration for asset service
 - Redirect service
 
