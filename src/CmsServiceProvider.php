@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Notifications\{ResetPassword, VerifyEmail};
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\{Carbon, ServiceProvider};
-use Illuminate\Support\Facades\{Blade, Gate, Schedule, URL};
+use Illuminate\Support\Facades\{Blade, Gate, Log, Schedule, URL};
 use Illuminate\Routing\ResourceRegistrar as OriginalRegistrar;
 use Illuminate\Routing\Router;
 use Netto\Http\Middleware\{
@@ -28,7 +28,7 @@ use Netto\Services\RedirectService;
 use Netto\Registrars\ResourceRegistrar;
 use Netto\View\Components\{Captcha, Form, Languages, Navigation};
 use Netto\Console\Commands\{RefreshSearchIndex, RefreshSitemap, ReportLogs};
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -112,8 +112,24 @@ class CmsServiceProvider extends ServiceProvider
     private function registerExceptionsHandler(): void
     {
         $this->app->afterResolving(Handler::class, function(Handler $handler) {
-            $handler->renderable(function(NotFoundHttpException $exception, Request $request) {
-                return RedirectService::exception($request);
+            $handler->renderable(function(HttpException $exception, Request $request) {
+                switch ($exception->getStatusCode()) {
+                    case 404:
+                        if ($redirect = RedirectService::exception($request)) {
+                            return $redirect;
+                        }
+
+                        Log::channel('404')->info($request->getRequestUri());
+                        break;
+                    case 403:
+                        Log::channel('403')->info($request->getRequestUri());
+                        break;
+                    case 400:
+                        Log::channel('400')->info($request->getRequestUri());
+                        break;
+                }
+
+                return null;
             });
         });
     }
@@ -248,6 +264,24 @@ class CmsServiceProvider extends ServiceProvider
         config()->set('logging.channels.sent', [
             'driver' => 'single',
             'path' => storage_path('logs/sent.log'),
+            'replace_placeholders' => true,
+        ]);
+
+        config()->set('logging.channels.404', [
+            'driver' => 'single',
+            'path' => storage_path('logs/404.log'),
+            'replace_placeholders' => true,
+        ]);
+
+        config()->set('logging.channels.403', [
+            'driver' => 'single',
+            'path' => storage_path('logs/403.log'),
+            'replace_placeholders' => true,
+        ]);
+
+        config()->set('logging.channels.400', [
+            'driver' => 'single',
+            'path' => storage_path('logs/400.log'),
             'replace_placeholders' => true,
         ]);
     }

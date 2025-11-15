@@ -76,6 +76,9 @@ return [
             'files' => [
                 'laravel.log',
                 'sent.log',
+                '404.log',
+                '403.log',
+                '400.log',
             ],
         ],
         'send' => [

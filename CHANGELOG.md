@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Added
+
+- 40x status logging
+
 #### [2.3.1] - 2025-11-15
 
 ##### Added

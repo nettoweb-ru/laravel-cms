@@ -1,5 +1,6 @@
 <?php
 return [
+    'bad_request' => 'Некорректный запрос',
     'not_found' => 'Страница не найдена',
     'unauthorized' => 'Требуется авторизация',
     'forbidden' => 'Запрещено',
