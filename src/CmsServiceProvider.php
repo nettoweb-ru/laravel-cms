@@ -261,7 +261,7 @@ class CmsServiceProvider extends ServiceProvider
             'replace_placeholders' => true,
         ]);
 
-        foreach (config('cms.logs.track') as $statusCode) {
+        foreach (config('cms.logs.track', []) as $statusCode) {
             config()->set("logging.channels.{$statusCode}", [
                 'driver' => 'single',
                 'path' => storage_path("logs/{$statusCode}.log"),
