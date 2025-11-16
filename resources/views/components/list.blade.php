@@ -18,9 +18,10 @@
     'defaultSort' => ['id' => 'asc'],
     'noSort' => [],
     'search' => true,
+    'ltr' => [],
 ])
 
-<x-cms::ajaxlist :showNav="true" :id="$id" :url="$url" :class="$class" :noSort="$noSort" :defaultSort="$defaultSort">
+<x-cms::ajaxlist :showNav="true" :id="$id" :url="$url" :class="$class" :noSort="$noSort" :defaultSort="$defaultSort" :ltr="$ltr">
     <x-slot:head>
         <span class="text-big">{{ $title }}</span>
     </x-slot:head>

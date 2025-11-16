@@ -18,5 +18,6 @@
             'toggle' => route('admin.redirect.toggle'),
             'downloadCsv' => route('admin.redirect.download-csv'),
         ]"
+        :ltr="['source', 'destination']"
     />
 </x-cms::layout.admin>

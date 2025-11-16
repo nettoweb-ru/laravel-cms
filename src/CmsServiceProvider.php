@@ -113,20 +113,14 @@ class CmsServiceProvider extends ServiceProvider
     {
         $this->app->afterResolving(Handler::class, function(Handler $handler) {
             $handler->renderable(function(HttpException $exception, Request $request) {
-                switch ($exception->getStatusCode()) {
-                    case 404:
-                        if ($redirect = RedirectService::exception($request)) {
-                            return $redirect;
-                        }
+                $statusCode = $exception->getStatusCode();
 
-                        Log::channel('404')->info($request->getRequestUri());
-                        break;
-                    case 403:
-                        Log::channel('403')->info($request->getRequestUri());
-                        break;
-                    case 400:
-                        Log::channel('400')->info($request->getRequestUri());
-                        break;
+                if (($statusCode == 404) && ($redirect = RedirectService::exception($request))) {
+                    return $redirect;
+                }
+
+                if (in_array($statusCode, config('cms.logs.track'))) {
+                    Log::channel($statusCode)->info("[".$request->ip()."] ".$request->getRequestUri());
                 }
 
                 return null;
@@ -267,22 +261,12 @@ class CmsServiceProvider extends ServiceProvider
             'replace_placeholders' => true,
         ]);
 
-        config()->set('logging.channels.404', [
-            'driver' => 'single',
-            'path' => storage_path('logs/404.log'),
-            'replace_placeholders' => true,
-        ]);
-
-        config()->set('logging.channels.403', [
-            'driver' => 'single',
-            'path' => storage_path('logs/403.log'),
-            'replace_placeholders' => true,
-        ]);
-
-        config()->set('logging.channels.400', [
-            'driver' => 'single',
-            'path' => storage_path('logs/400.log'),
-            'replace_placeholders' => true,
-        ]);
+        foreach (config('cms.logs.track') as $statusCode) {
+            config()->set("logging.channels.{$statusCode}", [
+                'driver' => 'single',
+                'path' => storage_path("logs/{$statusCode}.log"),
+                'replace_placeholders' => true,
+            ]);
+        }
     }
 }

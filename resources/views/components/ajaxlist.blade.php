@@ -18,9 +18,10 @@
     'url',
     'noSort' => [],
     'defaultSort' => [],
+    'ltr' => [],
 ])
 
-<div class="ajax-list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-default-sort="{{ json_encode($defaultSort) }}">
+<div class="ajax-list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-default-sort="{{ json_encode($defaultSort) }}" data-ltr="{{ json_encode($ltr) }}">
     @if ($head || $buttons)
         <div class="ajax-list-block top">
             <div class="table block-top-table">

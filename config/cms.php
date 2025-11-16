@@ -87,6 +87,7 @@ return [
                 'laravel.log',
             ],
         ],
+        'track' => [],
     ],
     'redirects' => [
         'www' => env('NETTO_REDIRECT_ENABLE_WWW', false),

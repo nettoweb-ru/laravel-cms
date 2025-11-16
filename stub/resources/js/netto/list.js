@@ -11,6 +11,7 @@ class List extends ListWidget {
     hasSearch = false
     id = 'netto-list'
     isSearchOpen = false
+    ltr = {}
     navObjects = {
         perPage: null,
         page: null,
@@ -29,6 +30,7 @@ class List extends ListWidget {
 
         this.defaultSort = object.data('default-sort')
         this.noSort = object.data('no-sort')
+        this.ltr = object.data('ltr')
 
         this.setId(object)
 
@@ -350,7 +352,7 @@ class List extends ListWidget {
 
     render(data) {
         if (data.total) {
-            let k1, k2, tr, attr = {}, self = this, th
+            let k1, k2, tr, attr = {}, spanAttr = {}, self = this, th
             for (k1 in this.params.columns) {
                 attr = {'data-code': k1, 'class': 'col-' + k1}
                 if (!this.noSort.includes(k1)) {
@@ -407,7 +409,12 @@ class List extends ListWidget {
 
                 tr = $('<tr />', attr)
                 for (k2 in this.params.columns) {
-                    tr.append($('<td />', {'class': 'col-' + k2}).html($('<span />', {'class': 'text'}).html(data.items[k1][k2])))
+                    spanAttr = {'class': 'text'}
+                    if (this.ltr.includes(k2)) {
+                        spanAttr.dir = 'ltr'
+                    }
+
+                    tr.append($('<td />', {'class': 'col-' + k2}).html($('<span />', spanAttr).html(data.items[k1][k2])))
                 }
 
                 this.setClickEvents(tr, function(event) {

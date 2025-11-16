@@ -2,11 +2,11 @@
 
 ### nettoweb/laravel-cms
 
-#### [2.3.2]
+#### [2.3.3]
 
 ##### Added
 
-- 40x status logging
+- Status logging
 - Configuration for asset service
 - Redirect service
 
@@ -14,6 +14,7 @@
 
 - Deprecated JS event
 - Public locale middleware minor fix
+- Left-to-right list columns
 
 #### [2.2.0] - 2025-11-02
 
