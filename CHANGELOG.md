@@ -2,7 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### [2.3.4]
+#### [2.3.5]
 
 ##### Added
 
