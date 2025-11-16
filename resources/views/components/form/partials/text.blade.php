@@ -4,6 +4,7 @@
     'value' => '',
     'disabled' => false,
     'autofocus' => false,
+    'dir' => config('text_dir'),
 ])
 
 @php
@@ -11,6 +12,7 @@
 @endphp
 
 <textarea
+    dir="{{ $dir }}"
     @if ($disabled)
         id="{{ $id }}-visible"
         {!! $attributes->merge(['class' => $class.' disabled'])->toHtml() !!}

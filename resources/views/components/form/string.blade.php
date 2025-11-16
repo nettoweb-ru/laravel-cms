@@ -10,6 +10,7 @@
     'value' => '',
     'multilang' => false,
     'transliterate' => false,
+    'dir' => config('text_dir')
 ])
 
 <div class="grid-cols grid-cols-{{ $width }}">
@@ -29,6 +30,7 @@
                         :disabled="$disabled"
                         :autofocus="$autofocus"
                         :transliterate="$transliterate"
+                        :dir="$dir"
                         {{ $attributes }}
                     />
                 </div>
@@ -41,6 +43,7 @@
                 :disabled="$disabled"
                 :autofocus="$autofocus"
                 :transliterate="$transliterate"
+                :dir="$dir"
                 {{ $attributes }}
             />
         @endif

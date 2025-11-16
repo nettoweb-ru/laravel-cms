@@ -7,11 +7,13 @@
                 :messages="$errors->get('source')"
                 :required="true"
                 :autofocus="true"
+                dir="ltr"
             />
             <x-cms::form.string name="destination" width="6" maxlength="255"
                 :label="__('main.attr_destination')"
                 :value="old('destination', $object->getAttribute('destination'))"
                 :messages="$errors->get('destination')"
+                dir="ltr"
             />
             <x-cms::form.select name="status" width="6"
                 :label="__('main.attr_status')"

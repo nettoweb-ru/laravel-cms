@@ -7,6 +7,7 @@
 ##### Fixed
 
 - List multilingual columns
+- Left-to-right inputs
 
 #### [2.3.5]
 

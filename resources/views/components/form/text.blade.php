@@ -9,6 +9,7 @@
     'messages' => [],
     'value' => '',
     'multilang' => false,
+    'dir' => config('text_dir'),
 ])
 
 <div class="grid-cols grid-cols-{{ $width }}">
@@ -27,6 +28,7 @@
                         :value="$langValue"
                         :disabled="$disabled"
                         :autofocus="$autofocus"
+                        :dir="$dir"
                         {{ $attributes }}
                     />
                 </div>
@@ -38,6 +40,7 @@
                 :value="$value"
                 :disabled="$disabled"
                 :autofocus="$autofocus"
+                :dir="$dir"
                 {{ $attributes }}
             />
         @endif
