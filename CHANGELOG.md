@@ -2,6 +2,12 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Fixed
+
+- List multilingual columns
+
 #### [2.3.5]
 
 ##### Added

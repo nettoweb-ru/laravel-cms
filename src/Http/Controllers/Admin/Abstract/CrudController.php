@@ -422,7 +422,7 @@ abstract class CrudController extends BaseController
                         $pivot = new ($relationTranslated->getPivotClass())();
                         $relationTableMultilingual = $pivot->getTable();
 
-                        $builder->join($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
+                        $builder->leftJoin($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
                             $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
                             $join->where("{$relationTableMultilingual}.lang_id", '=', get_default_language_id());
                         });
@@ -472,7 +472,7 @@ abstract class CrudController extends BaseController
                         $pivot = new ($relationTranslated->getPivotClass())();
                         $relationTableMultilingual = $pivot->getTable();
 
-                        $builder->join($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
+                        $builder->leftJoin($relationTableMultilingual, function(JoinClause $join) use ($relationTranslated, $relationTableMultilingual) {
                             $join->on($relationTranslated->getQualifiedForeignPivotKeyName(), '=', $relationTranslated->getQualifiedParentKeyName());
                             $join->where("{$relationTableMultilingual}.lang_id", '=', get_default_language_id());
                         });
