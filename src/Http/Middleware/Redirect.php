@@ -18,7 +18,7 @@ class Redirect
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($redirect = RedirectService::request($request)) {
+        if ($redirect = RedirectService::processRequest($request)) {
             return $redirect;
         }
 

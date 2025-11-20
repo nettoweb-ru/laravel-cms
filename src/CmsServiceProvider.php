@@ -118,7 +118,7 @@ class CmsServiceProvider extends ServiceProvider
             $handler->renderable(function(HttpException $exception, Request $request) {
                 $statusCode = $exception->getStatusCode();
 
-                if (($statusCode == 404) && ($redirect = RedirectService::exception($request))) {
+                if (($statusCode == 404) && ($redirect = RedirectService::getRedirect($request))) {
                     return $redirect;
                 }
 

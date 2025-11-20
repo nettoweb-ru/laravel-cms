@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        if ($redirect = RedirectService::request($request)) {
+        if ($redirect = RedirectService::processRequest($request)) {
             return $redirect;
         }
 

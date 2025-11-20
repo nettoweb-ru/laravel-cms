@@ -16,7 +16,7 @@ abstract class RedirectService
      * @param Request $request
      * @return RedirectResponse|null
      */
-    public static function exception(Request $request): ?RedirectResponse
+    public static function getRedirect(Request $request): ?RedirectResponse
     {
         $canonical = self::getHost($request);
         $uri = rtrim($request->getRequestUri(), '/');
@@ -59,8 +59,12 @@ abstract class RedirectService
      * @param Request $request
      * @return RedirectResponse|null
      */
-    public static function request(Request $request): ?RedirectResponse
+    public static function processRequest(Request $request): ?RedirectResponse
     {
+        if ($redirect = self::getRedirect($request)) {
+            return $redirect;
+        }
+
         $path = $request->path();
         $query = $request->getQueryString();
 

@@ -2,19 +2,10 @@
 
 ### nettoweb/laravel-cms
 
-#### [2.3.6] - 2025-11-20
+#### [2.4.0] - 2025-11-20
 
 ##### Added
 - Complete URI processing
-
-##### Fixed
-- List multilingual columns
-- Left-to-right inputs
-- Redundant abstract console command
-
-#### [2.3.5] - 2025-11-16
-
-##### Added
 - Status logging
 - Configuration for asset service
 - Redirect service
@@ -23,6 +14,9 @@
 - Deprecated JS event
 - Public locale middleware minor fix
 - Left-to-right list columns
+- List multilingual columns
+- Left-to-right inputs
+- Redundant abstract console command
 
 #### [2.2.0] - 2025-11-02
 
