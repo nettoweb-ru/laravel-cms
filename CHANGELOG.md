@@ -8,6 +8,7 @@
 
 - List multilingual columns
 - Left-to-right inputs
+- Redundant abstract console command
 
 #### [2.3.5]
 

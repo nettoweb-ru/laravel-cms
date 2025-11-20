@@ -3,9 +3,9 @@
 namespace Netto\Console\Commands;
 
 use App\Services\SitemapService;
-use Netto\Console\Commands\Abstract\Command as BaseCommand;
+use Illuminate\Console\Command;
 
-class RefreshSitemap extends BaseCommand
+class RefreshSitemap extends Command
 {
     protected $signature = 'cms:refresh-sitemap';
     protected $description = 'Regenerate sitemap.xml';
@@ -13,7 +13,7 @@ class RefreshSitemap extends BaseCommand
     /**
      * @return void
      */
-    protected function action(): void
+    public function handle(): void
     {
         (new SitemapService())->regenerate();
     }

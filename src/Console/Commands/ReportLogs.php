@@ -2,10 +2,10 @@
 
 namespace Netto\Console\Commands;
 
-use Netto\Console\Commands\Abstract\Command as BaseCommand;
+use Illuminate\Console\Command;
 use Netto\Services\ReportLogService;
 
-class ReportLogs extends BaseCommand
+class ReportLogs extends Command
 {
     protected $signature = 'cms:report-logs';
     protected $description = 'Report logs to service email';
@@ -13,7 +13,7 @@ class ReportLogs extends BaseCommand
     /**
      * @return void
      */
-    protected function action(): void
+    public function handle(): void
     {
         $email = config('cms.logs.send.email');
         if (empty($email)) {

@@ -41,6 +41,9 @@ class CmsServiceProvider extends ServiceProvider
         date_default_timezone_set(config('app.timezone', 'UTC'));
 
         if ($this->app->runningInConsole()) {
+            $language = config('cms.default_language', LocaleAdmin::DEFAULT_LANGUAGE);
+            set_language($language, get_admin_locales()[$language]);
+
             $this->commands([
                 RefreshSitemap::class,
                 RefreshSearchIndex::class,

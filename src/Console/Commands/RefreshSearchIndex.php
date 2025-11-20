@@ -3,9 +3,9 @@
 namespace Netto\Console\Commands;
 
 use App\Services\SearchService;
-use Netto\Console\Commands\Abstract\Command as BaseCommand;
+use Illuminate\Console\Command;
 
-class RefreshSearchIndex extends BaseCommand
+class RefreshSearchIndex extends Command
 {
     protected $signature = 'cms:refresh-search {--force=0 : Truncate table before reindexing}';
     protected $description = 'Reindex search database';
@@ -13,7 +13,7 @@ class RefreshSearchIndex extends BaseCommand
     /**
      * @return void
      */
-    protected function action(): void
+    public function handle(): void
     {
         (new SearchService(!empty($this->option('force'))))->reindex();
     }
