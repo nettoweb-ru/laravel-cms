@@ -4,6 +4,9 @@
 
 #### [Unreleased]
 
+##### Added
+- Complete URI processing
+
 ##### Fixed
 
 - List multilingual columns

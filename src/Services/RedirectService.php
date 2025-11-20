@@ -61,15 +61,34 @@ abstract class RedirectService
      */
     public static function request(Request $request): ?RedirectResponse
     {
-        $canonical = self::getHost($request);
-        $requested = ($request->isSecure() ? 'https' : 'http').'://'.$request->getHttpHost();
+        $path = $request->path();
+        $query = $request->getQueryString();
+
+        if ($path == '/') {
+            $path = '';
+        } else {
+            $path = "/{$path}";
+        }
+
+        if ($query) {
+            if (empty($path)) {
+                $path .= '/';
+            }
+
+            $path .= "?{$query}";
+        }
+
+        $canonical = self::getHost($request).$path;
+
+        $uri = $request->getRequestUri();
+        if ($uri == '/') {
+            $uri = '';
+        }
+
+        $requested = ($request->isSecure() ? 'https' : 'http').'://'.$request->getHttpHost().$uri;
 
         if ($requested == $canonical) {
             return null;
-        }
-
-        if ($path = ltrim($request->getRequestUri(), '/')) {
-            $canonical .= "/{$path}";
         }
 
         return redirect()->intended($canonical, 301);
