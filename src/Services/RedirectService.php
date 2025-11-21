@@ -6,6 +6,7 @@ namespace Netto\Services;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Netto\Models\Redirect;
 
 abstract class RedirectService
@@ -27,7 +28,13 @@ abstract class RedirectService
             $status = $item->getAttribute('status');
 
             if ($item->getAttribute('is_regexp')) {
-                preg_match('/^'.str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $source).'$/', $uri, $results);
+                try {
+                    preg_match('/^'.str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $source).'$/', $uri, $results);
+                } catch (\Throwable $throwable) {
+                    Log::error($throwable->getMessage());
+                    continue;
+                }
+
                 unset($results[0]);
 
                 if ($results) {

@@ -2,6 +2,11 @@
 
 ### nettoweb/laravel-cms
 
+#### [Unreleased]
+
+##### Fixed
+- Exception catch in redirect check
+
 #### [2.4.0] - 2025-11-20
 
 ##### Added
