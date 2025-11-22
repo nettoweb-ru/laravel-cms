@@ -19,7 +19,6 @@ abstract class RedirectService
      */
     public static function getRedirect(Request $request): ?RedirectResponse
     {
-        $canonical = self::getHost($request);
         $uri = rtrim($request->getRequestUri(), '/');
 
         foreach (Redirect::query()->where('is_active', '1')->orderBy('source')->get() as $item) {
@@ -46,14 +45,14 @@ abstract class RedirectService
                         $destination = str_replace("\${$key}", $value, $destination);
                     }
 
-                    return redirect()->intended($canonical.$destination, $status);
+                    return self::redirect($request, $uri, $destination, $status);
                 }
             } else if ($source == $uri) {
                 if (is_null($destination)) {
                     abort($status);
                 }
 
-                return redirect()->intended($canonical.$destination, $status);
+                return self::redirect($request, $uri, $destination, $status);
             }
         }
 
@@ -89,20 +88,20 @@ abstract class RedirectService
             $path .= "?{$query}";
         }
 
-        $canonical = self::getHost($request).$path;
+        $canonical = self::getHostCanonical($request).$path;
 
         $uri = $request->getRequestUri();
         if ($uri == '/') {
             $uri = '';
         }
 
-        $requested = ($request->isSecure() ? 'https' : 'http').'://'.$request->getHttpHost().$uri;
+        $requested = self::getHostRequested($request).$uri;
 
         if ($requested == $canonical) {
             return null;
         }
 
-        return redirect()->intended($canonical, 301);
+        return self::redirect($request, $uri, $path);
     }
 
     /**
@@ -111,22 +110,65 @@ abstract class RedirectService
      * @param Request $request
      * @return string
      */
-    private static function getHost(Request $request): string
+    private static function getHostCanonical(Request $request): string
     {
-        $return = (config('cms.redirects.https') ? 'https' : 'http').'://';
+        static $return;
 
-        if (config('cms.redirects.www')) {
-            $return .= 'www.';
-        }
+        if (is_null($return)) {
+            $return = (config('cms.redirects.https') ? 'https' : 'http').'://';
 
-        $host = $request->getHttpHost();
+            if (config('cms.redirects.www')) {
+                $return .= 'www.';
+            }
 
-        if (str_starts_with($host, 'www.')) {
-            $return .= ltrim($host, 'w.');
-        } else {
-            $return .= $host;
+            $host = $request->getHttpHost();
+
+            if (str_starts_with($host, 'www.')) {
+                $return .= ltrim($host, 'w.');
+            } else {
+                $return .= $host;
+            }
         }
 
         return $return;
+    }
+
+    /**
+     * Get requested hostname.
+     *
+     * @param Request $request
+     * @return string
+     */
+    private static function getHostRequested(Request $request): string
+    {
+        static $return;
+
+        if (is_null($return)) {
+            $return = ($request->isSecure() ? 'https' : 'http').'://'.$request->getHttpHost();
+        }
+
+        return $return;
+    }
+
+    /**
+     * Perform and track redirect.
+     *
+     * @param Request $request
+     * @param string $source
+     * @param string $destination
+     * @param int $status
+     * @return RedirectResponse|null
+     */
+    private static function redirect(Request $request, string $source, string $destination, int $status = 301): ?RedirectResponse
+    {
+        if (in_array($status, config('cms.logs.track', []))) {
+            if (empty($destination)) {
+                $destination = '/';
+            }
+
+            Log::channel($status)->info("[".$request->ip()."]".chr(9).chr(9).self::getHostRequested($request).$source." → ".$destination);
+        }
+
+        return redirect()->intended(self::getHostCanonical($request).$destination, $status);
     }
 }

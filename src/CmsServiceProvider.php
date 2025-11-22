@@ -123,7 +123,7 @@ class CmsServiceProvider extends ServiceProvider
                 }
 
                 if (in_array($statusCode, config('cms.logs.track', []))) {
-                    Log::channel($statusCode)->info("[".$request->ip()."] ".$request->getRequestUri());
+                    Log::channel($statusCode)->info("[".$request->ip()."]".chr(9).chr(9).$request->getRequestUri());
                 }
 
                 return null;

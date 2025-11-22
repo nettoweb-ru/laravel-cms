@@ -4,6 +4,9 @@
 
 #### [Unreleased]
 
+##### Added
+- Redirects logging
+
 ##### Fixed
 - Exception catch in redirect check
 - Redundant redirect in admin
