@@ -160,6 +160,11 @@ export default class ListWidget extends ListAbstract {
     }
 
     saveParams() {
+        this.params = Object.keys(this.params).sort().reduce((obj, key) => {
+            obj[key] = this.params[key]
+            return obj
+        }, {})
+
         localStorage.setItem(this.id, JSON.stringify(this.params))
     }
 

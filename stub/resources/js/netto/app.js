@@ -21,7 +21,7 @@ window.App = {
     langOpen: false,
 
     downloadFile: function(filename) {
-        window.open(this.url.download + '?filename=' + filename)
+        window.open(this.url.download + '?filename=' + encodeURIComponent(filename))
     },
 
     formatCurrency: function(value, currency, precision) {
