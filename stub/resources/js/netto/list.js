@@ -97,13 +97,13 @@ class List extends ListWidget {
         columns[nameColumn] = width
 
         return {
+            columns: columns,
+            filter: {},
             page: 1,
             perPage: 10,
-            columns: columns,
             sort: Object.keys(this.defaultSort)[0],
             sortDir: Object.values(this.defaultSort)[0],
             toggle: (typeof this.buttons.toggle === 'object') ? 1 : 0,
-            filter: {},
         }
     }
 
