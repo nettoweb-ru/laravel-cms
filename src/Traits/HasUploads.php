@@ -83,12 +83,9 @@ trait HasUploads
      */
     protected function saveUploads(): void
     {
-        $uploads = [];
-        foreach ($this->getAttributes() as $attribute => $value) {
-            if (is_object($value) && is_a($value, UploadedFile::class)) {
-                $uploads[$attribute] = $value;
-            }
-        }
+        $uploads = array_filter($this->getAttributes(), function ($value) {
+            return is_object($value) && is_a($value, UploadedFile::class);
+        });
 
         foreach ($this->uploads as $attribute => $params) {
             if (!empty($params['auto'])) {

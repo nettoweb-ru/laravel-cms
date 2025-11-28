@@ -248,27 +248,6 @@ abstract class CrudController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @return array
-     * @throws NettoException
- */
-    abstract protected function getListArray(Request $request): array;
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    protected function getListFilter(Request $request): array
-    {
-        return array_filter(array_map(function ($value) {
-            return $value ? [
-                'value' => $value,
-                'strict' => false,
-            ] : [];
-        }, $request->get('filter', [])));
-    }
-
-    /**
      * @param Model $model
      * @return string
      */
@@ -624,6 +603,27 @@ abstract class CrudController extends BaseController
             'total' => $total,
             'maxPage' => $maxPage,
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws NettoException
+     */
+    abstract protected function getListArray(Request $request): array;
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getListFilter(Request $request): array
+    {
+        return array_filter(array_map(function ($value) {
+            return $value ? [
+                'value' => $value,
+                'strict' => false,
+            ] : [];
+        }, $request->get('filter', [])));
     }
 
     /**
