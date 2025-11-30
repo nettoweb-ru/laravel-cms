@@ -485,11 +485,16 @@ class Form {
     }
 
     transliterate(source, target) {
+        if (source.data('transliterate-last') === source.val()) {
+            return
+        }
+
         Overlay.showAnimation()
         Ajax.get(App.url.transliterate, {
             string: source.val()
         }, function(data) {
             Overlay.hideAnimation()
+            source.data('transliterate-last', source.val())
             target.val(data.string)
         })
     }

@@ -27,6 +27,7 @@
         @if ($autofocus) autofocus @endif
         @if ($transliterate)
             data-transliterate-code="{{ $transliterate }}"
+            data-transliterate-last="{{ $value }}"
             {!! $attributes->merge(['class' => $class.' js-transliterate'])->toHtml() !!}
         @else
             {!! $attributes->merge(['class' => $class])->toHtml() !!}

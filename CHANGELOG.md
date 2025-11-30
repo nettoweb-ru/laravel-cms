@@ -10,6 +10,7 @@
 ##### Fixed
 - Exception catch in redirect check
 - Redundant redirect in admin
+- Double transliteration request
 
 #### [2.4.0] - 2025-11-20
 
