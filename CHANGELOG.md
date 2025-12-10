@@ -6,6 +6,7 @@
 
 ##### Added
 - Redirects logging
+- Square attribute for image uploads
 
 ##### Fixed
 - Exception catch in redirect check

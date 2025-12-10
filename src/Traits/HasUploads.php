@@ -117,11 +117,12 @@ trait HasUploads
                 $width = $this->uploads[$attribute]['width'] ?? $widthDefault;
                 $height = $this->uploads[$attribute]['height'] ?? $heightDefault;
                 $quality = $this->uploads[$attribute]['quality'] ?? $qualityDefault;
+                $square = $this->uploads[$attribute]['square'] ?? false;
 
                 try {
                     $image = Image::read($upload);
 
-                    $resized = ($width == $height)
+                    $resized = $square
                         ? $image->coverDown($width, $height)
                         : $image->scaleDown($width, $height);
 
