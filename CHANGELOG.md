@@ -2,7 +2,7 @@
 
 ### nettoweb/laravel-cms
 
-#### [Unreleased]
+#### [2.4.1] - 2025-12-17
 
 ##### Added
 - Redirects logging
