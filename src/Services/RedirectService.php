@@ -166,7 +166,7 @@ abstract class RedirectService
                 $destination = '/';
             }
 
-            Log::channel($status)->info("[".$request->ip()."]".chr(9).chr(9).self::getHostRequested($request).$source." → ".$destination);
+            Log::channel($status)->info("[".$request->ip()."]".chr(9).chr(9).chr(9).self::getHostRequested($request).$source." → ".$destination);
         }
 
         return redirect()->intended(self::getHostCanonical($request).$destination, $status);
