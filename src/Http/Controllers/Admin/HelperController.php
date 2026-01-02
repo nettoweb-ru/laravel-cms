@@ -77,7 +77,7 @@ class HelperController extends BaseController
     public function transliterate(Request $request): JsonResponse
     {
         return response()->json([
-            'string' => transliterate($request->get('string', '')),
+            'string' => transliterate((string) $request->get('string', '')),
         ]);
     }
 }
