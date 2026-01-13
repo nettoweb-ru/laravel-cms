@@ -55,7 +55,7 @@ export default class Editor {
                     openInNewTab: {
                         mode: 'manual',
                         label: 'Open in a new tab',
-                        defaultValue: true,
+                        defaultValue: false,
                         attributes: {
                             target: '_blank',
                             rel: 'noopener noreferrer'
