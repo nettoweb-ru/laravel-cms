@@ -32,6 +32,7 @@ class Image extends BaseModel
             'width' => null,
             'height' => null,
             'auto' => 'filename',
+            'square' => true,
         ],
     ];
 
