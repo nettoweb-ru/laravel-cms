@@ -243,6 +243,10 @@ body.rtl .form .form-grid .grid-item.value .json-value-table .json-value-cell.it
     background-color:var(--color-reset);
 }
 
+.form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.txt.lang.active{
+    background-color:var(--color-highlight);
+}
+
 .form .form-block.form-sheet-nav .table.sheet-nav .cell.sheet-nav-cell.wide{
     width:100%;
     min-width: 20px;
