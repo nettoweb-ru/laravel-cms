@@ -11,7 +11,7 @@
     $link = $route && !$active;
 @endphp
 
-<div title="{{ $title }}" class="menu-item @if ($active) active @endif @if ($link) js-top-link @endif " @if ($id) id="{{ $id }}" @endif @if ($link) data-url="{{ route($route) }}" @endif>
+<div title="{{ $title }}" class="menu-item @if ($active) active @endif @if ($link) js-link @endif " @if ($id) id="{{ $id }}" @endif @if ($link) data-url="{{ route($route) }}" @endif>
     <div class="menu-item-block title">
         <span class="icon">
             @include('cms::components.icons.'.$icon)

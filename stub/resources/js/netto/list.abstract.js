@@ -33,7 +33,7 @@ export default class ListAbstract {
             return
         }
 
-        Overlay.redirect(url)
+        window.location.href = url
     }
 
     getDefaultParams() {

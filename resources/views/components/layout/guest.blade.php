@@ -24,25 +24,23 @@
 
 @stack('head')
 </head>
+
 <body class="{{ $head['text_dir'] }}">
-    <div class="wrapper">
-        <div class="layer content">
-            <div class="table container-table">
-                <div class="cell container-cell">
-                    <div class="inline">
-                        <div class="guest-logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                                 y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
-                            @include('cms::components.icons.logo')
-                        </svg>
-                        </div>
-                        {{ $slot }}
-                    </div>
+<div class="layer content">
+    <div class="table container-table">
+        <div class="cell container-cell">
+            <div class="inline">
+                <div class="guest-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                         y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
+                    @include('cms::components.icons.logo')
+                </svg>
                 </div>
+                {{ $slot }}
             </div>
         </div>
-        @include('cms::components.overlay')
     </div>
+</div>
 <x-cms::session-status :status="session('status')"/>
 @stack('bottom')
 </body>

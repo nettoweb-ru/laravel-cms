@@ -13,12 +13,12 @@ class Logs extends ListAbstract {
     }
 
     delete(filename) {
-        Overlay.showAnimation()
+        Overlay.animation()
 
         Ajax.post(this.actions.delete, {filename: filename}, function() {
             window.location.reload()
         }, function() {
-            Overlay.hideAnimation()
+            Overlay.hide()
         })
     }
 
@@ -29,7 +29,7 @@ class Logs extends ListAbstract {
 
         let self = this
         object.on('click', '.js-list-button[data-type="delete"]', async function() {
-            if (await Overlay.showConfirmDelete()) {
+            if (await Overlay.confirmation(window.nettoweb.messages.confirm_delete, true)) {
                 self.delete($(this).data('filename'))
             }
         })

@@ -22,6 +22,6 @@
         </x-slot>
     </x-cms-form>
     <p class="text">
-        <a href="{{ route('admin.password.request') }}" class="js-animated-link">{{ __('auth.forgot_password') }}</a>
+        <a href="{{ route('admin.password.request') }}">{{ __('auth.forgot_password') }}</a>
     </p>
 </x-cms::layout.guest>

@@ -182,7 +182,7 @@ class List extends ListWidget {
                 wPopup = self.objects.dropdown.width(),
                 left = event.pageX - ($(window).width() - wHead) / 2
 
-            if (App.textDir === 'ltr') {
+            if (window.nettoweb.text_dir === 'ltr') {
                 left += 8
                 if ((left + wPopup) > wHead) {
                     left = wHead - wPopup

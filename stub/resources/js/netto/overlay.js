@@ -1,176 +1,213 @@
 window.Overlay = {
+    init: false,
+    visible: false,
     objects: {
-        overlay: {
-            container: null,
-            visible: false
-        },
+        body: null,
+        overlay: null,
+        animation: null,
         popup: {
-            container: null,
-            visible: false
-        },
-        animation: {
-            container: null,
-            visible: false
-        },
-        message: {
-            container: null,
-            visible: false,
-            btnClose: null,
-            text: ''
-        },
-        prompt: {
-            container: null,
-            visible: false,
+            window: null,
             text: null,
-            input: null,
-            btnClose: null,
-            btnConfirm: null
+            input: {
+                hold: null,
+                object: null,
+            },
+            buttons: {
+                ok: null,
+                confirm: null,
+                close: null,
+                remove: null,
+            }
         },
-        confirm: {
-            container: null,
-            visible: false,
-            text: null,
-            btnClose: null,
-            btnConfirm: null,
-        },
-        confirmDelete: {
-            container: null,
-            visible: false,
-            btnClose: null,
-            btnConfirm: null,
-        }
+        custom: null,
     },
 
-    hideAll: function() {
-        this.hidePopup()
-        this.hideAnimation()
-        this.hideMessage()
-        this.hideConfirm()
-        this.hideConfirmDelete();
-        this.hidePrompt()
+    animation: function() {
+        this.hide()
+
+        this.objects.animation.show()
+        this.show()
     },
 
-    hideAnimation: function() {
-        if (!this.objects.animation.visible) {
-            return
+    confirmation: async function(message, remove) {
+        this.hide()
+
+        if (typeof remove === 'undefined') {
+            remove = false
         }
 
-        this.objects.animation.container.hide()
-        this.objects.animation.visible = false
-    },
+        this.objects.popup.text.html(message)
 
-    hideConfirm: function() {
-        if (!this.objects.confirm.visible) {
-            return
+        if (remove) {
+            this.objects.popup.buttons.remove.show()
+        } else {
+            this.objects.popup.buttons.confirm.show()
         }
 
-        this.objects.confirm.btnConfirm.off('click.netto')
-        this.objects.confirm.btnClose.off('click.netto')
+        this.objects.popup.buttons.close.show()
+        this.objects.popup.window.show()
+        this.show()
 
-        this.objects.confirm.text.html('')
-        this.objects.confirm.container.hide()
-        this.objects.confirm.visible = false
-    },
+        return new Promise(function(resolve){
+            if (remove) {
+                Overlay.objects.popup.buttons.remove.one('click.netto', function() {
+                    resolve(true)
+                    Overlay.hide()
+                })
+            } else {
+                Overlay.objects.popup.buttons.confirm.one('click.netto', function() {
+                    resolve(true)
+                    Overlay.hide()
+                })
+            }
 
-    hideConfirmDelete: function() {
-        if (!this.objects.confirmDelete.visible) {
-            return
-        }
-
-        this.objects.confirmDelete.btnConfirm.off('click.netto')
-        this.objects.confirmDelete.btnClose.off('click.netto')
-
-        this.objects.confirmDelete.container.hide()
-        this.objects.confirmDelete.visible = false
-    },
-
-    hideMessage: function() {
-        if (!this.objects.message.visible) {
-            return
-        }
-
-        this.objects.message.btnClose.off('click.netto')
-        this.objects.message.text.html('')
-        this.objects.message.container.hide()
-        this.objects.message.visible = false
-    },
-
-    hideOverlay: function() {
-        if (!this.objects.overlay.visible) {
-            return
-        }
-
-        this.hideAll()
-
-        this.objects.overlay.container.hide()
-        this.objects.overlay.visible = false
-    },
-
-    hidePopup: function() {
-        if (!this.objects.popup.visible) {
-            return
-        }
-
-        this.objects.popup.container.html('').hide()
-        this.objects.popup.visible = false
-    },
-
-    hidePrompt: function() {
-        if (!this.objects.prompt.visible) {
-            return
-        }
-
-        this.objects.prompt.btnConfirm.off('click.netto')
-        this.objects.prompt.btnClose.off('click.netto')
-
-        this.objects.prompt.input.val('')
-        this.objects.prompt.text.html('')
-
-        this.objects.prompt.container.hide()
-        this.objects.prompt.visible = false
-    },
-
-    init: function() {
-        this.initObjects()
-        this.initPopupMessages()
-        this.initAnimatedLinks()
-    },
-
-    initAnimatedLinks: function() {
-        let self = this
-        $('.js-animated-link').click(function() {
-            self.initRedirect()
+            Overlay.objects.popup.buttons.close.one('click.netto', function() {
+                resolve(false)
+                Overlay.hide()
+            })
         })
     },
 
-    initObjects: function() {
-        let html = $('html')
-        this.objects.animation.container = html.find('#js-overlay-animation')
+    custom: function() {
+        this.hide()
 
-        this.objects.overlay.container = html.find('#js-overlay')
-        this.objects.popup.container = this.objects.overlay.container.find('#js-overlay-popup')
-
-        this.objects.message.container = this.objects.overlay.container.find('#js-overlay-message')
-        this.objects.message.btnClose = this.objects.message.container.find('.js-btn-close')
-        this.objects.message.text = this.objects.message.container.find('.js-text')
-
-        this.objects.prompt.container = this.objects.overlay.container.find('#js-overlay-prompt')
-        this.objects.prompt.text = this.objects.prompt.container.find('.js-text')
-        this.objects.prompt.input = this.objects.prompt.container.find('#js_prompt')
-        this.objects.prompt.btnClose = this.objects.prompt.container.find('.js-btn-close')
-        this.objects.prompt.btnConfirm = this.objects.prompt.container.find('.js-btn-confirm')
-
-        this.objects.confirm.container = this.objects.overlay.container.find('#js-overlay-confirm')
-        this.objects.confirm.btnClose = this.objects.confirm.container.find('.js-btn-close')
-        this.objects.confirm.btnConfirm = this.objects.confirm.container.find('.js-btn-confirm')
-        this.objects.confirm.text = this.objects.confirm.container.find('.js-text')
-
-        this.objects.confirmDelete.container = this.objects.overlay.container.find('#js-overlay-confirm-delete')
-        this.objects.confirmDelete.btnClose = this.objects.confirmDelete.container.find('.js-btn-close')
-        this.objects.confirmDelete.btnConfirm = this.objects.confirmDelete.container.find('.js-btn-confirm')
+        this.objects.custom.show()
+        this.show()
     },
 
-    initPopupMessages: function() {
+    hide: function() {
+        this.initialize()
+
+        if (!this.visible) {
+            return
+        }
+
+        this.objects.body.removeClass('show-overlay')
+        this.objects.popup.text.html('')
+
+        this.objects.popup.buttons.confirm.hide()
+        this.objects.popup.buttons.remove.hide()
+        this.objects.popup.buttons.close.hide()
+        this.objects.popup.buttons.ok.hide()
+
+        this.objects.popup.input.object.val('')
+        this.objects.popup.input.hold.hide()
+
+        this.objects.popup.window.hide()
+        this.objects.animation.hide()
+        this.objects.custom.hide()
+
+        this.objects.overlay.hide()
+
+        this.visible = false
+    },
+
+    initialize: function() {
+        if (this.init) {
+            return
+        }
+
+        this.objects.body = $('body')
+
+        this.objects.popup.text = $('<span />', {
+            'class': 'text js-text',
+        })
+        let objTextHold = $('<div />', {
+            'class': 'overlay-item text',
+        }).append(this.objects.popup.text)
+
+        this.objects.popup.input.hold = $('<div />', {
+            'class': 'overlay-item input',
+        })
+        this.objects.popup.input.object = $('<input />', {
+            'type': 'text',
+            'name': 'prompt',
+            'class': 'input text',
+        })
+        this.objects.popup.input.hold.append(this.objects.popup.input.object)
+
+        let btnMessages = {
+            btn_label_cancel: '',
+            btn_label_confirm: '',
+            btn_label_delete: '',
+            btn_label_ok: '',
+        }
+
+        if (typeof window.nettoweb !== 'undefined') {
+            btnMessages.btn_label_cancel = window.nettoweb.messages.btn_label_cancel
+            btnMessages.btn_label_confirm = window.nettoweb.messages.btn_label_confirm
+            btnMessages.btn_label_delete = window.nettoweb.messages.btn_label_delete
+            btnMessages.btn_label_ok = window.nettoweb.messages.btn_label_ok
+        }
+
+        this.objects.popup.buttons.close = $('<button />', {
+            'type': 'button',
+            'class': 'btn btn-form btn-normal btn-unavailable',
+        }).html(btnMessages.btn_label_cancel)
+        this.objects.popup.buttons.confirm = $('<button />', {
+            'type': 'button',
+            'class': 'btn btn-form btn-normal btn-done',
+        }).html(btnMessages.btn_label_confirm)
+        this.objects.popup.buttons.remove = $('<button />', {
+            'type': 'button',
+            'class': 'btn btn-form btn-warning btn-remove',
+        }).html(btnMessages.btn_label_delete)
+        this.objects.popup.buttons.ok = $('<button />', {
+            'type': 'button',
+            'class': 'btn btn-form btn-normal btn-done',
+        }).html(btnMessages.btn_label_ok)
+
+        let objBtnHold = $('<div />', {
+            'class': 'overlay-item buttons',
+        })
+            .append(this.objects.popup.buttons.ok)
+            .append(this.objects.popup.buttons.remove)
+            .append(this.objects.popup.buttons.confirm)
+            .append(this.objects.popup.buttons.close)
+
+
+        this.objects.popup.window = $('<div />', {
+            'class': 'overlay-popup',
+        }).append(objTextHold).append(this.objects.popup.input.hold).append(objBtnHold)
+
+        this.objects.animation = $('<div />', {
+            'class': 'overlay-loading',
+        })
+
+        for (let a = 0; a < 12; a++) {
+            this.objects.animation.append($('<div />'))
+        }
+
+        this.objects.overlay = $('<div />', {
+            'class': 'layer layer-overlay',
+        })
+
+        let objHold = $('<div />', {
+            'class': 'overlay-hold',
+        })
+
+        objHold.append(this.objects.popup.window)
+        objHold.append(this.objects.animation)
+
+        this.objects.custom = $('<div />', {
+            'class': 'overlay-custom',
+        })
+
+        objHold.append(this.objects.custom)
+
+        this.objects.overlay.append($('<div />', {
+            'class': 'overlay-table',
+        }).html(
+            $('<div />', {
+                'class': 'overlay-cell',
+            }).append(objHold)
+        ))
+
+        this.objects.body.append(this.objects.overlay)
+        this.init = true
+    },
+
+    initMessages: function() {
         let message = '';
         $('.js-flash-message').each(function() {
             message += ($(this).html() + '<br />')
@@ -178,157 +215,58 @@ window.Overlay = {
         })
 
         if (message.length) {
-            this.showMessage(message)
+            this.message(message)
         }
     },
 
-    initRedirect: function() {
-        this.showAnimation()
+    message: function(message) {
+        this.hide()
 
-        let self = this
-        $(window).one('unload.netto', function() {
-            self.hideOverlay()
-        })
+        this.objects.popup.text.html(message)
+
+        this.objects.popup.buttons.ok.one('click.netto', function() {
+            Overlay.hide()
+        }).show()
+
+        this.objects.popup.window.show()
+        this.show()
     },
 
-    redirect: function(url) {
-        this.initRedirect()
-        window.location.href = url
-    },
+    prompt: async function(message) {
+        this.hide()
 
-    showAnimation: function() {
-        if (this.objects.animation.visible) {
-            return
-        }
+        this.objects.popup.text.html(message)
+        this.objects.popup.input.hold.show()
 
-        this.objects.animation.container.show()
-        this.objects.animation.visible = true
+        this.objects.popup.buttons.confirm.show()
+        this.objects.popup.buttons.close.show()
 
-        this.objects.animation.container.attr('tabindex', -1).focus()
-    },
+        this.objects.popup.input.object.attr('tabindex', -1).focus()
 
-    showConfirm: async function(message) {
-        this.hideAll()
-
-        let self = this
-
-        this.objects.confirm.text.html(message)
-
-        this.objects.confirm.container.show()
-        this.objects.confirm.visible = true
-
-        this.showOverlay()
-        this.objects.confirm.container.attr('tabindex', -1).focus()
+        this.objects.popup.window.show()
+        this.show()
 
         return new Promise(function(resolve){
-            self.objects.confirm.btnConfirm.one('click.netto', function() {
-                resolve(true)
-                self.hideOverlay()
+            Overlay.objects.popup.buttons.confirm.one('click.netto', function() {
+                resolve(Overlay.objects.popup.input.object.val())
+                Overlay.hide()
             })
 
-            self.objects.confirm.btnClose.one('click.netto', function() {
+            Overlay.objects.popup.buttons.close.one('click.netto', function() {
                 resolve(false)
-                self.hideOverlay()
+                Overlay.hide()
             })
         })
     },
 
-    showConfirmDelete: async function() {
-        this.hideAll()
+    show: function() {
+        this.objects.body.addClass('show-overlay')
+        this.objects.overlay.show()
 
-        let self = this
-
-        this.objects.confirmDelete.container.show()
-        this.objects.confirmDelete.visible = true
-
-        this.showOverlay()
-        this.objects.confirmDelete.container.attr('tabindex', -1).focus()
-
-        return new Promise(function(resolve){
-            self.objects.confirmDelete.btnConfirm.one('click.netto', function() {
-                resolve(true)
-                self.hideOverlay()
-            })
-
-            self.objects.confirmDelete.btnClose.one('click.netto', function() {
-                resolve(false)
-                self.hideOverlay()
-            })
-        })
-    },
-
-    showOverlay: function() {
-        if (this.objects.overlay.visible) {
-            return
-        }
-
-        this.objects.overlay.container.show()
-        this.objects.overlay.visible = true
-    },
-
-    showMessage: function(text) {
-        this.hideAll()
-
-        let self = this
-
-        this.objects.message.btnClose.one('click.netto', function() {
-            self.hideOverlay()
-        })
-
-        this.objects.message.text.html(text)
-        this.objects.message.container.show()
-        this.objects.message.visible = true
-
-        this.showOverlay()
-        this.objects.message.container.attr('tabindex', -1).focus()
-    },
-
-    showPopup: function(modal) {
-        if (this.objects.popup.visible) {
-            return
-        }
-
-        this.hideAll()
-
-        if (!modal) {
-            let self = this
-            this.objects.overlay.container.one('click.netto', function() {
-                self.hideOverlay()
-            })
-        }
-
-        this.objects.popup.container.show()
-        this.objects.popup.visible = true
-
-        this.showOverlay()
-        this.objects.popup.container.attr('tabindex', -1).focus()
-    },
-
-    showPrompt: async function(message) {
-        this.hideAll()
-
-        this.objects.prompt.text.html(message)
-        this.objects.prompt.container.show()
-        this.objects.prompt.visible = true
-
-        this.showOverlay()
-        this.objects.prompt.input.attr('tabindex', -1).focus()
-
-        let self = this
-        return new Promise(function(resolve){
-            self.objects.prompt.btnConfirm.one('click.netto', function() {
-                resolve(self.objects.prompt.input.val())
-                self.hideOverlay()
-            })
-
-            self.objects.prompt.btnClose.one('click.netto', function() {
-                resolve(false)
-                self.hideOverlay()
-            })
-        })
+        this.visible = true
     }
 }
 
 $(document).ready(function() {
-    Overlay.init()
+    Overlay.initMessages()
 })

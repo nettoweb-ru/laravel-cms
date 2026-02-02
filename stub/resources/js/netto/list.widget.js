@@ -33,7 +33,7 @@ export default class ListWidget extends ListAbstract {
 
         Ajax.post(this.actions.delete, {id: this.selected}, function(data) {
             if (data.status) {
-                Overlay.showMessage(data.status)
+                Overlay.message(data.status)
             }
 
             self.params.page = 1
@@ -62,7 +62,7 @@ export default class ListWidget extends ListAbstract {
         if (typeof this.buttons.delete === 'object') {
             this.actions.delete = this.buttons.delete.data('url')
             this.buttons.delete.click(async function() {
-                if (await Overlay.showConfirmDelete()) {
+                if (await Overlay.confirmation(window.nettoweb.messages.confirm_delete, true)) {
                     self.delete()
                 }
             })
@@ -71,7 +71,7 @@ export default class ListWidget extends ListAbstract {
         if (typeof this.buttons.toggle === 'object') {
             this.actions.toggle = this.buttons.toggle.data('url')
             this.buttons.toggle.click(async function() {
-                if (await Overlay.showConfirm(App.messages.confirm.toggle)) {
+                if (await Overlay.confirmation(window.nettoweb.messages.confirm_toggle)) {
                     self.toggle()
                 }
             })
@@ -195,7 +195,7 @@ export default class ListWidget extends ListAbstract {
 
         Ajax.post(this.actions.toggle, {id: this.selected}, function(data) {
             if (data.status) {
-                Overlay.showMessage(data.status)
+                Overlay.message(data.status)
             }
 
             self.load()

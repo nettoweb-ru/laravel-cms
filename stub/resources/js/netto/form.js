@@ -178,7 +178,7 @@ class Form {
 
     initAnimation(object) {
         object.find('form').submit(function() {
-            Overlay.showAnimation()
+            Overlay.animation()
         })
     }
 
@@ -242,7 +242,7 @@ class Form {
         if (button.length) {
             let form = object.find('.js-form-destroy')
             button.click(async function() {
-                if (await Overlay.showConfirmDelete()) {
+                if (await Overlay.confirmation(window.nettoweb.messages.confirm_delete, true)) {
                     form.submit()
                 }
             })
@@ -287,14 +287,14 @@ class Form {
                         }
 
                         if (uploadMaxFileSizeError) {
-                            Overlay.showMessage(App.messages.errors.uploadMaxFileSize)
+                            Overlay.message(window.nettoweb.messages.error_upload_max)
                             this.value = ''
                             this.files.value = null
                             return false
                         }
 
                         if (postSize > self.maxSizePost) {
-                            Overlay.showMessage(App.messages.errors.postMaxSize)
+                            Overlay.message(window.nettoweb.messages.error_post_max)
                             this.value = ''
                             this.files.value = null
                             return false
@@ -489,11 +489,11 @@ class Form {
             return
         }
 
-        Overlay.showAnimation()
+        Overlay.animation()
         Ajax.get(App.url.transliterate, {
             string: source.val()
         }, function(data) {
-            Overlay.hideAnimation()
+            Overlay.hide()
             source.data('transliterate-last', source.val())
             target.val(data.string)
         })

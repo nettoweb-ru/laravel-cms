@@ -11,7 +11,7 @@
         @if ((empty($item['link'])) || ($i == $count))
             {{ $item['title'] }}
         @else
-            <a href="{{ $item['link'] }}" class="js-animated-link">{{ $item['title'] }}</a>
+            <a href="{{ $item['link'] }}">{{ $item['title'] }}</a>
         @endif
     </span>
 @endforeach

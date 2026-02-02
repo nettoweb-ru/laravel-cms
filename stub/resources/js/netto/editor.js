@@ -25,7 +25,7 @@ export default class Editor {
                 shouldNotGroupWhenFull: false
             },
             language: {
-                ui: App.lang,
+                ui: window.nettoweb.lang,
                 content: this.language
             },
             list: {
@@ -55,7 +55,7 @@ export default class Editor {
                     openInNewTab: {
                         mode: 'manual',
                         label: 'Open in a new tab',
-                        defaultValue: false,
+                        defaultValue: true,
                         attributes: {
                             target: '_blank',
                             rel: 'noopener noreferrer'

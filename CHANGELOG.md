@@ -2,6 +2,16 @@
 
 ### nettoweb/laravel-cms
 
+#### [2.4.3] - 2026-02-01
+
+##### Fixed
+- Logs tabulation
+- Redundant AJAX during transliteration
+- Default link setting in editor
+- Album image square size
+- Active language highlight
+- External overlay windows
+
 #### [2.4.2] - 2025-12-17
 
 ##### Added

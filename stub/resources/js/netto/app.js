@@ -3,9 +3,6 @@ window.App = {
         headings: [],
         styles: [],
     },
-    lang: '',
-    locale: '',
-    messages: {},
     url: {
         cookie: '/admin/tools/cookie',
         download: '/admin/tools/download',
@@ -60,11 +57,7 @@ window.App = {
         this.objects.blockMenu.hide()
     },
 
-    init: function(data) {
-        for (let key in data) {
-            this[key] = data[key]
-        }
-
+    init: function() {
         this.initObjects()
         this.initDropdowns()
         this.initResize()
@@ -72,8 +65,6 @@ window.App = {
         this.initLogoutLinks()
         this.initLanguageLinks()
         this.initLinks()
-
-        this.initTopLinks()
     },
 
     initDropdowns: function() {
@@ -95,7 +86,7 @@ window.App = {
     initLanguageLinks: function() {
         let self = this
         $('.js-set-language').click(function() {
-            Overlay.showAnimation()
+            Overlay.animation()
             Ajax.post(self.url.cookie, {
                 key: 'netto-admin-lang',
                 value: $(this).data('code')
@@ -109,19 +100,15 @@ window.App = {
         $('.js-link').click(function() {
             let url = $(this).data('url')
             if (url.length) {
-                Overlay.redirect(url)
+                window.location.href = url
             }
-        })
-
-        $('a.js-href').click(function() {
-            Overlay.showAnimation()
         })
     },
 
     initLogoutLinks: function() {
         let self = this
         $('#js-logout, #js-logout-mobile').click(async function() {
-            if (await Overlay.showConfirm(self.messages.confirm.logout)) {
+            if (await Overlay.confirmation(window.nettoweb.messages.confirm_logout)) {
                 $('#js-logout-form').submit();
             }
         })
@@ -145,12 +132,6 @@ window.App = {
 
                 $(document).off('click.netto')
             }
-        })
-    },
-
-    initTopLinks: function() {
-        $('.js-top-link').click(function() {
-            Overlay.redirect($(this).data('url'))
         })
     },
 
@@ -186,5 +167,5 @@ window.App = {
 }
 
 $(document).ready(function() {
-    App.init(appData)
+    App.init()
 })

@@ -56,7 +56,7 @@ class Browser extends ListWidget {
         if (typeof this.buttons.directory === 'object') {
             this.actions.directory = this.buttons.directory.data('url')
             this.buttons.directory.click(async function () {
-                let name = await Overlay.showPrompt($(this).data('message'))
+                let name = await Overlay.prompt($(this).data('message'))
                 if ((name === false) || (name.length === 0)) {
                     return
                 }
@@ -181,14 +181,14 @@ class Browser extends ListWidget {
             error = false
 
         if (fileSize > this.maxSizeUpload) {
-            error = App.messages.errors.uploadMaxFileSize
+            error = window.nettoweb.messages.error_upload_max
         } else if (fileSize > this.maxSizePost) {
-            error = App.messages.errors.postMaxSize
+            error = window.nettoweb.messages.error_post_max
         }
 
         if (error) {
             files[0].value = ''
-            Overlay.showMessage(error)
+            Overlay.message(error)
             return
         }
 

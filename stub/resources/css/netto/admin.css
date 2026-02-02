@@ -18,8 +18,18 @@
     --top-height:55px;
 }
 
+html{
+    min-height:100vh;
+}
+
 body{
     font-family: 'Play', sans-serif;
+    min-height:inherit;
+    font-size:0;
+    letter-spacing:0;
+    word-spacing:0;
+    overflow: hidden;
+    position:relative;
 }
 
 ::-webkit-scrollbar {
@@ -39,7 +49,15 @@ body{
     cursor: pointer;
 }
 
-.text{
+.table{
+    display: table;
+}
+
+.table .cell{
+    display: table-cell;
+}
+
+.btn, .text{
     font-size:var(--text-size-normal);
 }
 
@@ -50,12 +68,6 @@ body{
 .text-big{
     font-size:var(--text-size-large);
     font-weight: 700;
-}
-
-.layer.overlay .overlay-block.info .overlay-block-item.text-msg .text,
-.layer.overlay .overlay-block.info .overlay-block-item.text-input input,
-.layer.overlay .overlay-block.info .overlay-block-item.buttons .text{
-    font-size:var(--text-size-normal);
 }
 
 .chain{

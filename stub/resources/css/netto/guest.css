@@ -17,8 +17,30 @@
     --color-light-green:#b3ffa7;
 }
 
+html{
+    min-height:100vh;
+}
+
 body{
     font-family: 'Play', sans-serif;
+    min-height:inherit;
+    font-size:0;
+    letter-spacing:0;
+    word-spacing:0;
+    overflow: hidden;
+    position:relative;
+}
+
+.layer.content{
+    top:0;
+    left:0;
+    height:inherit;
+    min-height:inherit;
+    width:100%;
+    max-width:inherit;
+    position:absolute;
+    min-width: 280px;
+    outline:0;
 }
 
 .text{
@@ -115,6 +137,14 @@ textarea.textarea{
 
 button .text{
     line-height: 120%;
+}
+
+.table{
+    display: table;
+}
+
+.table .cell{
+    display: table-cell;
 }
 
 @media screen and (min-width: 1024px){

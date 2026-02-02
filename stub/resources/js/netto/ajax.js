@@ -75,7 +75,7 @@ window.Ajax = {
                     message = 'Unknown error'
                 }
 
-                Overlay.showMessage(message)
+                Overlay.message(message)
                 onError()
             }
         }
