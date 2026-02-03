@@ -26,7 +26,7 @@ window.App = {
             precision = 0
         }
 
-        return new Intl.NumberFormat(this.locale, {style: 'currency', currency: currency, maximumFractionDigits: precision}).format(value)
+        return new Intl.NumberFormat(window.nettoweb.locale, {style: 'currency', currency: currency, maximumFractionDigits: precision}).format(value)
     },
 
     formatDate: function(value, options) {
@@ -34,7 +34,7 @@ window.App = {
             options = {}
         }
 
-        return new Intl.DateTimeFormat(this.locale, options).format(value)
+        return new Intl.DateTimeFormat(window.nettoweb.locale, options).format(value)
     },
 
     formatNumber: function(value, precision) {
@@ -42,7 +42,7 @@ window.App = {
             precision = 0
         }
 
-        return new Intl.NumberFormat(this.locale, {style: 'decimal', maximumFractionDigits: precision}).format(value)
+        return new Intl.NumberFormat(window.nettoweb.locale, {style: 'decimal', maximumFractionDigits: precision}).format(value)
     },
 
     hideLanguages: function() {
