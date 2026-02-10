@@ -20,10 +20,6 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        if ($redirect = RedirectService::processRequest($request)) {
-            return $redirect;
-        }
-
         $this->authenticate($request, $guards);
 
         return $next($request);

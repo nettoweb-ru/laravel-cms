@@ -60,57 +60,12 @@ abstract class RedirectService
     }
 
     /**
-     * Process request to existing route.
-     *
-     * @param Request $request
-     * @return RedirectResponse|null
-     */
-    public static function processRequest(Request $request): ?RedirectResponse
-    {
-        if ($redirect = self::getRedirect($request)) {
-            return $redirect;
-        }
-
-        $path = $request->path();
-        $query = $request->getQueryString();
-
-        if ($path == '/') {
-            $path = '';
-        } else {
-            $path = "/{$path}";
-        }
-
-        if ($query) {
-            if (empty($path)) {
-                $path .= '/';
-            }
-
-            $path .= "?{$query}";
-        }
-
-        $canonical = self::getHostCanonical($request).$path;
-
-        $uri = $request->getRequestUri();
-        if ($uri == '/') {
-            $uri = '';
-        }
-
-        $requested = self::getHostRequested($request).$uri;
-
-        if ($requested == $canonical) {
-            return null;
-        }
-
-        return self::redirect($request, $uri, $path);
-    }
-
-    /**
      * Get canonical hostname.
      *
      * @param Request $request
      * @return string
      */
-    private static function getHostCanonical(Request $request): string
+    public static function getHostCanonical(Request $request): string
     {
         static $return;
 
@@ -139,7 +94,7 @@ abstract class RedirectService
      * @param Request $request
      * @return string
      */
-    private static function getHostRequested(Request $request): string
+    public static function getHostRequested(Request $request): string
     {
         static $return;
 
@@ -159,7 +114,7 @@ abstract class RedirectService
      * @param int $status
      * @return RedirectResponse|null
      */
-    private static function redirect(Request $request, string $source, string $destination, int $status = 301): ?RedirectResponse
+    public static function redirect(Request $request, string $source, string $destination, int $status = 301): ?RedirectResponse
     {
         if (in_array($status, config('cms.logs.track', []))) {
             if (empty($destination)) {

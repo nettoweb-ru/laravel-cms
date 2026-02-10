@@ -187,8 +187,8 @@ class CmsServiceProvider extends ServiceProvider
         }
 
         foreach ([
-            'admin' => ['web', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
-            'admin.guest' => ['web', 'admin.check', 'locale.guest'],
+            'admin' => ['web', 'redirect', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
+            'admin.guest' => ['web', 'redirect', 'admin.check', 'locale.guest'],
          ] as $key => $value) {
             $router->middlewareGroup($key, $value);
         }

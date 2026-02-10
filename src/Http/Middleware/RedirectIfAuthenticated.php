@@ -18,10 +18,6 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        if ($redirect = RedirectService::processRequest($request)) {
-            return $redirect;
-        }
-
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
