@@ -21,35 +21,55 @@ abstract class RedirectService
     {
         $uri = rtrim($request->getRequestUri(), '/');
 
+        $redirects = [
+            'regexp' => [],
+            'direct' => [],
+        ];
+
         foreach (Redirect::query()->where('is_active', '1')->orderBy('source')->get() as $item) {
-            $source = $item->getAttribute('source');
-            $destination = $item->getAttribute('destination');
-            $status = $item->getAttribute('status');
-
+            /** @var Redirect $item */
             if ($item->getAttribute('is_regexp')) {
-                try {
-                    preg_match('/^'.str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $source).'$/', $uri, $results);
-                } catch (\Throwable $throwable) {
-                    Log::error($throwable->getMessage());
-                    continue;
-                }
+                $redirects['regexp'][] = $item;
+            } else {
+                $redirects['direct'][] = $item;
+            }
+        }
 
-                unset($results[0]);
+        foreach ($redirects['direct'] as $item) {
+            if ($item->getAttribute('source') == $uri) {
+                $destination = $item->getAttribute('destination');
+                $status = $item->getAttribute('status');
 
-                if ($results) {
-                    if (is_null($destination)) {
-                        abort($status);
-                    }
-
-                    foreach ($results as $key => $value) {
-                        $destination = str_replace("\${$key}", $value, $destination);
-                    }
-
-                    return self::redirect($request, $uri, $destination, $status);
-                }
-            } else if ($source == $uri) {
                 if (is_null($destination)) {
                     abort($status);
+                }
+
+                return self::redirect($request, $uri, $destination, $status);
+            }
+        }
+
+        foreach ($redirects['regexp'] as $item) {
+            $source = $item->getAttribute('source');
+
+            try {
+                preg_match('/^'.str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $source).'$/', $uri, $results);
+            } catch (\Throwable $throwable) {
+                Log::error($throwable->getMessage());
+                continue;
+            }
+
+            unset($results[0]);
+
+            if ($results) {
+                $destination = $item->getAttribute('destination');
+                $status = $item->getAttribute('status');
+
+                if (is_null($destination)) {
+                    abort($status);
+                }
+
+                foreach ($results as $key => $value) {
+                    $destination = str_replace("\${$key}", $value, $destination);
                 }
 
                 return self::redirect($request, $uri, $destination, $status);
