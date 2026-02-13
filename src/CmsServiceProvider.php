@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Notifications\{ResetPassword, VerifyEmail};
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\{Carbon, ServiceProvider};
-use Illuminate\Support\Facades\{Blade, Gate, Log, Schedule, URL};
+use Illuminate\Support\Facades\{Blade, Gate, Schedule, URL};
 use Illuminate\Routing\ResourceRegistrar as OriginalRegistrar;
 use Illuminate\Routing\Router;
 use Netto\Http\Middleware\{
@@ -122,10 +122,6 @@ class CmsServiceProvider extends ServiceProvider
                     return $redirect;
                 }
 
-                if (in_array($statusCode, config('cms.logs.track', []))) {
-                    Log::channel($statusCode)->info("[".$request->ip()."]".chr(9).chr(9).chr(9).$request->getRequestUri());
-                }
-
                 return null;
             });
         });
@@ -187,7 +183,7 @@ class CmsServiceProvider extends ServiceProvider
         }
 
         foreach ([
-            'admin' => ['web', 'redirect', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
+            'admin' => ['web', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
             'admin.guest' => ['web', 'redirect', 'admin.check', 'locale.guest'],
          ] as $key => $value) {
             $router->middlewareGroup($key, $value);
