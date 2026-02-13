@@ -15,7 +15,7 @@ abstract class RedirectService
     {
         $return = (config('cms.redirects.https') ? 'https' : 'http') . '://';
 
-        if (config('redirects.use_www')) {
+        if (config('cms.redirects.www')) {
             $return .= 'www.';
         }
 
@@ -67,6 +67,10 @@ abstract class RedirectService
 
         foreach ($redirects['static'] as $redirect) {
             if ($redirect['source'] == $path) {
+                if (is_null($redirect['destination'])) {
+                    abort($redirect['status']);
+                }
+
                 return self::redirect(
                     self::getRequestedUrl($request),
                     self::getCanonicalDomain($request) . $redirect['destination'],
@@ -77,10 +81,20 @@ abstract class RedirectService
         }
 
         foreach ($redirects['dynamic'] as $redirect) {
-            preg_match('/^' . str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $redirect['source']) . '$/', $path, $results);
+            try {
+                preg_match('/^' . str_replace(['/', '?', '='], ['\\/', '\\?', '\\='], $redirect['source']) . '$/', $path, $results);
+            } catch (\Throwable $throwable) {
+                Log::error($throwable->getMessage());
+                continue;
+            }
+
             unset($results[0]);
 
             if ($results) {
+                if (is_null($redirect['destination'])) {
+                    abort($redirect['status']);
+                }
+
                 $to = $redirect['destination'];
 
                 foreach ($results as $key => $value) {
