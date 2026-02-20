@@ -18,7 +18,7 @@
             />
         </x-slot>
         <x-slot name="buttons">
-            <x-cms::form.button class="btn-form btn-normal">{{ __('auth.action_login') }}</x-cms::form.button>
+            <button class="btn btn-blue btn-label">{{ __('auth.action_login') }}</button>
         </x-slot>
     </x-cms-form>
     <p class="text">

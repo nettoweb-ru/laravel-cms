@@ -9,8 +9,26 @@ use Netto\Models\NavigationGroup;
 class Navigation extends Component
 {
     public array $items = [];
+    public int $mode = 1;
 
-    public function __construct()
+    public function __construct(int $mode = 1)
+    {
+        $this->mode = $mode;
+        $this->items = $this->getItems();
+    }
+
+    /**
+     * @return View
+     */
+    public function render(): View
+    {
+        return view('cms::components.navigation');
+    }
+
+    /**
+     * @return array
+     */
+    protected function getItems(): array
     {
         static $return;
 
@@ -50,14 +68,6 @@ class Navigation extends Component
             }
         }
 
-        $this->items = $return;
-    }
-
-    /**
-     * @return View
-     */
-    public function render(): View
-    {
-        return view('cms::components.navigation');
+        return $return;
     }
 }

@@ -20,8 +20,7 @@
             :messages="$errors->get('email')"
             :required="true"
         />
-
-        <x-cms::form.button>{{ __('main.action_save') }}</x-cms::form.button>
+        <button>{{ __('auth.action_save') }}</button>
     </form>
 
     {{ __('auth.update_password') }}
@@ -45,7 +44,7 @@
             :messages="$errors->updatePassword->get('password_confirmation')"
         />
 
-        <x-cms::form.button>{{ __('main.action_save') }}</x-cms::form.button>
+        <button>{{ __('auth.action_save') }}</button>
     </form>
 
     {{ __('auth.delete_profile') }}
@@ -60,7 +59,7 @@
             :required="true"
         />
 
-        <x-cms::form.button>{{ __('main.action_delete') }}</x-cms::form.button>
+        <button>{{ __('auth.action_delete') }}</button>
     </form>
 
     <p>

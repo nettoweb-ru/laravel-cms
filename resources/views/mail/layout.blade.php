@@ -16,10 +16,8 @@
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="-premailer-cellpadding:0;-premailer-cellspacing:0;-premailer-width:100%;margin:0;padding:0;width:100%;">
                 <tr>
                     <td style="padding:15px 0 20px;text-align:center;">
-                        <a href="https://nettoweb.ru" target="_blank" style="display:inline-block;">
-                            <svg style="width:150px;color:#2a3582;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
-                                @include('cms::components.icons.logo')
-                            </svg>
+                        <a href="https://nettoweb.ru" target="_blank" style="display:inline-block;width:150px;outline:0;">
+                            @include('cms::components.icons.logo')
                         </a>
                     </td>
                 </tr>

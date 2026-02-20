@@ -29,7 +29,7 @@
     @endpush
 @endif
 
-<div class="@if (!$disabled) js-autocomplete @endif" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}" data-custom-value="{{ (int) $custom }}">
+<div class="grid-value-autocomplete @if (!$disabled) js-autocomplete @endif" data-multiple="{{ (int) $multiple }}" data-name="{{ $name }}" data-custom-value="{{ (int) $custom }}">
     <div class="autocomplete-input">
         <label for="{{ $id }}">
             <input type="text"
@@ -47,12 +47,12 @@
         </label>
     </div>
     @if ($multiple)
-        <div class="autocomplete-value js-autocomplete-multiple-hold">
+        <div class="autocomplete-values js-autocomplete-multiple-hold">
             @if ($value)
                 @foreach ($value as $item)
-                    <div class="value-item js-autocomplete-multiple @if ($disabled) disabled @endif" data-id="{{ $item }}">
-                        <div class="value-item-table">
-                            <div class="value-item-cell">
+                    <div class="value js-autocomplete-multiple @if ($disabled) disabled @endif" data-id="{{ $item }}">
+                        <div class="table value-item-table">
+                            <div class="cell value-item-cell">
                                 <span class="text">{{ $options[$item] }}</span>
                                 <input type="hidden" name="{{ $name }}" value="{{ $item }}"/>
                             </div>

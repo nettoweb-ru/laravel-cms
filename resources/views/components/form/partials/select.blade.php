@@ -9,7 +9,7 @@
 ])
 
 @php
-    $class = 'select text';
+    $class = 'input text';
     if ($multiple) {
         $value = array_filter((array) $value);
         $name .= '[]';

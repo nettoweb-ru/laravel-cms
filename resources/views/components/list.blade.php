@@ -1,11 +1,10 @@
+@php \Netto\Services\AssetService::load('jquery.ui') @endphp
+
 @pushonce('head')
     @vite([
-        'resources/css/netto/list.css',
         'resources/js/netto/list.js',
     ])
 @endpushonce
-
-@php \Netto\Services\AssetService::load('jquery.ui') @endphp
 
 @props([
     'class' => 'js-list',
@@ -28,26 +27,26 @@
 
     <x-slot:buttons>
         @if (!empty($actions['create']))
-            <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal disabled js-link js-list-button" data-type="create" data-url="{{ $actions['create'] }}" title="{{ __('main.title_create') }}"/>
+            <button class="btn btn-bg btn-blue create js-link js-list-button" data-url="{{ $actions['create'] }}" data-type="create" title="{{ __('main.title_create') }}"></button>
         @endif
         @if ($search)
-            <x-cms::form.button type="button" bg="icons.search" class="btn-icon btn-normal disabled js-list-button" data-type="search" title="{{ __('main.title_find') }}"/>
+            <button class="btn btn-bg btn-blue search js-list-button" data-type="search" title="{{ __('main.title_find') }}"></button>
         @endif
         @if (!empty($actions['downloadCsv']))
-            <x-cms::form.button type="button" bg="icons.file-type-csv" class="btn-icon btn-normal disabled js-list-button" data-type="downloadCsv" data-url="{{ $actions['downloadCsv'] }}" title="{{ __('main.title_download_csv') }}"/>
+            <button class="btn btn-bg btn-blue file-type-csv js-list-button" data-type="downloadCsv" data-url="{{ $actions['downloadCsv'] }}" title="{{ __('main.title_download_csv') }}"></button>
         @endif
-        <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal disabled js-list-button" data-type="invert" title="{{ __('main.title_invert') }}"/>
+        <button class="btn btn-bg btn-blue invert-selection js-list-button" data-type="invert" title="{{ __('main.title_invert') }}"></button>
         @if (!empty($actions['toggle']))
-            <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal disabled js-list-button" data-type="toggle" data-url="{{ $actions['toggle'] }}" title="{{ __('main.title_toggle') }}"/>
+            <button class="btn btn-bg btn-blue toggle-on js-list-button" data-type="toggle" data-url="{{ $actions['toggle'] }}" title="{{ __('main.title_toggle') }}"></button>
         @endif
         @if (!empty($actions['delete']))
-            <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning disabled js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}"/>
+            <button class="btn btn-bg btn-red remove js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}"></button>
         @endif
     </x-slot:buttons>
 
     @if ($search)
         <x-slot:search>
-            <div class="ajax-results search js-list-search">
+            <div class="data-block search js-list-search">
                 @foreach ($columns as $key => $value)
                     <div class="table list-column-table">
                         <div class="cell list-column-cell">
@@ -59,8 +58,8 @@
         </x-slot:search>
     @endif
 
-    <div class="list-results">
-        <div class="list-results-visible">
+    <div class="general">
+        <div class="visible">
             <table>
                 <thead class="js-head">
                 <tr></tr>
@@ -68,7 +67,7 @@
                 <tbody class="js-body"></tbody>
             </table>
         </div>
-        <div class="list-results-dropdown js-dropdown">
+        <div class="dropdown js-dropdown">
             @foreach ($columns as $key => $value)
                 <div class="table list-column-table" data-id="{{ $key }}"
                      data-default="{{ (int) in_array($key, $default) }}">

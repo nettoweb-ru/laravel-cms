@@ -142,19 +142,19 @@ window.Overlay = {
 
         this.objects.popup.buttons.close = $('<button />', {
             'type': 'button',
-            'class': 'btn btn-form btn-normal btn-unavailable',
+            'class': 'btn btn-bg btn-blue btn-label unavailable',
         }).html(btnMessages.btn_label_cancel)
         this.objects.popup.buttons.confirm = $('<button />', {
             'type': 'button',
-            'class': 'btn btn-form btn-normal btn-done',
+            'class': 'btn btn-bg btn-blue btn-label done',
         }).html(btnMessages.btn_label_confirm)
         this.objects.popup.buttons.remove = $('<button />', {
             'type': 'button',
-            'class': 'btn btn-form btn-warning btn-remove',
+            'class': 'btn btn-bg btn-red btn-label remove',
         }).html(btnMessages.btn_label_delete)
         this.objects.popup.buttons.ok = $('<button />', {
             'type': 'button',
-            'class': 'btn btn-form btn-normal btn-done',
+            'class': 'btn btn-bg btn-blue btn-label done',
         }).html(btnMessages.btn_label_ok)
 
         let objBtnHold = $('<div />', {
@@ -171,7 +171,7 @@ window.Overlay = {
         }).append(objTextHold).append(this.objects.popup.input.hold).append(objBtnHold)
 
         this.objects.animation = $('<div />', {
-            'class': 'overlay-loading',
+            'class': 'overlay-loading loading',
         })
 
         for (let a = 0; a < 12; a++) {
@@ -241,10 +241,10 @@ window.Overlay = {
         this.objects.popup.buttons.confirm.show()
         this.objects.popup.buttons.close.show()
 
-        this.objects.popup.input.object.attr('tabindex', -1).focus()
-
         this.objects.popup.window.show()
         this.show()
+
+        this.objects.popup.input.object.attr('tabindex', -1).focus()
 
         return new Promise(function(resolve){
             Overlay.objects.popup.buttons.confirm.one('click.netto', function() {

@@ -5,7 +5,7 @@
 
 @if ($multilang)
     @foreach ($messages as $langCode => $langMessages)
-        <div class="js-multilang hidden" data-code="{{ $langCode }}">
+        <div class="multilang js-multilang hidden" data-code="{{ $langCode }}">
             <x-cms::form.partials.errors :messages="$langMessages" />
         </div>
     @endforeach

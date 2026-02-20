@@ -43,16 +43,14 @@
 @include('cms::components.assets')
 @include('components.favicons')
 @vite([
-    'resources/css/app.css',
     'resources/js/netto/overlay.js',
     'resources/js/netto/ajax.js',
-    'resources/js/app.js',
 ])
 
 @stack('head')
 </head>
 <body class="{{ $head['text_dir'] }}">
-<div class="layer content">
+<div class="layer layer-content">
     {{ $slot }}
 </div>
 <x-cms::session-status :status="session('status')"/>

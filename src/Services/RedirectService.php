@@ -11,6 +11,8 @@ use Netto\Models\Redirect;
 
 abstract class RedirectService
 {
+    protected const TTL = 600;
+
     public static function getCanonicalDomain(Request $request): string
     {
         $return = (config('cms.redirects.https') ? 'https' : 'http') . '://';
@@ -62,7 +64,7 @@ abstract class RedirectService
 
     public static function getRedirect(Request $request): ?RedirectResponse
     {
-        $path = '/' . trim($request->path(), '/');
+        $path = $request->getRequestUri();
         $redirects = self::getCachedRedirects();
 
         foreach ($redirects['static'] as $redirect) {
@@ -137,7 +139,7 @@ abstract class RedirectService
 
     protected static function getCachedRedirects(): array
     {
-        return Cache::rememberForever('redirects', function () {
+        return Cache::remember('redirects', self::TTL, function () {
             $return = [
                 'static' => [],
                 'dynamic' => [],

@@ -20,7 +20,7 @@
     <x-cms::form.partials.value>
         @if ($multilang)
             @foreach ($value as $langCode => $langValue)
-                <div class="js-multilang hidden" data-code="{{ $langCode }}">
+                <div class="multilang js-multilang hidden" data-code="{{ $langCode }}">
                     <x-cms::form.partials.string
                         type="datetime-local"
                         step="1"

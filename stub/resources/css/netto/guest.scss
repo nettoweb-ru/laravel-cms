@@ -1,0 +1,37 @@
+.table{
+    width:100%;
+}
+
+a{
+    color:var(--color-main);
+
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+input.input,textarea.input{
+    text-align: center;
+}
+
+.container-table{
+    min-height: inherit;
+
+    .container-cell{
+        vertical-align: middle;
+        text-align: center;
+
+        .guest-logo{
+            margin-bottom: 25px;
+            display: inline-block;
+
+            svg{
+                width: 150px;
+
+                @media screen and (min-width: 767px) {
+                    width: 120px;
+                }
+            }
+        }
+    }
+}

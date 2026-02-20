@@ -1,12 +1,11 @@
 @pushonce('head')
     @vite([
-        'resources/css/netto/browser.css',
         'resources/js/netto/browser.js',
     ])
 @endpushonce
 
 @props([
-    'class' => 'js-browser',
+    'class' => 'browser js-browser',
     'id' => 'browser',
     'url',
     'root',
@@ -20,17 +19,17 @@
     </x-slot:head>
 
     <x-slot:buttons>
-        <x-cms::form.button type="button" bg="icons.up" class="btn-icon btn-normal disabled js-list-button" data-type="up" title="{{ __('main.title_folder_up') }}" />
+        <button class="btn btn-bg btn-blue up js-list-button" data-type="up" title="{{ __('main.title_folder_up') }}"></button>
         @if (!empty($actions['directory']))
-            <x-cms::form.button type="button" bg="icons.add-folder" class="btn-icon btn-normal disabled js-list-button" data-type="directory" data-url="{{ $actions['directory'] }}" title="{{ __('main.title_folder_new') }}" data-message="{{ __('main.general_browser_dir_prompt') }}" />
+            <button class="btn btn-bg btn-blue add-folder js-list-button" data-type="directory" data-url="{{ $actions['directory'] }}" title="{{ __('main.title_folder_new') }}" data-message="{{ __('main.general_browser_dir_prompt') }}"></button>
         @endif
         @if (!empty($actions['upload']))
-            <x-cms::form.button type="button" bg="icons.upload" class="btn-icon btn-normal disabled js-list-button" data-type="upload" data-url="{{ $actions['upload'] }}" title="{{ __('main.title_upload') }}" />
+            <button class="btn btn-bg btn-blue upload js-list-button" data-type="upload" data-url="{{ $actions['upload'] }}" title="{{ __('main.title_upload') }}"></button>
             <input type="file" class="hidden js-upload" />
         @endif
-        <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal disabled js-list-button" data-type="invert" title="{{ __('main.title_invert') }}" />
+        <button class="btn btn-bg btn-blue invert-selection js-list-button" data-type="invert" title="{{ __('main.title_invert') }}"></button>
         @if (!empty($actions['delete']))
-            <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning disabled js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}" />
+            <button class="btn btn-bg btn-red remove js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}"></button>
         @endif
     </x-slot:buttons>
 

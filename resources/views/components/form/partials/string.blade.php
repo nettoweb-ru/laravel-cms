@@ -10,10 +10,6 @@
     'dir' => config('text_dir'),
 ])
 
-@php
-    $class = 'input text';
-@endphp
-
 @if ($disabled)
     <input type="{{ $type }}" id="{{ $id }}" value="{{ $value }}" dir="{{ $dir }}" disabled {!! $attributes->merge(['class' => 'input text disabled'])->toHtml() !!} autocomplete="off" />
     <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
@@ -28,9 +24,9 @@
         @if ($transliterate)
             data-transliterate-code="{{ $transliterate }}"
             data-transliterate-last="{{ $value }}"
-            {!! $attributes->merge(['class' => $class.' js-transliterate'])->toHtml() !!}
+            {!! $attributes->merge(['class' => 'input text js-transliterate'])->toHtml() !!}
         @else
-            {!! $attributes->merge(['class' => $class])->toHtml() !!}
+            {!! $attributes->merge(['class' => 'input text'])->toHtml() !!}
         @endif
     />
 @endif

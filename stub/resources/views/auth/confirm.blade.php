@@ -6,6 +6,6 @@
             :messages="$errors->get('password')"
             :required="true"
         />
-        <x-cms::form.button>{{ $title }}</x-cms::form.button>
+        <button>{{ $title }}</button>
     </form>
 </x-layout.default>

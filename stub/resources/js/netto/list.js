@@ -62,6 +62,55 @@ class List extends ListWidget {
         this.isSearchOpen = false
     }
 
+    download(route) {
+        let urlObj = new URL(route),
+            url = urlObj.origin + urlObj.pathname,
+            qParams = {},
+            k1, k2
+
+        for (let [k, v] of new URLSearchParams(urlObj.search)) {
+            qParams[k] = v
+        }
+
+        for (k1 in this.params) {
+            if (typeof this.params[k1] === 'object') {
+                for (k2 in this.params[k1]) {
+                    qParams[k1 + "[" + k2 + "]"] = this.params[k1][k2]
+                }
+            } else {
+                qParams[k1] = this.params[k1]
+            }
+        }
+
+        qParams.page = 1
+        qParams.perPage = 0
+
+        window.open(url + '?' + (new URLSearchParams(qParams)).toString())
+    }
+
+    filter() {
+        let update = false,
+            params = this.params
+
+        this.objects.searchInputs.each(function() {
+            let id = $(this).data('id'),
+                value = $(this).val()
+
+            if (params.filter[id] !== value) {
+                params.filter[id] = value
+                update = true
+            }
+        })
+
+        if (update) {
+            params.page = 1
+            this.params = params
+
+            this.saveParams()
+            this.load()
+        }
+    }
+
     getDefaultParams() {
         let k, codes = Array(), code
         for (k in this.columns) {
@@ -136,32 +185,6 @@ class List extends ListWidget {
                 self.download(self.buttons.downloadXls.data('url'))
             })
         }
-    }
-
-    download(route) {
-        let urlObj = new URL(route),
-            url = urlObj.origin + urlObj.pathname,
-            qParams = {},
-            k1, k2
-
-        for (let [k, v] of new URLSearchParams(urlObj.search)) {
-            qParams[k] = v
-        }
-
-        for (k1 in this.params) {
-            if (typeof this.params[k1] === 'object') {
-                for (k2 in this.params[k1]) {
-                    qParams[k1 + "[" + k2 + "]"] = this.params[k1][k2]
-                }
-            } else {
-                qParams[k1] = this.params[k1]
-            }
-        }
-
-        qParams.page = 1
-        qParams.perPage = 0
-
-        window.open(url + '?' + (new URLSearchParams(qParams)).toString())
     }
 
     initColumns() {
@@ -306,29 +329,6 @@ class List extends ListWidget {
 
         if (open) {
             this.openSearchPanel()
-        }
-    }
-
-    filter() {
-        let update = false,
-            params = this.params
-
-        this.objects.searchInputs.each(function() {
-            let id = $(this).data('id'),
-                value = $(this).val()
-
-            if (params.filter[id] !== value) {
-                params.filter[id] = value
-                update = true
-            }
-        })
-
-        if (update) {
-            params.page = 1
-            this.params = params
-
-            this.saveParams()
-            this.load()
         }
     }
 

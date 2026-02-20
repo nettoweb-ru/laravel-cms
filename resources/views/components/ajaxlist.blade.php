@@ -1,11 +1,11 @@
+@php \Netto\Services\AssetService::load('jquery.longpress') @endphp
+
 @pushonce('head')
     @vite([
-        'resources/css/netto/list.widget.css',
+        'resources/css/netto/list.scss',
         'resources/js/netto/list.widget.js',
     ])
 @endpushonce
-
-@php \Netto\Services\AssetService::load('jquery.longpress') @endphp
 
 @props([
     'id',
@@ -21,9 +21,9 @@
     'ltr' => [],
 ])
 
-<div class="ajax-list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-default-sort="{{ json_encode($defaultSort) }}" data-ltr="{{ json_encode($ltr) }}">
+<div class="list {{ $class }}" id="{{ $id }}" data-url="{{ $url }}" data-no-sort="{{ json_encode($noSort) }}" data-default-sort="{{ json_encode($defaultSort) }}" data-ltr="{{ json_encode($ltr) }}">
     @if ($head || $buttons)
-        <div class="ajax-list-block top">
+        <div class="list-block top">
             <div class="table block-top-table">
                 <div class="cell block-top-cell head">
                     {{ $head }}
@@ -34,26 +34,26 @@
             </div>
         </div>
     @endif
-    <div class="ajax-list-block content">
-        <div class="ajax-content-layer animation js-layer-animation">
+    <div class="list-block content">
+        <div class="content-layer animation js-layer-animation">
             <div class="table">
                 <div class="cell">
                     <div class="loading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 </div>
             </div>
         </div>
-        <div class="ajax-content-layer results js-layer-results">
+        <div class="content-layer results js-layer-results">
             {{ $search }}
-            <div class="ajax-results found js-layer-results-found">
-                <div class="ajax-result data">
+            <div class="data-block found js-layer-results-found">
+                <div class="result data">
                     {{ $slot }}
                 </div>
-                <div class="ajax-result bottom">
+                <div class="result bottom">
                     <div class="table result-bottom-table">
                         @if ($showNav)
                             <div class="cell result-bottom-cell per-page">
                                 <label>
-                                    <select class="select text js-per-page disabled" disabled name="per-page" title="{{ __('main.title_per_page') }}">
+                                    <select class="input text js-per-page disabled" disabled name="per-page" title="{{ __('main.title_per_page') }}">
                                         @foreach ([10, 20, 50] as $item)
                                             <option value="{{ $item }}">{{ format_number($item) }}</option>
                                         @endforeach
@@ -76,11 +76,11 @@
                             <div class="cell result-bottom-cell navigation">
                                 <div class="table result-bottom-nav-table">
                                     <div class="cell result-bottom-nav-cell padding">
-                                        <span class="text">{{ __('main.general_list_page') }}</span>
+                                        <span class="text desktop">{{ __('main.general_list_page') }}</span>
                                     </div>
                                     <div class="cell result-bottom-nav-cell">
                                         <label>
-                                            <select class="select text disabled js-page" disabled name="page"></select>
+                                            <select class="input text disabled js-page" disabled name="page"></select>
                                         </label>
                                     </div>
                                     <div class="cell result-bottom-nav-cell padding">
@@ -95,10 +95,10 @@
                     </div>
                 </div>
             </div>
-            <div class="ajax-results empty js-layer-results-empty">
-                <p class="text">
+            <div class="data-block empty js-layer-results-empty">
+                <span class="text">
                     {{ __('main.general_list_empty') }}
-                </p>
+                </span>
             </div>
         </div>
     </div>

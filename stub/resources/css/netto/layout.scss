@@ -1,0 +1,244 @@
+:root{
+    --color-reset:#fff;
+    --color-main:#2a3582;
+    --color-light-gray-1: #e5e5e5;
+    --color-light-gray-2: #eee;
+    --color-gray: #aaa;
+    --color-dark-gray:#777;
+    --color-yellow:#faffbd;
+    --color-dark-blue:#d0d2ff;
+    --color-light-blue:#e2e4ff;
+    --color-red:#a80000;
+    --color-light-red:#ffdbdb;
+    --color-green:#008000;
+    --color-light-green:#b3ffa7;
+    --text-big:22px;
+    --text-normal:16px;
+    --text-small:13px;
+    --top-height:55px;
+
+    @media screen and (min-width: 767px) {
+        --text-big:18px;
+        --text-normal:14px;
+        --text-small:11px;
+        --top-height:24px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 14px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-light-gray-1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-light-blue);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-main);
+    cursor: pointer;
+}
+
+html{
+    min-height:100vh;
+    background-color:var(--color-reset);
+}
+
+body{
+    min-height:inherit;
+    font-family: 'Play', sans-serif;
+    letter-spacing: 0;
+    font-size: 0;
+    word-spacing: 0;
+
+    &.show-overlay{
+        overflow: hidden;
+    }
+}
+
+.hidden{
+    display:none;
+}
+
+.table{
+    display: table;
+    width:inherit;
+}
+
+.table .cell{
+    display: table-cell;
+}
+
+.text-big{
+    font-size:var(--text-big);
+}
+
+.text{
+    font-size:var(--text-normal);
+}
+
+.text-small{
+    font-size:var(--text-small);
+}
+
+a{
+    color:inherit;
+    text-decoration: none;
+}
+
+input.input{
+    width:100%;
+    text-indent: 5px;
+    padding:5px 0;
+}
+
+textarea.input{
+    resize: none;
+    padding: 5px;
+    width: calc(100% - 10px);
+    line-height: 125%;
+}
+
+select.input{
+    width:100%;
+    padding:4px;
+}
+
+input.input,textarea.input,select.input{
+    border:none;
+    outline:none;
+    background-color:var(--color-light-blue);
+
+    &:focus{
+        color: var(--color-main);
+        background-color: var(--color-yellow);
+    }
+}
+
+select.input.h120,
+textarea.input.h120{
+    height:120px;
+}
+
+select.input.h250,
+textarea.input.h250{
+    height:250px;
+}
+
+select.input.h400,
+textarea.input.h400{
+    height:400px;
+}
+
+input.input.disabled,
+textarea.input.disabled,
+select.input.disabled{
+    background-color:var(--color-light-gray-1);
+    color:var(--color-dark-gray);
+}
+
+table{
+    border-collapse:collapse;
+    width:inherit;
+}
+
+.layer{
+    position: absolute;
+    top:0;
+
+    &.layer-content{
+        min-height:inherit;
+        width: 100%;
+        z-index: 50;
+
+        .inline{
+            display:inline-block;
+            min-width: 300px;
+        }
+    }
+}
+
+.btn{
+    border-style:solid;
+    border-width:1px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    padding:0;
+    min-height: 26px;
+    min-width: 26px;
+    cursor: pointer;
+    font-size: var(--text-normal);
+
+    &.disabled{
+        border-color:var(--color-gray);
+        background-color:var(--color-light-gray-1);
+        color:var(--color-gray);
+        cursor: not-allowed;
+    }
+
+    &:not(.disabled) {
+        &.btn-blue{
+            border-color:var(--color-main);
+            background-color:var(--color-light-blue);
+            color:var(--color-main);
+
+            &:hover,
+            &.active{
+                background-color:var(--color-main);
+                color:var(--color-light-blue);
+            }
+        }
+
+        &.btn-green{
+            border-color:var(--color-green);
+            background-color:var(--color-light-green);
+            color:var(--color-green);
+
+            &:hover,
+            &.active{
+                background-color:var(--color-green);
+                color:var(--color-light-green);
+            }
+        }
+
+        &.btn-red{
+            border-color:var(--color-red);
+            background-color:var(--color-light-red);
+            color:var(--color-red);
+
+            &:hover,
+            &.active{
+                background-color:var(--color-red);
+                color:var(--color-light-red);
+            }
+        }
+    }
+
+    &.btn-label{
+        width:150px;
+        background-size: auto !important;
+
+        @media screen and (min-width: 767px) {
+            width:130px;
+        }
+    }
+}
+
+body.ltr{
+    .btn.btn-bg.btn-label{
+        padding-left:30px;
+        background-position:10% center;
+    }
+}
+
+
+body.rtl{
+    .btn.btn-bg.btn-label{
+        padding-right:25px;
+        background-position:90% center;
+    }
+}

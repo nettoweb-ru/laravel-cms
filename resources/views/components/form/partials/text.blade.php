@@ -7,20 +7,16 @@
     'dir' => config('text_dir'),
 ])
 
-@php
-    $class = 'input text textarea';
-@endphp
-
 <textarea
     dir="{{ $dir }}"
     @if ($disabled)
         id="{{ $id }}-visible"
-        {!! $attributes->merge(['class' => $class.' disabled'])->toHtml() !!}
+        {!! $attributes->merge(['class' => 'input text disabled'])->toHtml() !!}
     @else
         @if ($autofocus) autofocus @endif
         id="{{ $id }}"
         name="{{ $name }}"
-        {!! $attributes->merge(['class' => $class])->toHtml() !!}
+        {!! $attributes->merge(['class' => 'input text'])->toHtml() !!}
     @endif
 >{{ $value }}</textarea>
 

@@ -9,7 +9,6 @@
 ])
 
 @php
-    $class = 'input';
 
     if ($multiple) {
         $name .= '[]';
@@ -34,9 +33,9 @@
                            value="{{ $key }}" name="{{ $name }}"
                        @endif
                        @if ($disabled)
-                           {!! $attributes->merge(['class' => $class.' disabled'])->toHtml() !!}
+                           {!! $attributes->merge(['class' => 'disabled'])->toHtml() !!}
                        @else
-                           {!! $attributes->merge(['class' => $class])->toHtml() !!}
+                           {!! $attributes->toHtml() !!}
                        @endif
                 />
                 @if ($disabled && $checked)

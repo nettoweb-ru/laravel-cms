@@ -20,6 +20,8 @@
         lang: '{{ app()->getLocale() }}',
         locale: '{{ config('locale_js') }}',
         text_dir: '{{ config('text_dir') }}',
+        upload_max_filesize: {{ ini_parse_quantity(ini_get('upload_max_filesize')) }},
+        post_max_size: {{ ini_parse_quantity(ini_get('post_max_size')) }},
         messages: {
             btn_label_ok: '{{ __('main.action_ok') }}',
             btn_label_confirm: '{{ __('main.action_confirm') }}',
@@ -38,9 +40,8 @@
 @include('cms::components.assets')
 @include('cms::components.favicons')
 @vite([
-    'resources/css/netto/layers.css',
-    'resources/css/netto/buttons.css',
-    'resources/css/netto/admin.css',
+    'resources/css/netto/layout.scss',
+    'resources/css/netto/app.scss',
     'resources/js/netto/overlay.js',
     'resources/js/netto/ajax.js',
     'resources/js/netto/app.js',
@@ -49,61 +50,33 @@
 @stack('head')
 </head>
 <body class="{{ $head['text_dir'] }}">
-<div class="layer content">
-    <div class="block mobile-top">
-        <div class="table">
-            <div class="cell left">
-                <div class="mobile-icon menu-open" id="js-icon-menu-open">
-                    @include('cms::components.icons.menu')
+<div class="layer layer-content">
+    <div class="block block-top">
+        <div class="inline">
+            <div class="table">
+                <div class="cell left">
+                    <div class="menu">
+                        <x-cms-navigation :mode="2" />
+                    </div>
+                    <div class="icons">
+                        <div class="icon icon-menu-open" id="js-mobile-menu-open"></div>
+                        <div class="icon icon-menu-close hidden" id="js-mobile-menu-close"></div>
+                    </div>
                 </div>
-                <div class="mobile-icon menu-close" id="js-icon-menu-close">
-                    @include('cms::components.icons.close')
+                <div class="cell right">
+                    <div class="icon icon-home js-link @if (request()->routeIs($url['home'])) active @endif" data-url="{{ route($url['home']) }}"></div>
+                    <div class="icon icon-user js-link @if (request()->routeIs($url['profile'])) active @endif" data-url="{{ route($url['profile']) }}"></div>
+                    <div class="icon icon-logout" id="js-logout"></div>
+                    <div class="icon icon-language icon-desktop js-desktop-menu-show" data-id="lang"></div>
+                    <div class="icon icon-language icon-mobile" id="js-mobile-languages-toggle"></div>
                 </div>
-            </div>
-            <div class="cell center">
-                @if (!empty($chain))
-                    <x-cms::navchain :items="$chain"/>
-                @endif
-            </div>
-            <div class="cell right">
-                <x-cms::menu-icon-mobile icon="home" route="{{ $url['home'] }}" />
-                <x-cms::menu-icon-mobile icon="user" route="{{ $url['profile'] }}" />
-                <x-cms::menu-icon-mobile icon="logout-{{ config('text_dir') }}" id="js-logout-mobile" />
-                <x-cms::menu-icon-mobile icon="hiragana-ma" id="js-icon-languages" />
             </div>
         </div>
     </div>
-    <div class="block mobile-menu" id="js-mobile-menu">
-        <x-cms-navigation/>
-    </div>
-    <div class="block mobile-languages" id="js-mobile-languages">
-        <x-cms-languages/>
-    </div>
-    <div class="block content">
+    <div class="block block-main">
         <div class="inline">
-            <div class="block menu">
-                <div class="table">
-                    <div class="cell left">
-                        <x-cms-navigation/>
-                    </div>
-                    <div class="cell right">
-                        <div class="menu">
-                            <x-cms::menu-icon icon="home" route="{{ $url['home'] }}" title="{{ __('main.general_home') }}" />
-                            <x-cms::menu-icon icon="user" route="{{ $url['profile'] }}" title="{{ __('auth.profile') }}" />
-                            <x-cms::menu-icon icon="logout-{{ config('text_dir') }}" id="js-logout" title="{{ __('auth.logout') }}" />
-                            <x-cms::menu-icon icon="hiragana-ma">
-                                <x-slot:dropdown>
-                                    <div class="menu-item-block dropdown">
-                                        <x-cms-languages/>
-                                    </div>
-                                </x-slot:dropdown>
-                            </x-cms::menu-icon>
-                        </div>
-                    </div>
-                </div>
-            </div>
             @if (!empty($chain))
-                <div class="block chain-hold">
+                <div class="main main-navigation">
                     <div class="table">
                         <div class="cell">
                             <x-cms::navchain :items="$chain"/>
@@ -111,15 +84,17 @@
                     </div>
                 </div>
             @endif
-            <div class="block main">
-                <div class="table main-padding-table">
-                    <div class="cell main-padding-cell">
+            <div class="main main-content">
+                <div class="table main-content-table">
+                    <div class="cell main-content-cell">
                         @if (!empty($header))
-                            <p class="header text-big">
-                                {{ $header }}
-                            </p>
+                            <div class="content-item header">
+                                <span class="text-big">
+                                    {{ $header }}
+                                </span>
+                            </div>
                         @endif
-                        <div>
+                        <div class="content-item content">
                             {{ $slot }}
                         </div>
                     </div>
@@ -127,6 +102,16 @@
             </div>
         </div>
     </div>
+</div>
+<x-cms-navigation :mode="3" />
+<div class="layer layer-dropdown dropdown-{{ config('text_dir') == 'rtl' ? 'normal' : 'reversed' }} desktop languages js-desktop-menu" data-id="lang">
+    <x-cms-languages/>
+</div>
+<div class="layer layer-dropdown mobile menu" id="js-mobile-menu">
+    <x-cms-navigation />
+</div>
+<div class="layer layer-dropdown mobile languages" id="js-mobile-languages">
+    <x-cms-languages/>
 </div>
 <x-cms::session-status :status="session('status')"/>
 @stack('bottom')

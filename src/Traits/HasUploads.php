@@ -27,12 +27,6 @@ trait HasUploads
         foreach ($this->uploads as $attribute => $params) {
             if (array_key_exists($attribute, $changes) && !empty($original[$attribute])) {
                 $delete[] = $basePath.$original[$attribute];
-
-                foreach ($this->uploads as $key => $value) {
-                    if (!empty($value['auto']) && ($value['auto'] == $attribute) && !empty($original[$key])) {
-                        $delete[] = $basePath.$original[$key];
-                    }
-                }
             }
         }
 

@@ -8,6 +8,6 @@
             :required="true"
             :autofocus="true"
         />
-        <x-cms::form.button>{{ $title }}</x-cms::form.button>
+        <button>{{ $title }}</button>
     </form>
 </x-layout.default>

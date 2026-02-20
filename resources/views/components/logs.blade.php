@@ -1,6 +1,5 @@
 @pushonce('head')
     @vite([
-        'resources/css/netto/logs.css',
         'resources/js/netto/logs.js',
     ])
 @endpushonce

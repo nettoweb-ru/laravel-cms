@@ -11,8 +11,6 @@ class Form {
         enabled: false,
         multiple: false,
     }
-    maxSizePost = 0
-    maxSizeUpload = 0
     sheets = {
         active: null,
         default: null,
@@ -25,9 +23,6 @@ class Form {
 
     constructor(object) {
         this.languages.enabled = (parseInt(object.data('multilang')) === 1)
-
-        this.maxSizeUpload = parseInt(object.data('upload-max-filesize'))
-        this.maxSizePost = parseInt(object.data('post-max-size'))
 
         let id = object.data('id')
         if (id.length) {
@@ -89,12 +84,12 @@ class Form {
         }
 
         parent.find('.js-autocomplete-multiple-hold').append($('<div />', {
-            'class': 'value-item js-autocomplete-multiple',
+            'class': 'value js-autocomplete-multiple',
             'data-id': object.value
         }).append($('<div />', {
-            'class': 'value-item-table'
+            'class': 'table value-item-table'
         }).append($('<div />', {
-            'class': 'value-item-cell'
+            'class': 'cell value-item-cell'
         }).append($('<span />', {
             'class': 'text'
         }).html(object.label)).append($('<input />', {
@@ -256,7 +251,6 @@ class Form {
     }
 
     initFileInputs(object) {
-        let self = this
         object.find('.js-file-attr').each(function() {
             let parent = $(this),
                 node = parent.find('.js-file-value'),
@@ -279,7 +273,7 @@ class Form {
                         for (let key in this.files) {
                             if (typeof this.files[key] === 'object') {
                                 postSize += this.files[key].size
-                                if (this.files[key].size > self.maxSizeUpload) {
+                                if (this.files[key].size > window.nettoweb.upload_max_filesize) {
                                     uploadMaxFileSizeError = true
                                     break
                                 }
@@ -293,7 +287,7 @@ class Form {
                             return false
                         }
 
-                        if (postSize > self.maxSizePost) {
+                        if (postSize > window.nettoweb.post_max_size) {
                             Overlay.message(window.nettoweb.messages.error_post_max)
                             this.value = ''
                             this.files.value = null
@@ -355,7 +349,7 @@ class Form {
         if (object.find('.js-view-image').length > 0) {
             Fancybox.bind("[data-fancybox]", {
                 hideScrollbar: false
-            });
+            })
         }
     }
 
@@ -372,7 +366,7 @@ class Form {
                 })
 
                 parent.find('.js-json-values').append($('<div />', {
-                    'class': 'json-value-item'
+                    'class': 'value'
                 }).append(input))
             })
 

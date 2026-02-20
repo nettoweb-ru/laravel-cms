@@ -1,6 +1,5 @@
 @pushonce('head')
     @vite([
-        'resources/css/netto/gallery.css',
         'resources/js/netto/gallery.js',
     ])
 @endpushonce
@@ -20,14 +19,14 @@
 
     <x-slot:buttons>
         @if (!empty($actions['create']))
-            <x-cms::form.button type="button" bg="icons.create" class="btn-icon btn-normal disabled js-link js-list-button" data-type="create" data-url="{{ $actions['create'] }}" title="{{ __('main.title_create') }}" />
+            <button class="btn btn-bg btn-blue create js-link js-list-button" data-url="{{ $actions['create'] }}" data-type="create" title="{{ __('main.title_create') }}"></button>
         @endif
-        <x-cms::form.button type="button" bg="icons.invert-selection" class="btn-icon btn-normal disabled js-list-button" data-type="invert" title="{{ __('main.title_invert') }}" />
+        <button class="btn btn-bg btn-blue invert-selection js-list-button" data-type="invert" title="{{ __('main.title_invert') }}"></button>
         @if (!empty($actions['toggle']))
-            <x-cms::form.button type="button" bg="icons.toggle-on" class="btn-icon btn-normal disabled js-list-button" data-type="toggle" data-url="{{ $actions['toggle'] }}" title="{{ __('main.title_toggle') }}" />
+            <button class="btn btn-bg btn-blue toggle-on js-list-button" data-type="toggle" data-url="{{ $actions['toggle'] }}" title="{{ __('main.title_toggle') }}"></button>
         @endif
         @if (!empty($actions['delete']))
-            <x-cms::form.button type="button" bg="icons.remove" class="btn-icon btn-warning disabled js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}" />
+            <button class="btn btn-bg btn-red remove js-list-button" data-type="delete" data-url="{{ $actions['delete'] }}" title="{{ __('main.title_delete') }}"></button>
         @endif
     </x-slot:buttons>
 

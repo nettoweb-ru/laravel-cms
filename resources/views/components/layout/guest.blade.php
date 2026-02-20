@@ -16,25 +16,29 @@
 @include('cms::components.assets')
 @include('cms::components.favicons')
 @vite([
-    'resources/css/netto/layers.css',
-    'resources/css/netto/buttons.css',
-    'resources/css/netto/guest.css',
+    'resources/css/netto/layout.scss',
+    'resources/css/netto/guest.scss',
     'resources/js/netto/overlay.js',
 ])
 
 @stack('head')
+
+<script>
+    window.nettoweb = {
+        messages: {
+            btn_label_ok: '{{ __('main.action_ok') }}',
+        }
+    }
+</script>
 </head>
 
 <body class="{{ $head['text_dir'] }}">
-<div class="layer content">
+<div class="layer layer-content">
     <div class="table container-table">
         <div class="cell container-cell">
             <div class="inline">
                 <div class="guest-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                         y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
                     @include('cms::components.icons.logo')
-                </svg>
                 </div>
                 {{ $slot }}
             </div>

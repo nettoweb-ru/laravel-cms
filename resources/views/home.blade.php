@@ -1,16 +1,20 @@
+@pushonce('head')
+    @vite([
+        'resources/css/netto/home.scss',
+    ])
+@endpushonce
+
 <x-cms::layout.admin :head="$head" :url="$url">
     <div class="main-page">
         <div class="main-page-block logo">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
-                @include('cms::components.icons.logo')
-            </svg>
+            @include('cms::components.icons.logo')
         </div>
-        <div class="main-page-table table">
-            <div class="main-page-cell cell left">
-                <x-cms-navigation/>
-            </div>
-            <div class="main-page-cell cell right">
-                <div class="main-page-block params">
+        <div class="main-page-block info">
+            <div class="table main-page-table">
+                <div class="cell main-page-cell left">
+                    <x-cms-navigation />
+                </div>
+                <div class="cell main-page-cell right">
                     <table>
                         @foreach ($data as $header => $items)
                             <tr class="header">

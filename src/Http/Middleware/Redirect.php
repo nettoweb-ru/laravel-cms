@@ -18,6 +18,10 @@ class Redirect
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($redirect = RedirectService::getRedirect($request)) {
+            return $redirect;
+        }
+
         $response = $next($request);
 
         if ($response->getStatusCode() == 200) {

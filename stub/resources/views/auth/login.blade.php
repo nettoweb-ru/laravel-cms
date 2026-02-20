@@ -16,7 +16,7 @@
         <x-cms::form.checkbox name="remember" type="checkbox"
             :options="['Y' => __('auth.remember_me')]"
         />
-        <x-cms::form.button>{{ __('auth.action_login') }}</x-cms::form.button>
+        <button>{{ __('auth.action_login') }}</button>
         <p>
             <a href="{{ route('password.request') }}">{{ __('auth.forgot_password') }}</a>
         </p>

@@ -10,7 +10,7 @@
             />
         </x-slot>
         <x-slot name="buttons">
-            <x-cms::form.button class="btn-form btn-normal">{{ $btnTitle }}</x-cms::form.button>
+            <button class="btn btn-blue btn-label">{{ $btnTitle }}</button>
         </x-slot>
     </x-cms-form>
 </x-cms::layout.guest>

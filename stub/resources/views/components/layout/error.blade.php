@@ -17,20 +17,18 @@
 @include('cms::components.assets')
 @include('components.favicons')
 @vite([
-    'resources/css/error.css',
+    'resources/css/error.scss',
 ])
 
 </head>
 <body class="{{ $text_dir }}">
-<div class="layer content">
+<div class="layer layer-content">
     <div class="error-table">
         <div class="error-cell">
             <div class="inline">
                 <div class="error-block logo">
                     <div class="logo">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 323.41 62.74" xml:space="preserve">
-                            @include('cms::components.icons.logo')
-                        </svg>
+                        @include('cms::components.icons.logo')
                     </div>
                 </div>
                 <div class="error-block message">
