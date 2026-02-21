@@ -159,6 +159,71 @@ table{
             min-width: 300px;
         }
     }
+
+    &.layer-overlay{
+        position:fixed;
+        background-color: rgba(0,0,0,.2);
+        z-index: 9999;
+        display: none;
+        min-height:inherit;
+        width: 100%;
+
+        .overlay-table{
+            display: table;
+            width: inherit;
+            min-height: inherit;
+
+            .overlay-cell{
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+
+                .overlay-hold{
+                    display: inline-block;
+
+                    .overlay-popup{
+                        display: none;
+                        padding: 20px 25px 15px;
+                        -webkit-border-radius: 5px;
+                        -moz-border-radius: 5px;
+                        border-radius: 5px;
+                        max-width: 600px;
+                        background-color: var(--color-reset);
+
+                        .overlay-item{
+                            width:100%;
+
+                            &.text{
+
+                            }
+
+                            &.input{
+                                margin-top:20px;
+                                display:none;
+
+                                input{
+                                    text-align:center;
+                                }
+                            }
+
+                            &.buttons{
+                                margin-top:20px;
+
+                                .btn{
+                                    display: none;
+                                    margin:5px;
+                                }
+                            }
+                        }
+                    }
+
+                    .overlay-loading{
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .btn{
@@ -225,20 +290,5 @@ table{
         @media screen and (min-width: 767px) {
             width:130px;
         }
-    }
-}
-
-body.ltr{
-    .btn.btn-bg.btn-label{
-        padding-left:30px;
-        background-position:10% center;
-    }
-}
-
-
-body.rtl{
-    .btn.btn-bg.btn-label{
-        padding-right:25px;
-        background-position:90% center;
     }
 }

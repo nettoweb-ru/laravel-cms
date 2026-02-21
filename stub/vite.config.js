@@ -13,7 +13,7 @@ export default defineConfig({
                 'resources/css/netto/layout.scss',
                 'resources/css/netto/list.scss',
                 'resources/css/netto/tabs.scss',
-                'resources/css/netto/home.css',
+                'resources/css/netto/home.scss',
                 'resources/js/styles.js',
                 'resources/js/netto/ajax.js',
                 'resources/js/netto/app.js',
