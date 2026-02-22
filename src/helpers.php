@@ -2,7 +2,7 @@
 
 use Composer\InstalledVersions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\{Cookie, Log};
 use Illuminate\Support\ViewErrorBag;
 
 use Netto\Services\MultilingualService;
@@ -488,6 +488,20 @@ if (!function_exists('is_multilingual')) {
     function is_multilingual(Model $model): bool
     {
         return in_array(IsMultiLingual::class, class_uses_recursive($model));
+    }
+}
+
+if (!function_exists('log_tabulated_string')) {
+    /**
+     * Writes formatted string and IP address to log channel.
+     *
+     * @param $channel
+     * @param string $ip
+     * @param string $string
+     * @return void
+     */
+    function log_tabulated_string($channel, string $ip, string $string): void {
+        Log::channel($channel)->info("[{$ip}]".chr(9).chr(9).chr(9).$string);
     }
 }
 

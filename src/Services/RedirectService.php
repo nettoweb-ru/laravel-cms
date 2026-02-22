@@ -122,7 +122,7 @@ abstract class RedirectService
                 $destination = '/';
             }
 
-            Log::channel($status)->info("[".$ip."]".chr(9).chr(9).chr(9)."{$source} → {$destination}");
+            log_tabulated_string($status, $ip, "{$source} → {$destination}");
         }
 
         return redirect()->intended($destination, $status);
