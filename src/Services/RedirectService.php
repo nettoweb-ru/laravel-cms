@@ -64,7 +64,7 @@ abstract class RedirectService
 
     public static function getRedirect(Request $request): ?RedirectResponse
     {
-        $path = $request->getRequestUri();
+        $path = rtrim($request->getRequestUri(), '/');
         $redirects = self::getCachedRedirects();
 
         foreach ($redirects['static'] as $redirect) {
