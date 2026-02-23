@@ -25,6 +25,10 @@ class Redirect
         $response = $next($request);
 
         if ($response->getStatusCode() == 200) {
+            if ($request->isSecure() && $request->ajax()) {
+                return $response;
+            }
+
             $canonical = RedirectService::getCanonicalUrl($request);
             $requested = RedirectService::getRequestedUrl($request);
 
