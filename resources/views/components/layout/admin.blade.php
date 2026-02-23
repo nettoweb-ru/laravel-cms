@@ -118,11 +118,17 @@
 </div>
 
 <div class="layer-mobile-dropdown menu" id="js-mobile-menu">
-    <x-cms-navigation />
+    <div class="block block-head-dummy"></div>
+    <div class="block block-content">
+        <x-cms-navigation />
+    </div>
 </div>
 
 <div class="layer-mobile-dropdown languages" id="js-mobile-languages">
-    <x-cms-languages/>
+    <div class="block block-head-dummy"></div>
+    <div class="block block-content">
+        <x-cms-languages/>
+    </div>
 </div>
 
 <x-cms::session-status :status="session('status')"/>
