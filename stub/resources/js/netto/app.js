@@ -67,7 +67,7 @@ window.App = {
         }
 
         this.objects.mobile.lang.hide()
-        this.objects.body.removeClass('show-overlay')
+        this.objects.body.removeClass('overflow')
 
         this.dropdown.mobile.lang = false
     },
@@ -81,7 +81,7 @@ window.App = {
         this.objects.mobile.menuBtnOpen.show()
 
         this.objects.mobile.menu.hide()
-        this.objects.body.removeClass('show-overlay')
+        this.objects.body.removeClass('overflow')
 
         this.dropdown.mobile.menu = false
     },
@@ -159,10 +159,10 @@ window.App = {
     },
 
     initLogoutLink: function() {
-        $('#js-logout').click(async function() {
+        $('.js-logout').click(async function() {
             if (await Overlay.confirmation(window.nettoweb.messages.confirm_logout)) {
                 Overlay.animation()
-                App.objects.logoutForm.submit();
+                App.objects.logoutForm.submit()
             }
         })
     },
@@ -196,7 +196,7 @@ window.App = {
             let id = $(this).data('id'),
                 trigger = $('.js-desktop-menu-show[data-id="' + id+ '"]')
 
-            if ($(this).hasClass('dropdown-normal')) {
+            if ($(this).hasClass('normal')) {
                 App.objects.desktop[id] = {
                     trigger: trigger,
                     menu: $(this),
@@ -248,11 +248,11 @@ window.App = {
             this.hideMobileMenu()
         }
 
-        this.objects.mobile.lang.show()
+        this.objects.mobile.lang.show().scrollTop(0)
         this.dropdown.mobile.lang = true
 
         setTimeout(function() {
-            App.objects.body.addClass('show-overlay')
+            App.objects.body.addClass('overflow')
 
             $(document).one('click.netto', function() {
                 App.hideMobileLanguages()
@@ -272,11 +272,11 @@ window.App = {
         this.objects.mobile.menuBtnOpen.hide()
         this.objects.mobile.menuBtnClose.show()
 
-        this.objects.mobile.menu.show();
+        this.objects.mobile.menu.show().scrollTop(0)
         this.dropdown.mobile.menu = true
 
         setTimeout(function() {
-            App.objects.body.addClass('show-overlay')
+            App.objects.body.addClass('overflow')
 
             $(document).one('click.netto', function() {
                 App.hideMobileMenu()

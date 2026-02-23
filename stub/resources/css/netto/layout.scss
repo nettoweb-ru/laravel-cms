@@ -12,34 +12,33 @@
     --color-light-red:#ffdbdb;
     --color-green:#008000;
     --color-light-green:#b3ffa7;
+
     --text-big:22px;
     --text-normal:16px;
     --text-small:13px;
-    --top-height:55px;
 
     @media screen and (min-width: 767px) {
         --text-big:18px;
         --text-normal:14px;
         --text-small:11px;
-        --top-height:24px;
     }
 }
 
 ::-webkit-scrollbar {
-    width: 14px;
+    width:14px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-light-gray-1);
+    background:var(--color-light-gray-1);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-light-blue);
+    background:var(--color-light-blue);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-main);
-    cursor: pointer;
+    background:var(--color-main);
+    cursor:pointer;
 }
 
 html{
@@ -48,28 +47,35 @@ html{
 }
 
 body{
+    background-color:inherit;
     min-height:inherit;
-    font-family: 'Play', sans-serif;
-    letter-spacing: 0;
-    font-size: 0;
-    word-spacing: 0;
+    letter-spacing:0;
+    font-size:0;
+    word-spacing:0;
+    font-family:'Play', sans-serif;
 
-    &.show-overlay{
-        overflow: hidden;
+    &.overflow{
+        overflow:hidden;
+    }
+}
+
+.layer-main{
+    width:100%;
+    min-height:inherit;
+
+    .block{
+        width:inherit;
+        text-align:center;
+    }
+
+    .container{
+        display:inline-block;
+        min-width:300px;
     }
 }
 
 .hidden{
     display:none;
-}
-
-.table{
-    display: table;
-    width:inherit;
-}
-
-.table .cell{
-    display: table-cell;
 }
 
 .text-big{
@@ -85,8 +91,13 @@ body{
 }
 
 a{
-    color:inherit;
-    text-decoration: none;
+    color:var(--color-main);
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+    cursor:pointer;
 }
 
 input.input{
@@ -145,81 +156,72 @@ table{
     width:inherit;
 }
 
-.layer{
-    position: absolute;
-    top:0;
+.table{
+    width:inherit;
+    display:table;
 
-    &.layer-content{
-        min-height:inherit;
-        width: 100%;
-        z-index: 50;
-
-        .inline{
-            display:inline-block;
-            min-width: 300px;
-        }
+    .cell{
+        display:table-cell;
     }
+}
 
-    &.layer-overlay{
-        position:fixed;
-        background-color: rgba(0,0,0,.2);
-        z-index: 9999;
-        display: none;
+.layer-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    background-color:rgba(0,0,0,.2);
+    z-index:9999;
+    display:none;
+    min-height:inherit;
+    width:100%;
+
+    .overlay-table{
+        display:table;
+        width:inherit;
         min-height:inherit;
-        width: 100%;
 
-        .overlay-table{
-            display: table;
-            width: inherit;
-            min-height: inherit;
+        .overlay-cell{
+            display:table-cell;
+            vertical-align:middle;
+            text-align:center;
 
-            .overlay-cell{
-                display: table-cell;
-                vertical-align: middle;
-                text-align: center;
+            .overlay-hold{
+                display:inline-block;
 
-                .overlay-hold{
-                    display: inline-block;
+                .overlay-popup{
+                    display:none;
+                    padding:20px 25px 15px;
+                    -webkit-border-radius:5px;
+                    -moz-border-radius:5px;
+                    border-radius:5px;
+                    max-width:600px;
+                    background-color:var(--color-reset);
 
-                    .overlay-popup{
-                        display: none;
-                        padding: 20px 25px 15px;
-                        -webkit-border-radius: 5px;
-                        -moz-border-radius: 5px;
-                        border-radius: 5px;
-                        max-width: 600px;
-                        background-color: var(--color-reset);
+                    .overlay-item{
+                        width:100%;
 
-                        .overlay-item{
-                            width:100%;
+                        &.input{
+                            margin-top:20px;
+                            display:none;
 
-                            &.text{
-
+                            input{
+                                text-align:center;
                             }
+                        }
 
-                            &.input{
-                                margin-top:20px;
+                        &.buttons{
+                            margin-top:20px;
+
+                            .btn{
                                 display:none;
-
-                                input{
-                                    text-align:center;
-                                }
-                            }
-
-                            &.buttons{
-                                margin-top:20px;
-
-                                .btn{
-                                    display: none;
-                                    margin:5px;
-                                }
+                                margin:5px;
                             }
                         }
                     }
+                }
 
-                    .overlay-loading{
-                        display: none;
-                    }
+                .overlay-loading{
+                    display:none;
                 }
             }
         }

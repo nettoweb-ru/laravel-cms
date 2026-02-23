@@ -117,7 +117,7 @@ export default class ListWidget extends ListAbstract {
             return true
         }
 
-        return ("button" in event) && (event.button === 2);
+        return ("button" in event) && (event.button === 2)
     }
 
     lock() {

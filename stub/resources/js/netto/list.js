@@ -140,7 +140,7 @@ class List extends ListWidget {
 
         if (!nameColumn) {
             let keys = Object.keys(columns)
-            nameColumn = keys[keys.length - 1];
+            nameColumn = keys[keys.length - 1]
         }
 
         columns[nameColumn] = width
@@ -462,7 +462,7 @@ class List extends ListWidget {
             this.enable(this.navObjects.page)
         }
 
-        this.navObjects.perPage.find('option[value=' + this.params.perPage + ']').attr('selected', true);
+        this.navObjects.perPage.find('option[value=' + this.params.perPage + ']').attr('selected', true)
     }
 
     reset() {

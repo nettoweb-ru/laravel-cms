@@ -2,16 +2,16 @@
     width:100%;
 }
 
-a{
-    color:var(--color-main);
-
-    &:hover{
-        text-decoration: underline;
-    }
-}
-
 input.input,textarea.input{
     text-align: center;
+}
+
+.layer-content{
+    min-height: 100vh;
+
+    .container{
+        min-width: 300px;
+    }
 }
 
 .container-table{

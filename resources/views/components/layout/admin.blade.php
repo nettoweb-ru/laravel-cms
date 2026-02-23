@@ -50,31 +50,26 @@
 @stack('head')
 </head>
 <body class="{{ $head['text_dir'] }}">
-<div class="layer layer-content">
-    <div class="block block-top">
-        <div class="inline">
+<div class="layer-main">
+    <div class="block block-desktop-head">
+        <div class="container">
             <div class="table">
                 <div class="cell left">
                     <div class="menu">
                         <x-cms-navigation :mode="2" />
                     </div>
-                    <div class="icons">
-                        <div class="icon icon-menu-open" id="js-mobile-menu-open"></div>
-                        <div class="icon icon-menu-close hidden" id="js-mobile-menu-close"></div>
-                    </div>
                 </div>
                 <div class="cell right">
-                    <div class="icon icon-home js-link @if (request()->routeIs($url['home'])) active @endif" data-url="{{ route($url['home']) }}"></div>
-                    <div class="icon icon-user js-link @if (request()->routeIs($url['profile'])) active @endif" data-url="{{ route($url['profile']) }}"></div>
-                    <div class="icon icon-logout" id="js-logout"></div>
-                    <div class="icon icon-language icon-desktop js-desktop-menu-show" data-id="lang"></div>
-                    <div class="icon icon-language icon-mobile" id="js-mobile-languages-toggle"></div>
+                    <div class="icon icon-home @if (request()->routeIs($url['home'])) active @else js-link @endif" data-url="{{ route($url['home']) }}"></div>
+                    <div class="icon icon-user @if (request()->routeIs($url['profile'])) active @else js-link @endif" data-url="{{ route($url['profile']) }}"></div>
+                    <div class="icon icon-logout js-logout"></div>
+                    <div class="icon icon-language js-desktop-menu-show" data-id="lang"></div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="block block-main">
-        <div class="inline">
+    <div class="block block-content">
+        <div class="container">
             @if (!empty($chain))
                 <div class="main main-navigation">
                     <div class="table">
@@ -84,6 +79,7 @@
                     </div>
                 </div>
             @endif
+
             <div class="main main-content">
                 <div class="table main-content-table">
                     <div class="cell main-content-cell">
@@ -103,16 +99,43 @@
         </div>
     </div>
 </div>
+<div class="layer-mobile-head">
+    <div class="table">
+        <div class="cell left">
+            <div class="icons">
+                <div class="icon icon-menu-open" id="js-mobile-menu-open"></div>
+                <div class="icon icon-menu-close" id="js-mobile-menu-close"></div>
+            </div>
+        </div>
+        <div class="cell right">
+            <div class="icon icon-home js-link" data-url="{{ route($url['home']) }}"></div>
+            <div class="icon icon-user js-link" data-url="{{ route($url['profile']) }}"></div>
+            <div class="icon icon-logout js-logout"></div>
+            <div class="icon icon-language" id="js-mobile-languages-toggle"></div>
+        </div>
+    </div>
+</div>
+
 <x-cms-navigation :mode="3" />
-<div class="layer layer-dropdown dropdown-{{ config('text_dir') == 'rtl' ? 'normal' : 'reversed' }} desktop languages js-desktop-menu" data-id="lang">
+
+<div class="layer-menu-dropdown {{ config('text_dir') == 'rtl' ? 'normal' : 'reversed' }} js-desktop-menu" data-id="lang">
     <x-cms-languages/>
 </div>
-<div class="layer layer-dropdown mobile menu" id="js-mobile-menu">
-    <x-cms-navigation />
+
+<div class="layer-mobile-dropdown menu" id="js-mobile-menu">
+    <div class="block block-head-dummy"></div>
+    <div class="block block-content">
+        <x-cms-navigation />
+    </div>
 </div>
-<div class="layer layer-dropdown mobile languages" id="js-mobile-languages">
-    <x-cms-languages/>
+
+<div class="layer-mobile-dropdown languages" id="js-mobile-languages">
+    <div class="block block-head-dummy"></div>
+    <div class="block block-content">
+        <x-cms-languages/>
+    </div>
 </div>
+
 <x-cms::session-status :status="session('status')"/>
 @stack('bottom')
 <form method="post" action="{{ route($url['logout']) }}" id="js-logout-form">

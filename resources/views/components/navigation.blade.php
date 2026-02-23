@@ -28,7 +28,7 @@
     @case(3)
         @foreach ($items as $key => $item)
             @if (!empty($item['items']))
-                <div class="layer layer-dropdown dropdown-{{ config('text_dir') == 'ltr' ? 'normal' : 'reversed' }} desktop menu js-desktop-menu" data-id="{{ $key }}">
+                <div class="layer-menu-dropdown {{ config('text_dir') == 'ltr' ? 'normal' : 'reversed' }} js-desktop-menu" data-id="{{ $key }}">
                     @foreach ($item['items'] as $kid)
                         <div class="menu-item-kid @if ($kid['current']) active @else js-link @endif" data-url="{{ $kid['url'] }}">
                             <span class="text">{{ $kid['name'] }}</span>

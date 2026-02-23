@@ -33,10 +33,10 @@
 </head>
 
 <body class="{{ $head['text_dir'] }}">
-<div class="layer layer-content">
+<div class="layer-main">
     <div class="table container-table">
         <div class="cell container-cell">
-            <div class="inline">
+            <div class="container">
                 <div class="guest-logo">
                     @include('cms::components.icons.logo')
                 </div>

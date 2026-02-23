@@ -82,7 +82,7 @@ window.Overlay = {
             return
         }
 
-        this.objects.body.removeClass('show-overlay')
+        this.objects.body.removeClass('overflow')
         this.objects.popup.text.html('')
 
         this.objects.popup.buttons.confirm.hide()
@@ -179,7 +179,7 @@ window.Overlay = {
         }
 
         this.objects.overlay = $('<div />', {
-            'class': 'layer layer-overlay',
+            'class': 'layer-overlay',
         })
 
         let objHold = $('<div />', {
@@ -208,7 +208,7 @@ window.Overlay = {
     },
 
     initMessages: function() {
-        let message = '';
+        let message = ''
         $('.js-flash-message').each(function() {
             message += ($(this).html() + '<br />')
             $(this).remove()
@@ -260,7 +260,7 @@ window.Overlay = {
     },
 
     show: function() {
-        this.objects.body.addClass('show-overlay')
+        this.objects.body.addClass('overflow')
         this.objects.overlay.show()
 
         this.visible = true
