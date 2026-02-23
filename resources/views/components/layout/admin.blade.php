@@ -51,19 +51,30 @@
 </head>
 <body class="{{ $head['text_dir'] }}">
 <div class="layer-main">
-    <div class="block block-desktop-head">
+    <div class="block block-top">
         <div class="container">
             <div class="table">
                 <div class="cell left">
-                    <div class="menu">
-                        <x-cms-navigation :mode="2" />
+                    <div class="menu-desktop">
+                        <div class="menu">
+                            <x-cms-navigation :mode="2" />
+                        </div>
+                    </div>
+                    <div class="icons-mobile">
+                        <div class="icon icon-menu-open" id="js-mobile-menu-open"></div>
+                        <div class="icon icon-menu-close" id="js-mobile-menu-close"></div>
                     </div>
                 </div>
                 <div class="cell right">
                     <div class="icon icon-home @if (request()->routeIs($url['home'])) active @else js-link @endif" data-url="{{ route($url['home']) }}"></div>
                     <div class="icon icon-user @if (request()->routeIs($url['profile'])) active @else js-link @endif" data-url="{{ route($url['profile']) }}"></div>
-                    <div class="icon icon-logout js-logout"></div>
-                    <div class="icon icon-language js-desktop-menu-show" data-id="lang"></div>
+                    <div class="icon icon-logout" id="js-logout"></div>
+                    <div class="icons">
+                        <div class="icon icon-language icon-desktop js-desktop-menu-show" data-id="lang"></div>
+                    </div>
+                    <div class="icons">
+                        <div class="icon icon-language icon-mobile" id="js-mobile-languages-toggle"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,22 +110,6 @@
         </div>
     </div>
 </div>
-<div class="layer-mobile-head">
-    <div class="table">
-        <div class="cell left">
-            <div class="icons">
-                <div class="icon icon-menu-open" id="js-mobile-menu-open"></div>
-                <div class="icon icon-menu-close" id="js-mobile-menu-close"></div>
-            </div>
-        </div>
-        <div class="cell right">
-            <div class="icon icon-home js-link" data-url="{{ route($url['home']) }}"></div>
-            <div class="icon icon-user js-link" data-url="{{ route($url['profile']) }}"></div>
-            <div class="icon icon-logout js-logout"></div>
-            <div class="icon icon-language" id="js-mobile-languages-toggle"></div>
-        </div>
-    </div>
-</div>
 
 <x-cms-navigation :mode="3" />
 
@@ -123,17 +118,11 @@
 </div>
 
 <div class="layer-mobile-dropdown menu" id="js-mobile-menu">
-    <div class="block block-head-dummy"></div>
-    <div class="block block-content">
-        <x-cms-navigation />
-    </div>
+    <x-cms-navigation />
 </div>
 
 <div class="layer-mobile-dropdown languages" id="js-mobile-languages">
-    <div class="block block-head-dummy"></div>
-    <div class="block block-content">
-        <x-cms-languages/>
-    </div>
+    <x-cms-languages/>
 </div>
 
 <x-cms::session-status :status="session('status')"/>

@@ -159,7 +159,7 @@ window.App = {
     },
 
     initLogoutLink: function() {
-        $('.js-logout').click(async function() {
+        $('#js-logout').click(async function() {
             if (await Overlay.confirmation(window.nettoweb.messages.confirm_logout)) {
                 Overlay.animation()
                 App.objects.logoutForm.submit()

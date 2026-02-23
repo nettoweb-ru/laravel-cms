@@ -33,9 +33,9 @@
 </head>
 
 <body class="{{ $head['text_dir'] }}">
-<div class="layer-main">
-    <div class="table container-table">
-        <div class="cell container-cell">
+<div class="layer-guest">
+    <div class="table">
+        <div class="cell">
             <div class="container">
                 <div class="guest-logo">
                     @include('cms::components.icons.logo')

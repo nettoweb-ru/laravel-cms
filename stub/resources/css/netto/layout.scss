@@ -24,25 +24,6 @@
     }
 }
 
-@media screen and (min-width: 767px) {
-    ::-webkit-scrollbar {
-        width: 14px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: var(--color-light-gray-1);
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: var(--color-light-blue);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--color-main);
-        cursor: pointer;
-    }
-}
-
 html{
     min-height:100vh;
     background-color:var(--color-reset);
@@ -61,19 +42,9 @@ body{
     }
 }
 
-.layer-main{
-    width:100%;
-    min-height:inherit;
-
-    .block{
-        width:inherit;
-        text-align:center;
-    }
-
-    .container{
-        display:inline-block;
-        min-width:300px;
-    }
+.container{
+    display:inline-block;
+    min-width:300px;
 }
 
 .hidden{
@@ -155,11 +126,12 @@ select.input.disabled{
 
 table{
     border-collapse:collapse;
-    width:inherit;
+    width:100%
 }
 
 .table{
-    width:inherit;
+    width:100%;
+    border-collapse:collapse;
     display:table;
 
     .cell{
@@ -294,5 +266,24 @@ table{
         @media screen and (min-width: 767px) {
             width:130px;
         }
+    }
+}
+
+@media screen and (min-width: 767px) {
+    ::-webkit-scrollbar {
+        width: 14px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--color-light-gray-1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-light-blue);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-main);
+        cursor: pointer;
     }
 }
