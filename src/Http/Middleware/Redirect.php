@@ -25,8 +25,13 @@ class Redirect
         $response = $next($request);
 
         if ($response->getStatusCode() == 200) {
-            if ($request->isSecure() && $request->ajax()) {
-                return $response;
+            if ($request->ajax()) {
+                $https = config('cms.redirects.https');
+                $secure = $request->isSecure();
+
+                if (($https && $secure) || (!$https && !$secure)) {
+                    return $response;
+                }
             }
 
             $canonical = RedirectService::getCanonicalUrl($request);
