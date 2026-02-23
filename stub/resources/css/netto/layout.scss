@@ -24,21 +24,23 @@
     }
 }
 
-::-webkit-scrollbar {
-    width:14px;
-}
+@media screen and (min-width: 767px) {
+    ::-webkit-scrollbar {
+        width: 14px;
+    }
 
-::-webkit-scrollbar-track {
-    background:var(--color-light-gray-1);
-}
+    ::-webkit-scrollbar-track {
+        background: var(--color-light-gray-1);
+    }
 
-::-webkit-scrollbar-thumb {
-    background:var(--color-light-blue);
-}
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-light-blue);
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background:var(--color-main);
-    cursor:pointer;
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-main);
+        cursor: pointer;
+    }
 }
 
 html{
