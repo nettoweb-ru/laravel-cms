@@ -39,7 +39,7 @@
             <tr>
                 <th class="col-8 sortable" data-code="name"><span class="text-small">{{ __('main.general_browser_name') }}</span></th>
                 <th class="col-2 size sortable" data-code="size"><span class="text-small">{{ __('main.general_browser_size') }}</span></th>
-                <th class="col-2 sortable" data-code="date"><span class="text-small">{{ __('main.general_browser_date') }}</span></th>
+                <th class="col-2 date sortable" data-code="date"><span class="text-small">{{ __('main.general_browser_date') }}</span></th>
             </tr>
             </thead>
             <tbody class="js-body"></tbody>

@@ -334,6 +334,15 @@
                                         width: inherit;
                                         overflow-y: auto;
 
+                                        .size,
+                                        .date{
+                                            display:none;
+
+                                            @media screen and (min-width: 767px) {
+                                                display: table-cell;
+                                            }
+                                        }
+
                                         table.info{
                                             tbody{
                                                 tr{
