@@ -316,8 +316,8 @@
             height:var(--top-height);
         }
 
-        &.content{
-
+        &.block-content{
+            padding-bottom: 20px;
         }
     }
 
@@ -326,7 +326,11 @@
     }
 
     .menu-item{
-        margin-bottom: 20px;
+        margin-top: 20px;
+
+        &:first-child{
+            margin-top:0;
+        }
     }
 
     .menu-item-block{
