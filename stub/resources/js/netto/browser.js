@@ -103,7 +103,7 @@ class Browser extends ListWidget {
             let attr = {}, tr, self = this
             for (let key in data.items) {
                 attr = {
-                    'data-id': data.currentDir + data.items[key].name
+                    'data-id': data.currentDir + data.items[key].filename
                 }
 
                 if (data.items[key].dir) {

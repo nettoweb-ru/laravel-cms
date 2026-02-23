@@ -99,8 +99,10 @@ abstract class BrowserController extends BaseController
 
         $dirs = [];
         foreach ($disk->directories($dir) as $item) {
+            $basename = basename($item);
             $dirs[] = [
-                'name' => soft_break_string(basename($item)),
+                'name' => soft_break_string($basename),
+                'filename' => $basename,
                 'dir' => true,
                 'size' => '',
                 'date' => $disk->lastModified($item),
@@ -110,8 +112,10 @@ abstract class BrowserController extends BaseController
 
         $files = [];
         foreach ($disk->files($dir) as $item) {
+            $basename = basename($item);
             $files[] = [
-                'name' => soft_break_string(basename($item)),
+                'name' => soft_break_string($basename),
+                'filename' => $basename,
                 'dir' => false,
                 'size' => $disk->size($item),
                 'date' => $disk->lastModified($item),
