@@ -37,6 +37,7 @@ body{
     word-spacing:0;
     font-family:'Play', sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
     &.overflow{
         overflow:hidden;
