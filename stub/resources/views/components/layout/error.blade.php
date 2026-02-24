@@ -22,7 +22,7 @@
 
 </head>
 <body class="{{ $text_dir }}">
-<div class="layer layer-content">
+<div class="layer-error">
     <div class="error-table">
         <div class="error-cell">
             <div class="inline">
