@@ -49,6 +49,10 @@ body{
 a, .link{
     color:var(--color-main);
     text-decoration: none;
+
+    &:hover{
+        text-decoration: underline;
+    }
 }
 
 .error-table{
