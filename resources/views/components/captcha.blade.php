@@ -9,4 +9,4 @@
     :messages="$errors"
     :required="true"
 />
-<input type="hidden" name="captcha_value" id="captcha_value" value="{{ $valueShow }}" />
+<input type="hidden" name="captcha_value" id="captcha_value" value="{{ $valueShow }}">
