@@ -1,3 +1,18 @@
-p.class1{
+.ck-editor {
+    h1{
+        font-weight: 700;
+        font-size: larger;
+    }
 
+    h2{
+        font-weight: 700;
+    }
+
+    p.class-1{
+        color:#777777;
+    }
+
+    a{
+        background-color: #faffbd;
+    }
 }
