@@ -54,16 +54,16 @@
                         <div class="table value-item-table">
                             <div class="cell value-item-cell">
                                 <span class="text">{{ $options[$item] }}</span>
-                                <input type="hidden" name="{{ $name }}" value="{{ $item }}"/>
+                                <input type="hidden" name="{{ $name }}" value="{{ $item }}">
                             </div>
                         </div>
                     </div>
                 @endforeach
             @else
-                <input type="hidden" name="{{ $name }}" class="js-autocomplete-multiple-hidden" value=""/>
+                <input type="hidden" name="{{ $name }}" class="js-autocomplete-multiple-hidden" value="">
             @endif
         </div>
     @else
-        <input type="hidden" class="js-autocomplete-single" name="{{ $name }}" value="{{ $value }}" />
+        <input type="hidden" class="js-autocomplete-single" name="{{ $name }}" value="{{ $value }}">
     @endif
 </div>

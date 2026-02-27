@@ -17,9 +17,9 @@ if ($value && str_starts_with(DIRECTORY_SEPARATOR.$value, get_storage_path('publ
 
 <div class="grid-value-file table js-file-attr">
     <div class="cell filename">
-        <input type="text" value="{{ $value }}" id="{{ $id }}-visible" disabled {!! $attributes->merge(['class' => 'input text js-file-text disabled'])->toHtml() !!} />
-        <input type="hidden" name="{{ $name }}" class="js-file-value" value="{{ $value }}" />
-        <input type="file" name="{{ $name }}|new" id="{{ $id }}" class="hidden js-file-input" />
+        <input type="text" value="{{ $value }}" id="{{ $id }}-visible" disabled {!! $attributes->merge(['class' => 'input text js-file-text disabled'])->toHtml() !!} >
+        <input type="hidden" name="{{ $name }}" class="js-file-value" value="{{ $value }}">
+        <input type="file" name="{{ $name }}|new" id="{{ $id }}" class="hidden js-file-input">
     </div>
     <div class="cell icons">
         @if ($image)

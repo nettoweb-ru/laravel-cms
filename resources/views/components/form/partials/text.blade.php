@@ -21,5 +21,5 @@
 >{{ $value }}</textarea>
 
 @if ($disabled)
-    <input type="hidden" name="{{ $name }}" value="{{ $value }}" id="{{ $id }}" />
+    <input type="hidden" name="{{ $name }}" value="{{ $value }}" id="{{ $id }}">
 @endif

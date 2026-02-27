@@ -52,12 +52,12 @@
     @if ($multiple)
         @if ($value)
             @foreach ($value as $item)
-                <input type="hidden" name="{{ $name }}" value="{{ $item }}"/>
+                <input type="hidden" name="{{ $name }}" value="{{ $item }}">
             @endforeach
         @else
-            <input type="hidden" name="{{ $name }}" value="" />
+            <input type="hidden" name="{{ $name }}" value="">
         @endif
     @else
-        <input type="hidden" name="{{ $name }}" id="{{ $id }}" value="{{ $value }}" />
+        <input type="hidden" name="{{ $name }}" id="{{ $id }}" value="{{ $value }}">
     @endif
 @endif

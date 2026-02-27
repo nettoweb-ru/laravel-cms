@@ -37,9 +37,9 @@
                        @else
                            {!! $attributes->toHtml() !!}
                        @endif
-                />
+                >
                 @if ($disabled && $checked)
-                    <input type="hidden" name="{{ $name }}" value="{{ $key }}" />
+                    <input type="hidden" name="{{ $name }}" value="{{ $key }}">
                 @endif
             </div>
             <div class="cell label">

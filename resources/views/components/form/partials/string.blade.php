@@ -11,8 +11,8 @@
 ])
 
 @if ($disabled)
-    <input type="{{ $type }}" id="{{ $id }}" value="{{ $value }}" dir="{{ $dir }}" disabled {!! $attributes->merge(['class' => 'input text disabled'])->toHtml() !!} autocomplete="off" />
-    <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
+    <input type="{{ $type }}" id="{{ $id }}" value="{{ $value }}" dir="{{ $dir }}" disabled {!! $attributes->merge(['class' => 'input text disabled'])->toHtml() !!} autocomplete="off">
+    <input type="hidden" name="{{ $name }}" value="{{ $value }}">
 @else
     <input type="{{ $type }}"
         name="{{ $name }}"
@@ -28,5 +28,5 @@
         @else
             {!! $attributes->merge(['class' => 'input text'])->toHtml() !!}
         @endif
-    />
+    >
 @endif
