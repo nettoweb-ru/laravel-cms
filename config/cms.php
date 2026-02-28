@@ -53,7 +53,7 @@ return [
         'bias' => 11,
         'multiplier' => 2,
     ],
-    'default_language' => 'ru',
+    'default_language' => 'en',
     'export' => [
         'csv' => [
             'separator' => ',',
