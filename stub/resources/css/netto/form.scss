@@ -197,8 +197,10 @@
                         white-space: nowrap;
                         overflow-x: hidden;
 
-                        .required{
+                        .required:after{
+                            content: '*';
                             color:var(--color-red);
+                            padding:0 2px;
                         }
                     }
 
@@ -380,10 +382,6 @@ body.ltr{
         margin-right: 10px;
     }
 
-    .form .form-block .form-grid .grid-cols .grid-item.label .required{
-        padding-left: 2px;
-    }
-
     .form .form-block .form-grid .grid-cols .grid-item.value .grid-value-option{
         margin-right: 12px;
     }
@@ -416,10 +414,6 @@ body.ltr{
 body.rtl{
     .form .form-block.buttons .btn{
         margin-left: 10px;
-    }
-
-    .form .form-block .form-grid .grid-cols .grid-item.label .required{
-        padding-right: 2px;
     }
 
     .form .form-block .form-grid .grid-cols .grid-item.value .grid-value-option{

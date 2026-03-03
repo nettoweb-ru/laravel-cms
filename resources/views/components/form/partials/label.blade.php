@@ -15,7 +15,7 @@
             <label for="{{ $id }}">
         @endif
 
-        <span class="text-small">{{ $text }}@if ($required)<span class="required">*</span>@endif</span>
+        <span class="text-small @if ($required) required @endif">{{ $text }}</span>
 
         @if ($labelTag)
             </label>
