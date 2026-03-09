@@ -5,7 +5,6 @@ namespace Netto\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Netto\Services\RedirectService;
 use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated

@@ -23,7 +23,7 @@ return new class extends Migration
         });
 
         DB::table(self::TABLE)->insert([
-            ['sort' => 10, 'name' => 'Русский', 'slug' => 'ru', 'locale' => 'ru_RU', 'is_default' => '1'],
+            ['sort' => 10, 'name' => 'English', 'slug' => 'en', 'locale' => 'en_GB', 'is_default' => '1'],
         ]);
     }
 

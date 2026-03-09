@@ -1,5 +1,6 @@
 :root{
     --color-reset:#fff;
+    --color-black:#000;
     --color-main:#2a3582;
     --color-light-gray-1: #e5e5e5;
     --color-light-gray-2: #eee;
@@ -27,6 +28,7 @@
 html{
     min-height:100vh;
     background-color:var(--color-reset);
+    color:var(--color-black);
 }
 
 body{

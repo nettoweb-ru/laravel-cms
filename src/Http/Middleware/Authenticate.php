@@ -7,7 +7,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Netto\Services\RedirectService;
 
 class Authenticate extends Middleware
 {
