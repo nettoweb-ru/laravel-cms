@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 abstract class AbstractController extends BaseController
 {
     protected array $crumbs = [];
-    private array $title = [];
+    protected array $title = [];
 
     /**
      * @param string $title

@@ -2,7 +2,7 @@
 
 use Composer\InstalledVersions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\{Cookie, Log};
+use Illuminate\Support\Facades\{Context, Cookie, Log};
 use Illuminate\Support\ViewErrorBag;
 
 use Netto\Services\MultilingualService;
@@ -142,6 +142,15 @@ if (!function_exists('format_number')) {
         }
 
         return (string) $formatter->format($number);
+    }
+}
+
+if (!function_exists('get_admin_context')) {
+    /**
+     * @return bool
+     */
+    function get_admin_context(): bool {
+        return Context::get('netto_admin', false);
     }
 }
 
@@ -537,6 +546,15 @@ if (!function_exists('parse_xml')) {
     function parse_xml(string $string): mixed
     {
         return json_decode(json_encode(simplexml_load_string($string, null, LIBXML_NOCDATA)), true);
+    }
+}
+
+if (!function_exists('set_admin_context')) {
+    /**
+     * @return void
+     */
+    function set_admin_context(): void {
+        Context::add('netto_admin', true);
     }
 }
 
