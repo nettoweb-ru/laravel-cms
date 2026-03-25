@@ -58,7 +58,7 @@ export default class Editor {
                         defaultValue: false,
                         attributes: {
                             target: '_blank',
-                            rel: 'noopener noreferrer'
+                            rel: 'noopener nofollow'
                         }
                     }
                 }
