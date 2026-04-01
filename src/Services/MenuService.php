@@ -131,7 +131,7 @@ abstract class MenuService
                     $array['is_current'] = request()->routeIs(...array_filter(array_merge([$array['link']], (array) $array['highlight'])));
                     $array['target'] = $array['is_blank'] ? '_blank' : '_self';
                     if ($array['link']) {
-                        $array['link'] = route($array['link']);
+                        $array['link'] = route($array['link'], [], false);
                     }
 
                     unset($array['roles']);
