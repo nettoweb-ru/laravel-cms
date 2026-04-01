@@ -25,7 +25,7 @@
       "ext-intl": "*",
       "ext-simplexml": "*",
       "ext-zip": "*",
-      "intervention/image-laravel": "^3.11.7"
+      "intervention/image-laravel": "1.5.7"
   },
   "minimum-stability": "stable",
   "extra": {
