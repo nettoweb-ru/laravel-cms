@@ -355,11 +355,12 @@ if (!function_exists('get_language_route')) {
     /**
      * @param string $route
      * @param array $params
+     * @param bool $absolute
      * @return string
      */
-    function get_language_route(string $route, array $params = []): string
+    function get_language_route(string $route, array $params = [], bool $absolute = false): string
     {
-        return route(app()->getLocale().'.'.$route, $params);
+        return route(app()->getLocale().'.'.$route, $params, $absolute);
     }
 }
 
