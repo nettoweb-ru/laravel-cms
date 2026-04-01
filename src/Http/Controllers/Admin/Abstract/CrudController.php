@@ -593,6 +593,10 @@ abstract class CrudController extends BaseController
                 } else {
                     $item[$column] = $obj->{$alias};
                 }
+
+                if (mb_strlen($item[$column]) === 0) {
+                    $item[$column] = '&nbsp;';
+                }
             }
 
             $items[] = $this->getItem($item);
