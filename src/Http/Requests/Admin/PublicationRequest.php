@@ -17,7 +17,7 @@ class PublicationRequest extends BaseRequest
             'lang_id' => ['required', 'integer', 'exists:'.Language::class.',id'],
             'album_id' => ['nullable', 'integer', 'exists:'.Album::class.',id'],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', new UniqueSlug(Publication::class, $this->get('id'), $this->get('lang_id'))],
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', new UniqueSlug(Publication::class, $this->input('id'), $this->input('lang_id'))],
             'meta_title' => ['nullable', 'max:255'],
             'meta_keywords' => ['nullable'],
             'meta_description' => ['nullable'],

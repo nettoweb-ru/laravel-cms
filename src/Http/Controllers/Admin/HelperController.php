@@ -18,7 +18,7 @@ class HelperController extends BaseController
      */
     public function cookie(Request $request): JsonResponse
     {
-        set_admin_cookie($request->get('key'), $request->get('value'));
+        set_admin_cookie($request->input('key'), $request->input('value'));
         return response()->json(true);
     }
 
@@ -28,7 +28,7 @@ class HelperController extends BaseController
      */
     public function download(Request $request): BinaryFileResponse
     {
-        $filename = $request->get('filename');
+        $filename = $request->input('filename');
         if (empty($filename)) {
             abort(404);
         }
@@ -77,7 +77,7 @@ class HelperController extends BaseController
     public function transliterate(Request $request): JsonResponse
     {
         return response()->json([
-            'string' => transliterate((string) $request->get('string', '')),
+            'string' => transliterate((string) $request->input('string', '')),
         ]);
     }
 }

@@ -16,7 +16,7 @@ class MenuRequest extends BaseRequest
         return [
             'lang_id' => ['required', 'integer', 'exists:'.Language::class.',id'],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', new UniqueSlug(Menu::class, $this->get('id'), $this->get('lang_id'))],
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', new UniqueSlug(Menu::class, $this->input('id'), $this->input('lang_id'))],
             'menu_item_id' => ['nullable', 'exists:'.MenuItem::class.',id'],
         ];
     }

@@ -16,7 +16,7 @@ class RedirectRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'source' => ['required', 'string', 'max:255', new UniqueSlug(Redirect::class, $this->get('id'))],
+            'source' => ['required', 'string', 'max:255', new UniqueSlug(Redirect::class, $this->input('id'))],
             'destination' => ['required_unless:status,'.implode(',', config('cms.redirects.statuses.error')), 'nullable', 'string', 'max:255'],
             'is_active' => ['in:1,0'],
             'is_regexp' => ['in:1,0'],

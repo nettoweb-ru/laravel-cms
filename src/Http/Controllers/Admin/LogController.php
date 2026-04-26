@@ -16,7 +16,7 @@ class LogController extends BaseController
      */
     public function delete(Request $request): JsonResponse
     {
-        $filename = $request->get('filename');
+        $filename = $request->input('filename');
         if (empty($filename)) {
             abort(400);
         }

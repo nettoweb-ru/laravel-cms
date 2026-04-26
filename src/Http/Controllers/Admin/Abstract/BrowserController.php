@@ -16,7 +16,7 @@ abstract class BrowserController extends BaseController
      */
     public function delete(Request $request): JsonResponse
     {
-        $id = $request->get('id', []);
+        $id = $request->input('id', []);
         if (empty($id)) {
             abort(400);
         }
@@ -56,12 +56,12 @@ abstract class BrowserController extends BaseController
      */
     public function directory(Request $request): JsonResponse
     {
-        $name = $request->get('name');
+        $name = $request->input('name');
         if (empty($name)) {
             abort(400);
         }
 
-        $dir = $request->get('dir', DIRECTORY_SEPARATOR);
+        $dir = $request->input('dir', DIRECTORY_SEPARATOR);
         if ($dir !== DIRECTORY_SEPARATOR) {
             $dir = DIRECTORY_SEPARATOR.trim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         }
@@ -83,13 +83,13 @@ abstract class BrowserController extends BaseController
      */
     public function list(Request $request): JsonResponse
     {
-        $dir = $request->get('dir', DIRECTORY_SEPARATOR);
+        $dir = $request->input('dir', DIRECTORY_SEPARATOR);
         if ($dir !== DIRECTORY_SEPARATOR) {
             $dir = DIRECTORY_SEPARATOR.trim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         }
 
-        $sort = $request->get('sort', 'id');
-        $sortDir = $request->get('sortDir', 'asc');
+        $sort = $request->input('sort', 'id');
+        $sortDir = $request->input('sortDir', 'asc');
 
         $disk = Storage::disk($this->disk);
 
@@ -152,7 +152,7 @@ abstract class BrowserController extends BaseController
      */
     public function upload(Request $request): JsonResponse
     {
-        $dir = $request->get('dir', DIRECTORY_SEPARATOR);
+        $dir = $request->input('dir', DIRECTORY_SEPARATOR);
         $file = $request->file('file');
         $disk = Storage::disk($this->disk);
 

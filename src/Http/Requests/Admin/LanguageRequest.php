@@ -17,9 +17,9 @@ class LanguageRequest extends BaseRequest
         return [
             'sort' => ['integer', 'min:0', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'size:2', 'lowercase', 'alpha:ascii', Rule::unique(Language::class, 'slug')->ignore($this->get('id'))],
+            'slug' => ['required', 'string', 'size:2', 'lowercase', 'alpha:ascii', Rule::unique(Language::class, 'slug')->ignore($this->input('id'))],
             'locale' => ['required', 'string', 'size:5', 'regex:/^[a-z]{2}_[A-Z]{2}$/'],
-            'is_default' => ['in:1,0', new UniqueDefaultEntity(Language::class, $this->get('id'), $this->get('is_default'))],
+            'is_default' => ['in:1,0', new UniqueDefaultEntity(Language::class, $this->input('id'), $this->input('is_default'))],
         ];
     }
 }

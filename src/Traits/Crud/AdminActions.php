@@ -133,7 +133,7 @@ trait AdminActions
             return back()->with('status', __('main.error_saving_model'));
         }
 
-        $to = $request->get('button_apply')
+        $to = $request->input('button_apply')
             ? route($this->getRouteCrud('edit'), [$this->itemRouteId => $model])
             : $this->getRouteIndex();
 

@@ -39,7 +39,7 @@ abstract class CrudController extends BaseController
     public function csv(Request $request): void
     {
         $return = $this->getListArray($request);
-        $this->download($request->get('columns', []), $return['items'], self::DOWNLOAD_CSV);
+        $this->download($request->input('columns', []), $return['items'], self::DOWNLOAD_CSV);
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class CrudController extends BaseController
      */
     public function delete(Request $request): JsonResponse
     {
-        $id = $request->get('id', []);
+        $id = $request->input('id', []);
         if (empty($id)) {
             abort(400);
         }
@@ -102,7 +102,7 @@ abstract class CrudController extends BaseController
      */
     public function toggle(Request $request): JsonResponse
     {
-        $id = $request->get('id', []);
+        $id = $request->input('id', []);
         if (empty($id)) {
             abort(400);
         }
@@ -158,7 +158,7 @@ abstract class CrudController extends BaseController
     /*public function xls(Request $request): void
     {
         $return = $this->getListArray($request);
-        $this->download($request->get('columns', []), $return['items'], self::DOWNLOAD_XLS);
+        $this->download($request->input('columns', []), $return['items'], self::DOWNLOAD_XLS);
     }*/
 
     /**
@@ -594,7 +594,7 @@ abstract class CrudController extends BaseController
                     $item[$column] = $obj->{$alias};
                 }
 
-                if (mb_strlen($item[$column]) === 0) {
+                if (!is_bool($item[$column]) && (mb_strlen($item[$column]) === 0)) {
                     $item[$column] = '&nbsp;';
                 }
             }
@@ -627,7 +627,7 @@ abstract class CrudController extends BaseController
                 'value' => $value,
                 'strict' => false,
             ] : [];
-        }, $request->get('filter', [])));
+        }, $request->input('filter', [])));
     }
 
     /**
@@ -677,7 +677,7 @@ abstract class CrudController extends BaseController
         }
 
         foreach ($this->syncRelations as $relation) {
-            $model->{$relation}()->sync(array_filter($request->get($relation, [])));
+            $model->{$relation}()->sync(array_filter($request->input($relation, [])));
         }
 
         return true;

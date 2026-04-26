@@ -110,7 +110,7 @@ trait AdminActionsKid
      */
     protected function getListArray(Request $request): array
     {
-        if ($parentId = $request->get($this->itemRouteParentId)) {
+        if ($parentId = $request->input($this->itemRouteParentId)) {
             return $this->getList(
                 $this->createModel($parentId),
                 array_merge([
@@ -169,7 +169,7 @@ trait AdminActionsKid
             return back()->with('status', __('main.error_saving_model'));
         }
 
-        $to = $request->get('button_apply')
+        $to = $request->input('button_apply')
             ? route($this->getRouteCrud('edit'), [$this->itemRouteId => $model])
             : $this->getRouteIndex($model);
 

@@ -16,8 +16,8 @@ class UserRequest extends FormRequest
         return [
             'id' => ['nullable', 'integer'],
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', Rule::unique(User::class, 'email')->ignore($this->get('id'))],
-            'password' => ['nullable', Password::defaults(), 'confirmed', Rule::requiredIf(empty($this->get('id')))],
+            'email' => ['required', 'string', 'email', Rule::unique(User::class, 'email')->ignore($this->input('id'))],
+            'password' => ['nullable', Password::defaults(), 'confirmed', Rule::requiredIf(empty($this->input('id')))],
             'email_verified_at' => ['date:Y-m-d\TH:i:s', 'nullable'],
         ];
     }
