@@ -3,12 +3,13 @@ import ListAbstract from './list.abstract.js'
 class Logs extends ListAbstract {
     constructor(object) {
         super(object)
-        this.initButtons(object)
 
         this.actions = {
-            delete: this.body.data('delete-url')
+            delete: this.body.data('delete-url'),
+            download: this.body.data('download-url'),
         }
 
+        this.initButtons(object)
         this.load()
     }
 
@@ -23,11 +24,12 @@ class Logs extends ListAbstract {
     }
 
     initButtons(object) {
+        let self = this
+
         object.on('click', '.js-list-button[data-type="download"]', function() {
-            App.downloadFile($(this).data('filename'))
+            window.open(self.actions.download + '?filename=' + $(this).data('filename'))
         })
 
-        let self = this
         object.on('click', '.js-list-button[data-type="delete"]', async function() {
             if (await Overlay.confirmation(window.nettoweb.messages.confirm_delete, true)) {
                 self.delete($(this).data('filename'))

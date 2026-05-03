@@ -8,6 +8,7 @@
     'messages' => [],
     'value' => '',
     'multilang' => false,
+    'disk' => config('filesystems.default'),
 ])
 
 <div class="grid-cols grid-cols-{{ $width }}">
@@ -25,6 +26,7 @@
                         :id="$id.'_'.$langCode"
                         :value="$langValue"
                         :disabled="$disabled"
+                        :disk="$disk"
                         {{ $attributes }}
                     />
                 </div>
@@ -35,6 +37,7 @@
                 :id="$id"
                 :value="$value"
                 :disabled="$disabled"
+                :disk="$disk"
                 {{ $attributes }}
             />
         @endif

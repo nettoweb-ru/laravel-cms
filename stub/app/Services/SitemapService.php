@@ -11,8 +11,6 @@ class SitemapService extends BaseService
      */
     protected function paths(): array
     {
-        return [
-
-        ];
+        return [];
     }
 }

@@ -26,7 +26,7 @@ class Redirect
 
         if ($response->getStatusCode() == 200) {
             if ($request->ajax()) {
-                $https = config('cms.redirects.https');
+                $https = config('cms.redirects-enable-https');
                 $secure = $request->isSecure();
 
                 if (($https && $secure) || (!$https && !$secure)) {

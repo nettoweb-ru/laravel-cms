@@ -59,7 +59,7 @@ class ImageController extends BaseController
      */
     protected function getItem(array $item): array
     {
-        $item['thumb'] = get_public_uploaded_path($item['thumb']);
+        $item['thumb'] = get_storage_url($item['thumb']);
         return $item;
     }
 }

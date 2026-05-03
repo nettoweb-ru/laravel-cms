@@ -57,8 +57,8 @@ class RedirectController extends BaseController
      */
     protected function getReference($model): array
     {
-        $statuses = array_merge(config('cms.redirects.statuses.redirect'), config('cms.redirects.statuses.error'));
-        
+        $statuses = array_merge(config('cms.redirects-allowed-3x'), config('cms.redirects-allowed-4x'));
+
         return [
             'boolean' => get_labels_boolean(),
             'status' => array_combine($statuses, $statuses),

@@ -1,8 +1,8 @@
 <x-cms::layout.admin :head="$head" :url="$url" :header="$header">
     <x-cms::browser
-        id="browser-public"
+        id="{{ config('filesystems.default') }}"
         :url="route('admin.browser.list')"
-        :root="get_storage_path($disk)"
+        :disk="config('filesystems.default')"
         :dir="DIRECTORY_SEPARATOR"
         :actions="[
             'delete' => route('admin.browser.delete'),

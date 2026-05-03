@@ -8,7 +8,7 @@
     'class' => 'browser js-browser',
     'id' => 'browser',
     'url',
-    'root',
+    'disk' => config('filesystems.default'),
     'dir' => '',
     'actions' => [],
 ])
@@ -33,7 +33,7 @@
         @endif
     </x-slot:buttons>
 
-    <div class="browser js-browser-hold" data-root="{{ $root }}" data-start-dir="{{ $dir }}" data-upload-max-filesize="{{ ini_parse_quantity(ini_get('upload_max_filesize')) }}" data-post-max-size="{{ ini_parse_quantity(ini_get('post_max_size')) }}">
+    <div class="browser js-browser-hold" data-disk="{{ $disk }}" data-start-dir="{{ $dir }}" data-upload-max-filesize="{{ ini_parse_quantity(ini_get('upload_max_filesize')) }}" data-post-max-size="{{ ini_parse_quantity(ini_get('post_max_size')) }}">
         <table class="info">
             <thead class="js-head">
             <tr>

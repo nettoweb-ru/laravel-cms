@@ -56,23 +56,6 @@ if (!function_exists('escape_quotes')) {
     }
 }
 
-if (!function_exists('find_language_code')) {
-    /**
-     * @param int $id
-     * @return string|null
-     */
-    function find_language_code(int $id): ?string
-    {
-        foreach (get_language_list() as $slug => $language) {
-            if ($language['id'] == $id) {
-                return $slug;
-            }
-        }
-
-        return null;
-    }
-}
-
 if (!function_exists('format_date')) {
     /**
      * Format date using locale settings.
@@ -181,7 +164,7 @@ if (!function_exists('get_admin_locales')) {
             'he' => 'he_IL',
         ];
 
-        foreach (config('cms.locales', []) as $key => $value) {
+        foreach (config('cms.admin-locales') as $key => $value) {
             if (array_key_exists($key, $return)) {
                 $return[$key] = $value;
             }
@@ -199,7 +182,7 @@ if (!function_exists('get_admin_role')) {
      */
     function get_admin_role(): string
     {
-        return config('cms.admin', 'administrator');
+        return config('cms.admin-role');
     }
 }
 
@@ -339,6 +322,19 @@ if (!function_exists('get_labels_translated')) {
     }
 }
 
+if (!function_exists('get_language_code')) {
+    /**
+     * Returns language slug by ID.
+     *
+     * @param int $id
+     * @return string|null
+     */
+    function get_language_code(int $id): ?string
+    {
+        return MultilingualService::getLanguageCode($id);
+    }
+}
+
 if (!function_exists('get_language_list')) {
     /**
      * Return the list of public languages.
@@ -361,33 +357,6 @@ if (!function_exists('get_language_route')) {
     function get_language_route(string $route, array $params = [], bool $absolute = false): string
     {
         return route(app()->getLocale().'.'.$route, $params, $absolute);
-    }
-}
-
-if (!function_exists('get_public_uploaded_path')) {
-    /**
-     * Return relative public path for automatic upload file.
-     *
-     * @param string $path
-     * @return string
-     */
-    function get_public_uploaded_path(string $path): string
-    {
-        return $path
-            ? '/storage/auto/'.basename($path)
-            : '';
-    }
-}
-
-if (!function_exists('get_relative_path')) {
-    /**
-     * Return relative path.
-     *
-     * @param string $path
-     * @return string
-     */
-    function get_relative_path(string $path): string {
-        return str_replace(base_path(), '', $path);
     }
 }
 
@@ -435,14 +404,37 @@ if (!function_exists('get_rules_upload')) {
 
 if (!function_exists('get_storage_path')) {
     /**
-     * Return relative path for configured disk storage.
+     * Generates absolute path to stored file.
      *
-     * @param string $storage
+     * @param string $path
+     * @param string|null $disk
      * @return string
      */
-    function get_storage_path(string $storage): string
+    function get_storage_path(string $path, ?string $disk = null): string
     {
-        return get_relative_path(config("filesystems.disks.{$storage}.root"));
+        if (is_null($disk)) {
+            $disk = config('filesystems.default');
+        }
+
+        return config("filesystems.disks.{$disk}.root", '').DIRECTORY_SEPARATOR.$path;
+    }
+}
+
+if (!function_exists('get_storage_url')) {
+    /**
+     * Generates absolute URL to stored file.
+     *
+     * @param string $path
+     * @param string|null $disk
+     * @return string
+     */
+    function get_storage_url(string $path, ?string $disk = null): string
+    {
+        if (is_null($disk)) {
+            $disk = config('filesystems.default');
+        }
+
+        return config("filesystems.disks.{$disk}.url", '').DIRECTORY_SEPARATOR.$path;
     }
 }
 
@@ -511,7 +503,14 @@ if (!function_exists('log_tabulated_string')) {
      * @return void
      */
     function log_tabulated_string($channel, string $ip, string $string): void {
-        Log::channel($channel)->info("[{$ip}]".chr(9).chr(9).chr(9).$string);
+        $log = "[{$ip}]".chr(9).chr(9);
+
+        if (strlen($ip) < 15) {
+            $log .= chr(9);
+        }
+
+        $log .= $string;
+        Log::channel($channel)->info($log);
     }
 }
 
@@ -569,7 +568,7 @@ if (!function_exists('set_admin_cookie')) {
      */
     function set_admin_cookie(string $name, string $value): void
     {
-        Cookie::queue(Cookie::forever($name, $value, '/'.config('cms.location', 'admin')));
+        Cookie::queue(Cookie::forever($name, $value, '/'.config('cms.admin-location')));
     }
 }
 
@@ -586,7 +585,7 @@ if (!function_exists('set_language')) {
         app()->setLocale($language);
         config()->set('text_dir', get_text_direction($language));
 
-        $full = $locale.'.'.config('cms.utf8suffix', 'utf8');
+        $full = $locale.'.'.config('cms.utf8-suffix');
 
         setlocale(LC_MONETARY, $full);
         setlocale(LC_NUMERIC, $full);
@@ -600,18 +599,13 @@ if (!function_exists('set_language')) {
 
 if (!function_exists('set_language_default')) {
     /**
+     * Sets default public language as application language.
+     *
      * @return void
      */
     function set_language_default(): void
     {
-        $language = get_default_language_code();
-
-        $locales = [];
-        foreach (get_language_list() as $key => $value) {
-            $locales[$key] = $value['locale'];
-        }
-
-        set_language($language, $locales[$language]);
+        MultilingualService::setDefaultLanguage();
     }
 }
 

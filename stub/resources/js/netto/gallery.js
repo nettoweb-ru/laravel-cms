@@ -13,6 +13,21 @@ class Gallery extends ListWidget {
         this.load()
     }
 
+    delete() {
+        this.lock()
+        let self = this
+
+        Ajax.post(this.actions.delete, {id: this.selected}, function(data) {
+            if (data.status) {
+                Overlay.message(data.status)
+            }
+
+            self.load()
+        }, function() {
+            self.unlock()
+        })
+    }
+
     getDefaultParams() {
         return {
             columns: {

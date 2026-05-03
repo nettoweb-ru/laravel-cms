@@ -144,7 +144,7 @@ abstract class MenuService
             foreach (Menu::all() as $menu) {
                 /** @var Menu $menu */
                 $array = $menu->toArray();
-                $array['language'] = find_language_code($array['lang_id']);
+                $array['language'] = get_language_code($array['lang_id']);
                 $array['kids'] = [];
 
                 $menus[$array['id']] = $array;

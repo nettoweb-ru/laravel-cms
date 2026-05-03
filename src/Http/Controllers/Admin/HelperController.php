@@ -33,7 +33,12 @@ class HelperController extends BaseController
             abort(404);
         }
 
-        $path = base_path().$filename;
+        $disk = $request->input('disk', config('filesystems.default'));
+        if (!array_key_exists($disk, config('filesystems.disks', []))) {
+            abort(404);
+        }
+
+        $path = get_storage_path($filename, $disk);
         if (!File::exists($path)) {
             abort(404);
         }

@@ -15,13 +15,13 @@ class ReportLogs extends Command
      */
     public function handle(): void
     {
-        $email = config('cms.logs.send.email');
+        $email = config('cms.logs-send-email');
         if (empty($email)) {
             return;
         }
 
         $logs = [];
-        foreach (config('cms.logs.send.files', []) as $file) {
+        foreach (config('cms.logs-send-files') as $file) {
             $path = storage_path('logs/'.$file);
             if (file_exists($path)) {
                 $logs[] = $path;

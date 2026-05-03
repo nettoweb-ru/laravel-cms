@@ -60,7 +60,7 @@ abstract class AssetService
         ];
 
         $assets = [];
-        foreach (config('cms.assets.prepend', []) as $prepend) {
+        foreach (config('cms.assets-prepend') as $prepend) {
             if (array_key_exists($prepend, self::$assets)) {
                 $assets[$prepend] = self::$assets[$prepend];
                 unset(self::$assets[$prepend]);
@@ -69,7 +69,7 @@ abstract class AssetService
 
         $assets += self::$assets;
 
-        $files = config('cms.assets.files', []);
+        $files = config('cms.assets-files');
         $lang = app()->getLocale();
 
         foreach ($assets as $asset => $deferred) {

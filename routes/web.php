@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use Netto\Http\Controllers\Admin\{
     AlbumController,
     AuthenticatedSessionController,
-    PublicDiskController,
+    BrowserController,
     ConfirmablePasswordController,
     EmailVerificationNotificationController,
     EmailVerificationPromptController,
@@ -29,7 +29,7 @@ use Netto\Http\Controllers\Admin\{
     VerifyEmailController,
 };
 
-Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(function() {
+Route::prefix(config('cms.admin-location'))->name('admin.')->group(function() {
     Route::middleware('admin.guest')->group(function() {
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
@@ -137,17 +137,18 @@ Route::prefix(config('cms.location'))->name(config('cms.location').'.')->group(f
             });
 
             Route::middleware('permission:admin-public-browser')->group(function() {
-                Route::get('browser', [PublicDiskController::class, 'index'])->name('browser');
-                Route::get('browser/list', [PublicDiskController::class, 'list'])->name('browser.list');
-                Route::post('browser/upload', [PublicDiskController::class, 'upload'])->name('browser.upload');
-                Route::put('browser/directory', [PublicDiskController::class, 'directory'])->name('browser.directory');
-                Route::post('browser/delete', [PublicDiskController::class, 'delete'])->name('browser.delete');;
+                Route::get('browser', [BrowserController::class, 'index'])->name('browser');
+                Route::get('browser/list', [BrowserController::class, 'list'])->name('browser.list');
+                Route::post('browser/upload', [BrowserController::class, 'upload'])->name('browser.upload');
+                Route::put('browser/directory', [BrowserController::class, 'directory'])->name('browser.directory');
+                Route::post('browser/delete', [BrowserController::class, 'delete'])->name('browser.delete');;
             });
 
             Route::middleware('permission:admin-logs')->group(function() {
                 Route::get('log', [LogController::class, 'index'])->name('log.index');
                 Route::get('log/list', [LogController::class, 'list'])->name('log.list');
                 Route::post('log/delete', [LogController::class, 'delete'])->name('log.delete');
+                Route::get('log/download', [LogController::class, 'download'])->name('log.download');
             });
 
             Route::middleware('permission:admin-redirects')->group(function() {

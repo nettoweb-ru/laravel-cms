@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Netto\Services;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\{Cache, Log};
 use Netto\Models\Redirect;
 
 abstract class RedirectService
 {
-    protected const TTL = 600;
-
     public static function getCanonicalDomain(Request $request): string
     {
-        $return = (config('cms.redirects.https') ? 'https' : 'http') . '://';
+        $return = (config('cms.redirects-enable-https') ? 'https' : 'http') . '://';
 
-        if (config('cms.redirects.www')) {
+        if (config('cms.redirects-enable-www')) {
             $return .= 'www.';
         }
 
@@ -117,7 +114,7 @@ abstract class RedirectService
 
     public static function redirect(string $source, string $destination, string $ip, int $status = 301): RedirectResponse
     {
-        if (in_array($status, config('cms.logs.track', []))) {
+        if (in_array($status, config('cms.logs-track'))) {
             if (empty($destination)) {
                 $destination = '/';
             }
@@ -139,7 +136,7 @@ abstract class RedirectService
 
     protected static function getCachedRedirects(): array
     {
-        return Cache::remember('redirects', self::TTL, function () {
+        return Cache::remember('redirects', config('cms.redirects-cache-time'), function () {
             $return = [
                 'static' => [],
                 'dynamic' => [],

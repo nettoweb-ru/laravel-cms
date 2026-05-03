@@ -62,6 +62,24 @@ class List extends ListWidget {
         this.isSearchOpen = false
     }
 
+    delete() {
+        this.lock()
+        let self = this
+
+        Ajax.post(this.actions.delete, {id: this.selected}, function(data) {
+            if (data.status) {
+                Overlay.message(data.status)
+            }
+
+            self.params.page = 1
+            self.saveParams()
+
+            self.load()
+        }, function() {
+            self.unlock()
+        })
+    }
+
     download(route) {
         let urlObj = new URL(route),
             url = urlObj.origin + urlObj.pathname,

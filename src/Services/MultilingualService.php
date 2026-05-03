@@ -59,6 +59,23 @@ abstract class MultilingualService
     }
 
     /**
+     * Returns language slug by ID.
+     *
+     * @param int $id
+     * @return string|null
+     */
+    public static function getLanguageCode(int $id): ?string
+    {
+        foreach (get_language_list() as $slug => $language) {
+            if ($language['id'] == $id) {
+                return $slug;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Return the list of public languages.
      *
      * @return array
@@ -99,5 +116,21 @@ abstract class MultilingualService
         }
 
         return $return;
+    }
+
+    /**
+     * Sets default public language as application language.
+     *
+     * @return void
+     */
+    public static function setDefaultLanguage(): void
+    {
+        $language = self::getDefaultCode();
+
+        $locales = array_map(function ($value) {
+            return $value['locale'];
+        }, self::getList());
+
+        set_language($language, $locales[$language]);
     }
 }

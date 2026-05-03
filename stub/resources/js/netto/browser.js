@@ -11,7 +11,6 @@ class Browser extends ListWidget {
     }
     maxSizePost = 0
     maxSizeUpload = 0
-    root = null
 
     constructor(object) {
         super(object)
@@ -28,9 +27,25 @@ class Browser extends ListWidget {
         this.load()
     }
 
+    delete() {
+        this.lock()
+        let self = this
+
+        Ajax.post(this.actions.delete, {id: this.selected, disk: this.params.disk}, function(data) {
+            if (data.status) {
+                Overlay.message(data.status)
+            }
+
+            self.load()
+        }, function() {
+            self.unlock()
+        })
+    }
+
     getDefaultParams() {
         return {
             dir: '/',
+            disk: window.nettoweb.default_disk,
             sort: 'name',
             sortDir: 'asc'
         }
@@ -40,7 +55,7 @@ class Browser extends ListWidget {
         this.maxSizePost = this.objects.hold.data('post-max-size')
         this.maxSizeUpload = this.objects.hold.data('upload-max-filesize')
         this.params.dir = this.objects.hold.data('start-dir')
-        this.root = this.objects.hold.data('root')
+        this.params.disk = this.objects.hold.data('disk')
     }
 
     initButtons() {
@@ -64,7 +79,8 @@ class Browser extends ListWidget {
                 self.lock()
                 Ajax.put(self.actions.directory, {
                     name: name,
-                    dir: self.params.dir
+                    dir: self.params.dir,
+                    disk: self.params.disk
                 }, function() {
                     self.load()
                 }, function() {
@@ -143,7 +159,7 @@ class Browser extends ListWidget {
                         self.params.dir = id
                         self.load()
                     } else {
-                        App.downloadFile(self.root + id)
+                        App.downloadFile(id, self.params.disk)
                     }
                 })
 
@@ -197,6 +213,7 @@ class Browser extends ListWidget {
         let form = new FormData()
         form.append('file', files[0])
         form.append('dir', this.params.dir)
+        form.append('disk', this.params.disk)
 
         let self = this
         Ajax.send({

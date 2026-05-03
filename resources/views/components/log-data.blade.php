@@ -7,7 +7,7 @@
                         <span class="text-big" dir="ltr">{{ $key }}</span>
                     </div>
                     <div class="cell cell-log-head right">
-                        <button class="btn btn-bg btn-blue download js-list-button" data-type="download" data-filename="{{ get_relative_path(storage_path('logs/'.$key)) }}" title="{{ __('main.title_download') }}"></button>
+                        <button class="btn btn-bg btn-blue download js-list-button" data-type="download" data-filename="{{ $key }}" title="{{ __('main.title_download') }}"></button>
                         <button class="btn btn-bg btn-red remove js-list-button" data-type="delete" data-filename="{{ $key }}" title="{{ __('main.title_upload_file_delete') }}"></button>
                     </div>
                 </div>

@@ -1,14 +1,27 @@
 <?php
 
-namespace Netto\Http\Controllers\Admin\Abstract;
+namespace Netto\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Abstract\Controller as BaseController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\{Request, Response, UploadedFile};
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\{JsonResponse, Request, UploadedFile};
+use App\Http\Controllers\Admin\Abstract\Controller as BaseController;
 
-abstract class BrowserController extends BaseController
+class BrowserController extends BaseController
 {
-    protected string $disk;
+    /**
+     * @return Response
+     */
+    public function index(): Response
+    {
+        $header = __('main.general_browser');
+        $this->addCrumb($header);
+        $this->addTitle($header);
+
+        return $this->view('cms::browser', [
+            'header' => $header,
+        ]);
+    }
 
     /**
      * @param Request $request
@@ -16,6 +29,11 @@ abstract class BrowserController extends BaseController
      */
     public function delete(Request $request): JsonResponse
     {
+        $diskId = $request->input('disk', 'public');
+        if (!array_key_exists($diskId, config('filesystems.disks', []))) {
+            abort(400);
+        }
+
         $id = $request->input('id', []);
         if (empty($id)) {
             abort(400);
@@ -24,7 +42,7 @@ abstract class BrowserController extends BaseController
         $dirs = [];
         $files = [];
 
-        $disk = Storage::disk($this->disk);
+        $disk = Storage::disk($diskId);
         foreach ($id as $item) {
             if ($disk->directoryExists($item)) {
                 $dirs[] = $item;
@@ -56,6 +74,11 @@ abstract class BrowserController extends BaseController
      */
     public function directory(Request $request): JsonResponse
     {
+        $diskId = $request->input('disk', 'public');
+        if (!array_key_exists($diskId, config('filesystems.disks', []))) {
+            abort(400);
+        }
+
         $name = $request->input('name');
         if (empty($name)) {
             abort(400);
@@ -68,7 +91,7 @@ abstract class BrowserController extends BaseController
 
         $dirName = $dir.transliterate(trim($name, DIRECTORY_SEPARATOR));
 
-        $disk = Storage::disk($this->disk);
+        $disk = Storage::disk($diskId);
         if ($disk->directoryExists($dirName)) {
             abort(400, __('main.error_dir_exists'));
         }
@@ -83,6 +106,11 @@ abstract class BrowserController extends BaseController
      */
     public function list(Request $request): JsonResponse
     {
+        $diskId = $request->input('disk', 'public');
+        if (!array_key_exists($diskId, config('filesystems.disks', []))) {
+            abort(400);
+        }
+
         $dir = $request->input('dir', DIRECTORY_SEPARATOR);
         if ($dir !== DIRECTORY_SEPARATOR) {
             $dir = DIRECTORY_SEPARATOR.trim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -91,7 +119,7 @@ abstract class BrowserController extends BaseController
         $sort = $request->input('sort', 'id');
         $sortDir = $request->input('sortDir', 'asc');
 
-        $disk = Storage::disk($this->disk);
+        $disk = Storage::disk($diskId);
 
         if (!$disk->directoryExists($dir)) {
             abort(400);
@@ -152,9 +180,14 @@ abstract class BrowserController extends BaseController
      */
     public function upload(Request $request): JsonResponse
     {
+        $diskId = $request->input('disk', 'public');
+        if (!array_key_exists($diskId, config('filesystems.disks', []))) {
+            abort(400);
+        }
+
         $dir = $request->input('dir', DIRECTORY_SEPARATOR);
         $file = $request->file('file');
-        $disk = Storage::disk($this->disk);
+        $disk = Storage::disk($diskId);
 
         if (empty($file)) {
             abort(400);
@@ -173,7 +206,7 @@ abstract class BrowserController extends BaseController
         }
 
         /** @var UploadedFile $file */
-        $file->storeAs(trim($dir, DIRECTORY_SEPARATOR), $name, $this->disk);
+        $file->storeAs(trim($dir, DIRECTORY_SEPARATOR), $name, $diskId);
         return response()->json(true);
     }
 
@@ -185,10 +218,9 @@ abstract class BrowserController extends BaseController
      */
     protected function sort(array $items, string $sort, string $sortDir): array
     {
-        $array = [];
-        foreach ($items as $key => $item) {
-            $array[$key] = $item[$sort];
-        }
+        $array = array_map(function ($item) use ($sort) {
+            return $item[$sort];
+        }, $items);
 
         if ($sortDir == 'asc') {
             asort($array);

@@ -27,8 +27,12 @@ window.App = {
         transliterate: '/admin/tools/transliterate',
     },
 
-    downloadFile: function(filename) {
-        window.open(this.url.download + '?filename=' + encodeURIComponent(filename))
+    downloadFile: function(filename, disk) {
+        if (typeof disk === 'undefined') {
+            disk = window.nettoweb.default_disk
+        }
+
+        window.open(this.url.download + '?disk=' + disk + '&filename=' + encodeURIComponent(filename))
     },
 
     formatCurrency: function(value, currency, precision) {

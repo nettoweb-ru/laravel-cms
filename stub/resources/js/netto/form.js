@@ -306,7 +306,7 @@ class Form {
             })
 
             download.click(function() {
-                App.downloadFile($(this).data('filename'))
+                App.downloadFile($(this).data('filename'), $(this).data('disk'))
             })
 
             parent.find('.js-file-delete').click(function() {

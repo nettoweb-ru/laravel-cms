@@ -189,7 +189,7 @@ abstract class CrudController extends BaseController
 
         switch ($mode) {
             case self::DOWNLOAD_CSV:
-                if ($encoding = config('cms.export.csv.encoding')) {
+                if ($encoding = config('cms.export-csv-encoding')) {
                     foreach ($list as $key => $item) {
                         foreach ($item as $key2 => $string) {
                             $list[$key][$key2] = mb_convert_encoding($string, $encoding);
@@ -206,10 +206,10 @@ abstract class CrudController extends BaseController
                     fputcsv(
                         $handler,
                         $item,
-                        config('cms.export.csv.separator'),
-                        config('cms.export.csv.enclosure'),
-                        config('cms.export.csv.escape'),
-                        config('cms.export.csv.eol'),
+                        config('cms.export-csv-separator'),
+                        config('cms.export-csv-enclosure'),
+                        config('cms.export-csv-escape'),
+                        config('cms.export-csv-eol'),
                     );
                 }
 

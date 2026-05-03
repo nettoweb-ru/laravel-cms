@@ -7,6 +7,7 @@ use Illuminate\Http\{JsonResponse, Request, Response};
 
 use Netto\Http\Controllers\Admin\Abstract\Controller as BaseController;
 use Netto\Services\ReadLogService;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LogController extends BaseController
 {
@@ -31,6 +32,26 @@ class LogController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     */
+    public function download(Request $request): BinaryFileResponse
+    {
+        $filename = $request->input('filename');
+        if (empty($filename)) {
+            abort(404);
+        }
+
+        $path = storage_path("logs/{$filename}");
+
+        if (!File::exists($path)) {
+            abort(404);
+        }
+
+        return response()->download($path);
+    }
+
+    /**
      * @return Response
      */
     public function index(): Response
@@ -52,10 +73,10 @@ class LogController extends BaseController
         $items = [];
         $total = 0;
 
-        if ($files = config('cms.logs.read.files', [])) {
+        if ($files = config('cms.logs-read-files')) {
             $items = (new ReadLogService(
                 $files,
-                config('cms.logs.read.max', 10)
+                config('cms.logs-read-max')
             ))->read();
             $total = count($items);
         }

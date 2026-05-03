@@ -11,7 +11,7 @@
 ])
 
 <x-cms::ajaxlist :id="$id" :url="$url" :class="$class" :showTotal="false">
-    <div class="logs js-body" data-delete-url="{{ route('admin.log.delete') }}">
+    <div class="logs js-body" data-delete-url="{{ route('admin.log.delete') }}" data-download-url="{{ route('admin.log.download') }}">
 
     </div>
 </x-cms::ajaxlist>

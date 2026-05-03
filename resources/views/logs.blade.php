@@ -4,6 +4,7 @@
         :url="route('admin.log.list')"
         :actions="[
             'delete' => route('admin.log.delete'),
+            'download' => route('admin.log.download'),
         ]"
     />
 </x-cms::layout.admin>

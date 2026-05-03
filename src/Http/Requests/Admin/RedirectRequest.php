@@ -17,10 +17,10 @@ class RedirectRequest extends BaseRequest
     {
         return [
             'source' => ['required', 'string', 'max:255', new UniqueSlug(Redirect::class, $this->input('id'))],
-            'destination' => ['required_unless:status,'.implode(',', config('cms.redirects.statuses.error')), 'nullable', 'string', 'max:255'],
+            'destination' => ['required_unless:status,'.implode(',', config('cms.redirects-allowed-4x')), 'nullable', 'string', 'max:255'],
             'is_active' => ['in:1,0'],
             'is_regexp' => ['in:1,0'],
-            'status' => ['integer', 'in:' . implode(',', array_merge(config('cms.redirects.statuses.redirect'), config('cms.redirects.statuses.error')))],
+            'status' => ['integer', 'in:' . implode(',', array_merge(config('cms.redirects-allowed-3x'), config('cms.redirects-allowed-4x')))],
         ];
     }
 }

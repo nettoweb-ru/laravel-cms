@@ -27,24 +27,6 @@ export default class ListWidget extends ListAbstract {
         }
     }
 
-    delete() {
-        this.lock()
-        let self = this
-
-        Ajax.post(this.actions.delete, {id: this.selected}, function(data) {
-            if (data.status) {
-                Overlay.message(data.status)
-            }
-
-            self.params.page = 1
-            self.saveParams()
-
-            self.load()
-        }, function() {
-            self.unlock()
-        })
-    }
-
     findButtons(object) {
         let self = this
         object.find('.js-list-button').each(function() {

@@ -3,6 +3,7 @@
 namespace Netto\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Netto\Handlers\{AlbumImageHandler, AlbumPreviewHandler};
 use Netto\Models\Abstract\Model as BaseModel;
 use Netto\Traits\{HasUploads, IsMultiLingual};
 
@@ -25,14 +26,17 @@ class Image extends BaseModel
 
     public array $uploads = [
         'filename' => [
-            'storage' => 'public',
+            'disk' => 'public',
+            'handlers' => [
+                AlbumImageHandler::class
+            ],
         ],
         'thumb' => [
-            'storage' => 'public',
-            'width' => null,
-            'height' => null,
+            'disk' => 'public',
+            'handlers' => [
+                AlbumPreviewHandler::class
+            ],
             'auto' => 'filename',
-            'square' => true,
         ],
     ];
 

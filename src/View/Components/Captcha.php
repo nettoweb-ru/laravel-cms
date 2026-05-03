@@ -30,7 +30,7 @@ class Captcha extends Component
      */
     public function check(int $valueShow, mixed $value): bool
     {
-        return (($valueShow / config('cms.captcha.multiplier')) - config('cms.captcha.bias')) === (int) $value;
+        return (($valueShow / config('cms.captcha-multiplier')) - config('cms.captcha-bias')) === (int) $value;
     }
 
     /**
@@ -49,7 +49,7 @@ class Captcha extends Component
     {
         $value = mt_rand(1, $this->max);
 
-        $this->valueShow = ($value + config('cms.captcha.bias')) * config('cms.captcha.multiplier');
+        $this->valueShow = ($value + config('cms.captcha-bias')) * config('cms.captcha-multiplier');
         $this->valueText = spell_number($value);
     }
 }

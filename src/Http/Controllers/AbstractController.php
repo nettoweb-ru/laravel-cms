@@ -58,7 +58,7 @@ abstract class AbstractController extends BaseController
      */
     protected function getTitleSeparator(): string
     {
-        return config('cms.title_separator', ' | ');
+        return config('cms.title-separator');
     }
 
     /**

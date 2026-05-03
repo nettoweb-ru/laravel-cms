@@ -76,8 +76,8 @@ abstract class Controller extends BaseController
             /** @var Image $image */
             $return[] = [
                 'caption' => $image->caption,
-                'thumb' => get_public_uploaded_path($image->getAttribute('thumb')),
-                'filename' => get_public_uploaded_path($image->getAttribute('filename')),
+                'thumb' => get_storage_url($image->getAttribute('thumb')),
+                'filename' => get_storage_url($image->getAttribute('filename')),
             ];
         }
 

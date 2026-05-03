@@ -3,6 +3,7 @@
 namespace Netto\Services;
 
 use Carbon\Carbon;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\{Cache, DB, Http, Log};
 use Illuminate\Support\Collection;
@@ -10,17 +11,10 @@ use Netto\Exceptions\NettoException;
 
 abstract class SearchService
 {
-    public const MIN_NEEDLE_LENGTH = 3;
-    public const CHUNK_SIZE = 500;
-
     private const TABLE = 'cms__search';
     private const MAX_NAME_LENGTH = 2048;
-    private const TTL = 600;
 
-    protected int $delay;
     protected int $perPage;
-    protected int $maxPreviewLength;
-    protected string $highlightClass;
 
     private array $paths = [];
     private array $deleteId = [];
@@ -46,7 +40,7 @@ abstract class SearchService
     {
         $query = urldecode(strip_tags($query));
 
-        if (($page < 1) || (mb_strlen($query) < static::MIN_NEEDLE_LENGTH)) {
+        if (($page < 1) || (mb_strlen($query) < config('cms.search-min-query-length'))) {
             return [
                 'query' => $query,
                 'results' => [
@@ -60,7 +54,7 @@ abstract class SearchService
         }
 
         $locale = app()->getLocale();
-        $items = Cache::remember($locale.'|'.md5($query), self::TTL, function() use ($query, $locale): array {
+        $items = Cache::remember($locale.'|'.md5($query), config('cms.search-cache-time'), function() use ($query, $locale): array {
             Log::channel('search')->info("[{$locale}] ".$query);
 
             $collection = DB::table(self::TABLE)
@@ -71,7 +65,7 @@ abstract class SearchService
 
             $items = [];
             $length = mb_strlen($query);
-            $cutLength = (int) floor(($this->maxPreviewLength - $length) / 2);
+            $cutLength = (int) floor((config('cms.search-max-preview-length') - $length) / 2);
 
             foreach ($collection as $item) {
                 $pos = mb_stripos($item->name, $query);
@@ -130,8 +124,10 @@ abstract class SearchService
             $this->paths[] = $data['path'];
         }
 
+        $delay = config('cms.search-reindex-delay');
+
         if (!$this->force) {
-            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(self::CHUNK_SIZE, function(Collection $collection) {
+            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(500, function(Collection $collection) use ($delay) {
                 foreach ($collection as $item) {
                     if (in_array($item->url, $this->paths)) {
                         unset($this->paths[array_search($item->url, $this->paths)]);
@@ -155,7 +151,7 @@ abstract class SearchService
                         'updated_at' => $updatedAt,
                     ]);
 
-                    usleep($this->delay);
+                    usleep($delay);
                 }
             });
 
@@ -180,7 +176,7 @@ abstract class SearchService
                 'updated_at' => $updatedAt,
             ]);
 
-            usleep($this->delay);
+            usleep($delay);
         }
     }
 
@@ -202,7 +198,7 @@ abstract class SearchService
     /**
      * @param string $url
      * @return array
-     * @throws NettoException
+     * @throws NettoException|ConnectionException
      */
     private function parse(string $url): array
     {
@@ -297,13 +293,11 @@ abstract class SearchService
         array_shift($array);
         $return = implode(' ', $array);
 
-        if ($this->highlightClass) {
-            $pos = mb_stripos($return, $needle);
-            if ($pos !== false) {
-                $return = mb_substr($return, 0, $pos).'<span class="'.$this->highlightClass.'">'.mb_substr($return, $pos, $length).'</span>'.mb_substr($return, ($pos + $length));
-            }
+        $pos = mb_stripos($return, $needle);
+        if ($pos !== false) {
+            $return = mb_substr($return, 0, $pos).'<span class="'.config('cms.search-highlight-class').'">'.mb_substr($return, $pos, $length).'</span>'.mb_substr($return, ($pos + $length));
         }
 
-        return $return;
+        return "&hellip;{$return}&hellip;";
     }
 }

@@ -14,7 +14,7 @@ class MessageSentListener
     public function handle(MessageSent $event): void
     {
         $to = $event->message->getTo()[0]->getAddress();
-        if ($to == config('cms.logs.send.email')) {
+        if ($to == config('cms.logs-send-email')) {
             return;
         }
 

@@ -17,6 +17,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
     window.nettoweb = {
+        default_disk: '{{ config('filesystems.default') }}',
         lang: '{{ app()->getLocale() }}',
         locale: '{{ config('locale_js') }}',
         text_dir: '{{ config('text_dir') }}',

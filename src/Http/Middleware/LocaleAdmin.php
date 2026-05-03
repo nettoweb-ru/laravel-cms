@@ -52,7 +52,7 @@ class LocaleAdmin extends BaseLocale
     {
         $locales = get_admin_locales();
 
-        $language = Cookie::get(self::COOKIE_ID, config('cms.default_language', self::DEFAULT_LANGUAGE));
+        $language = Cookie::get(self::COOKIE_ID, config('cms.admin-default-language', self::DEFAULT_LANGUAGE));
         if (!array_key_exists($language, $locales)) {
             $language = self::DEFAULT_LANGUAGE;
         }

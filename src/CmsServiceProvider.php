@@ -41,7 +41,7 @@ class CmsServiceProvider extends ServiceProvider
         date_default_timezone_set(config('app.timezone', 'UTC'));
 
         if ($this->app->runningInConsole()) {
-            $language = config('cms.default_language', LocaleAdmin::DEFAULT_LANGUAGE);
+            $language = config('cms.admin-default-language', LocaleAdmin::DEFAULT_LANGUAGE);
             set_language($language, get_admin_locales()[$language]);
 
             $this->commands([
@@ -86,7 +86,6 @@ class CmsServiceProvider extends ServiceProvider
         });
 
         $this->mergeConfigFrom(__DIR__ . '/../config/cms.php', 'cms');
-
     }
 
     /**
@@ -122,7 +121,7 @@ class CmsServiceProvider extends ServiceProvider
                     return $redirect;
                 }
 
-                if (in_array($statusCode, config('cms.logs.track'))) {
+                if (in_array($statusCode, config('cms.logs-track'))) {
                     log_tabulated_string($statusCode, $request->ip(), $request->getRequestUri());
                 }
 
@@ -232,9 +231,11 @@ class CmsServiceProvider extends ServiceProvider
      */
     private function registerScheduledTasks(): void
     {
-        Schedule::command(ReportLogs::class)->hourlyAt(config('cms.schedule.hourly', 0));
-        Schedule::command(RefreshSitemap::class)->dailyAt(config('cms.schedule.daily', 1));
-        Schedule::command(RefreshSearchIndex::class)->weeklyOn(config('cms.schedule.weekly', 2));
+        if (config('logs-send-email')) {
+            Schedule::command(ReportLogs::class)->everyTenMinutes();
+        }
+
+        Schedule::command(RefreshSitemap::class)->daily();
     }
 
     /**
@@ -264,7 +265,7 @@ class CmsServiceProvider extends ServiceProvider
             'replace_placeholders' => true,
         ]);
 
-        foreach (config('cms.logs.track', []) as $statusCode) {
+        foreach (config('cms.logs-track') as $statusCode) {
             config()->set("logging.channels.{$statusCode}", [
                 'driver' => 'single',
                 'path' => storage_path("logs/{$statusCode}.log"),

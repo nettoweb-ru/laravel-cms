@@ -3,17 +3,13 @@
 namespace Netto\Traits;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\{File, Storage};
-use Illuminate\Support\Str;
-use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\File;
 use Netto\Exceptions\NettoException;
+use Netto\Handlers\Abstract\FileHandler;
+use Throwable;
 
 trait HasUploads
 {
-    protected const IMAGE_WIDTH = 150;
-    protected const IMAGE_HEIGHT = 150;
-    private const IMAGE_QUALITY = 91;
-
     /**
      * @return void
      */
@@ -21,16 +17,13 @@ trait HasUploads
     {
         $changes = $this->getChanges();
         $original = $this->getOriginal();
-        $basePath = base_path().DIRECTORY_SEPARATOR;
         $delete = [];
 
         foreach ($this->uploads as $attribute => $params) {
             if (array_key_exists($attribute, $changes) && !empty($original[$attribute])) {
-                $delete[] = $basePath.$original[$attribute];
+                $delete[] = get_storage_path($original[$attribute], $params['disk']);
             }
         }
-
-        $delete = array_unique($delete);
 
         if ($delete) {
             File::delete($delete);
@@ -43,12 +36,11 @@ trait HasUploads
     protected function deleteUploads(): void
     {
         $attributes = $this->getAttributes();
-        $basePath = base_path().DIRECTORY_SEPARATOR;
         $delete = [];
 
         foreach ($this->uploads as $attribute => $params) {
             if (!empty($attributes[$attribute])) {
-                $delete[] = $basePath.$attributes[$attribute];
+                $delete[] = get_storage_path($attributes[$attribute], $params['disk']);
             }
         }
 
@@ -97,49 +89,39 @@ trait HasUploads
             return;
         }
 
-        $widthDefault = config('cms.image.width', self::IMAGE_WIDTH);
-        $heightDefault = config('cms.image.height', self::IMAGE_HEIGHT);
-        $qualityDefault = config('cms.image.quality', self::IMAGE_QUALITY);
-
-        $basePath = base_path().DIRECTORY_SEPARATOR;
+        $delete = [];
+        $autoDir = config('cms.public-auto-upload-dir');
 
         foreach ($uploads as $attribute => $upload) {
-            $storage = $this->uploads[$attribute]['storage'];
-            $disk = Storage::disk($storage);
+            $params = $this->uploads[$attribute];
 
-            if (array_key_exists('width', $this->uploads[$attribute]) && array_key_exists('height', $this->uploads[$attribute])) {
-                $width = $this->uploads[$attribute]['width'] ?? $widthDefault;
-                $height = $this->uploads[$attribute]['height'] ?? $heightDefault;
-                $quality = $this->uploads[$attribute]['quality'] ?? $qualityDefault;
-                $square = $this->uploads[$attribute]['square'] ?? false;
+            /** @var UploadedFile $upload */
+            if (!empty($params['handlers'])) {
+                foreach ($params['handlers'] as $handlerName) {
+                    /** @var FileHandler $handler */
+                    $handler = new $handlerName($upload);
 
-                try {
-                    $image = Image::read($upload);
+                    try {
+                        $upload = $handler->result();
+                    } catch (Throwable $exception) {
+                        throw new NettoException($exception->getMessage());
+                    }
 
-                    $resized = $square
-                        ? $image->coverDown($width, $height)
-                        : $image->scaleDown($width, $height);
-
-                    $path = 'auto'.DIRECTORY_SEPARATOR.Str::random(40).'.'.$upload->getClientOriginalExtension();
-
-                    $disk->put(
-                        $path,
-                        $resized->encodeByExtension(
-                            $upload->getClientOriginalExtension(),
-                            quality: $quality
-                        )
-                    );
-                } catch (\Exception $exception) {
-                    throw new NettoException($exception->getMessage());
-                }
-            } else {
-                $path = $upload->store('auto', $storage);
-                if (empty($path)) {
-                    throw new NettoException(__('main.error_saving_model'));
+                    $delete = array_merge($delete, $handler->getTmpFiles());
                 }
             }
 
-            $this->setAttribute($attribute, str_replace($basePath, '', $disk->path('').$path));
+            $path = $upload->store($autoDir, $params['disk']);
+
+            if ($path === false) {
+                throw new NettoException(__('main.error_saving_model'));
+            }
+
+            $this->setAttribute($attribute, $path);
+        }
+
+        if ($delete) {
+            File::delete($delete);
         }
     }
 }
