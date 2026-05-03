@@ -11,6 +11,7 @@
     dir="{{ $dir }}"
     @if ($disabled)
         id="{{ $id }}-visible"
+        disabled
         {!! $attributes->merge(['class' => 'input text disabled'])->toHtml() !!}
     @else
         @if ($autofocus) autofocus @endif
