@@ -65,10 +65,6 @@ return [
     'export-csv-separator' => ',',
     'logs-read-files' => [
         'laravel.log',
-        'sent.log',
-        '404.log',
-        '403.log',
-        '400.log',
     ],
     'logs-read-max' => 10,
     'logs-send-email' => env('NETTO_LOG_EMAIL', ''),
