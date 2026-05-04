@@ -505,7 +505,7 @@ if (!function_exists('log_tabulated_string')) {
     function log_tabulated_string($channel, string $ip, string $string): void {
         $log = "[{$ip}]".chr(9);
 
-        if (strlen($ip) < 12) {
+        if (strlen($ip) < 15) {
             $log .= chr(9);
         }
 
