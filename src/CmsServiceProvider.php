@@ -231,7 +231,7 @@ class CmsServiceProvider extends ServiceProvider
      */
     private function registerScheduledTasks(): void
     {
-        if (config('logs-send-email')) {
+        if (config('cms.logs-send-email')) {
             Schedule::command(ReportLogs::class)->everyTenMinutes();
         }
 
