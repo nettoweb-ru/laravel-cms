@@ -106,19 +106,36 @@ input.input,textarea.input,select.input{
     }
 }
 
-select.input.h120,
-textarea.input.h120{
+select.input.h80{
+    height:80px;
+}
+
+textarea.input.h80{
+    height:70px;
+}
+
+select.input.h120{
     height:120px;
 }
 
-select.input.h250,
-textarea.input.h250{
+textarea.input.h120{
+    height:110px;
+}
+
+select.input.h250{
     height:250px;
 }
 
-select.input.h400,
-textarea.input.h400{
+textarea.input.h250{
+    height:240px;
+}
+
+select.input.h400{
     height:400px;
+}
+
+textarea.input.h400{
+    height:390px;
 }
 
 input.input.disabled,
