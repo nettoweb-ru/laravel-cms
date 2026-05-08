@@ -122,7 +122,7 @@ class CmsServiceProvider extends ServiceProvider
                 }
 
                 if (in_array($statusCode, config('cms.logs-track'))) {
-                    log_tabulated_string($statusCode, $request->ip(), $request->getRequestUri());
+                    log_formatted_string($statusCode, $request->ip(), $request->getRequestUri());
                 }
 
                 return null;

@@ -119,7 +119,7 @@ abstract class RedirectService
                 $destination = '/';
             }
 
-            log_tabulated_string($status, $ip, "{$source} → {$destination}");
+            log_formatted_string($status, $ip, "{$source} → {$destination}");
         }
 
         return redirect()->intended($destination, $status);

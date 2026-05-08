@@ -47,10 +47,9 @@ trait IsMultiLingual
             return [];
         }
 
-        $return = [];
-        foreach (get_language_list() as $key => $value) {
-            $return[$key] = '';
-        }
+        $return = array_map(function ($value) {
+            return '';
+        }, get_language_list());
 
         if ($this->exists) {
             foreach ($this->translated->all() as $item) {

@@ -313,12 +313,9 @@ if (!function_exists('get_labels_translated')) {
      */
     function get_labels_translated(string $className, bool $empty = false, string $columnKey = 'id', string $columnValue = 'name'): array
     {
-        $return = [];
-        foreach (get_labels($className, $empty, $columnKey, $columnValue) as $id => $name) {
-            $return[$id] = $name ? __($name) : '';
-        }
-
-        return $return;
+        return array_map(function ($name) {
+            return $name ? __($name) : '';
+        }, get_labels($className, $empty, $columnKey, $columnValue));
     }
 }
 
@@ -493,7 +490,7 @@ if (!function_exists('is_multilingual')) {
     }
 }
 
-if (!function_exists('log_tabulated_string')) {
+if (!function_exists('log_formatted_string')) {
     /**
      * Writes formatted string and IP address to log channel.
      *
@@ -502,15 +499,8 @@ if (!function_exists('log_tabulated_string')) {
      * @param string $string
      * @return void
      */
-    function log_tabulated_string($channel, string $ip, string $string): void {
-        $log = "[{$ip}]".chr(9);
-
-        if (strlen($ip) < 15) {
-            $log .= chr(9);
-        }
-
-        $log .= $string;
-        Log::channel($channel)->info($log);
+    function log_formatted_string($channel, string $ip, string $string): void {
+        Log::channel($channel)->info("[{$ip}]".str_repeat(' ', 10 + (15 - strlen($ip))).$string);
     }
 }
 
