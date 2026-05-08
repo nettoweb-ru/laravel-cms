@@ -39,6 +39,7 @@ return [
     "attr_value" => "价值",
     "confirmation_delete" => "您确实要删除指定的对象吗？",
     "confirmation_logout" => "您确实要退出吗？",
+    "confirmation_sitemap_refresh" => "您真的想更新网站地图吗？",
     "confirmation_toggle" => "您确实要切换指定对象的活动吗？",
     "create_album" => "新相册",
     "create_image" => "新图像",

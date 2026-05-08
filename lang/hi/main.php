@@ -39,6 +39,7 @@ return [
     "attr_value" => "मूल्य",
     "confirmation_delete" => "क्या आप सचमुच निर्दिष्ट ऑब्जेक्ट्स को हटाना चाहते हैं?",
     "confirmation_logout" => "क्या आप सचमुच लॉग आउट करना चाहते हैं?",
+    "confirmation_sitemap_refresh" => "क्या आप सच में साइट मैप अपडेट करना चाहते हैं?",
     "confirmation_toggle" => "क्या आप सचमुच निर्दिष्ट ऑब्जेक्ट्स के लिए गतिविधि टॉगल करना चाहते हैं?",
     "create_album" => "नया फोटो एल्बम",
     "create_image" => "नई छवि",

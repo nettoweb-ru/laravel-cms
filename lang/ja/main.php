@@ -39,6 +39,7 @@ return [
     "attr_value" => "値",
     "confirmation_delete" => "指定されたオブジェクトを本当に削除しますか?",
     "confirmation_logout" => "本当にログアウトしますか?",
+    "confirmation_sitemap_refresh" => "本当にサイトマップを更新しますか？",
     "confirmation_toggle" => "指定されたオブジェクトのアクティビティを切り替えてもよろしいですか?",
     "create_album" => "新しい写真アルバム",
     "create_image" => "新しい画像",

@@ -39,6 +39,7 @@ return [
     "attr_value" => "ارزش",
     "confirmation_delete" => "آیا واقعاً می خواهید اشیاء مشخص شده را حذف کنید؟",
     "confirmation_logout" => "آیا واقعاً می‌خواهید از سیستم خارج شوید؟",
+    "confirmation_sitemap_refresh" => "آیا واقعاً می‌خواهید نقشه سایت را به‌روزرسانی کنید؟",
     "confirmation_toggle" => "آیا واقعاً می‌خواهید فعالیت را برای اشیاء مشخص‌شده تغییر دهید؟",
     "create_album" => "آلبوم عکس جدید",
     "create_image" => "تصویر جدید",

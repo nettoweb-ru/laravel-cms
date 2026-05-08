@@ -31,6 +31,7 @@
             confirm_toggle: '{{ __('main.confirmation_toggle') }}',
             confirm_logout: '{{ __('main.confirmation_logout') }}',
             confirm_delete: '{{ __('main.confirmation_delete') }}',
+            confirm_sitemap_refresh: '{{ __('main.confirmation_sitemap_refresh') }}',
             error_upload_max: '{{ __('main.error_upload_max_size_exceeded') }}',
             error_post_max: '{{ __('main.error_post_max_size_exceeded') }}',
         }
@@ -67,6 +68,7 @@
                     </div>
                 </div>
                 <div class="cell right">
+                    <div class="icon icon-refresh-sitemap" id="js-refresh-sitemap"></div>
                     <div class="icon icon-home @if (request()->routeIs($url['home'])) active @else js-link @endif" data-url="{{ route($url['home']) }}"></div>
                     <div class="icon icon-user @if (request()->routeIs($url['profile'])) active @else js-link @endif" data-url="{{ route($url['profile']) }}"></div>
                     <div class="icon icon-logout" id="js-logout"></div>

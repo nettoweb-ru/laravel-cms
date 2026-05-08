@@ -39,6 +39,7 @@ return [
     "attr_value" => "Wert",
     "confirmation_delete" => "Möchten Sie bestimmte Objekte wirklich löschen?",
     "confirmation_logout" => "Möchten Sie sich wirklich ausloggen?",
+    "confirmation_sitemap_refresh" => "Möchten Sie die Sitemap wirklich aktualisieren?",
     "confirmation_toggle" => "Möchten Sie die Aktivität für bestimmte Objekte wirklich umschalten?",
     "create_album" => "Neues Fotoalbum",
     "create_image" => "Neues Bild",

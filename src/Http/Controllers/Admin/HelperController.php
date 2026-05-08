@@ -2,6 +2,7 @@
 
 namespace Netto\Http\Controllers\Admin;
 
+use App\Services\SitemapService;
 use Illuminate\Support\Facades\{Auth, File};
 use Illuminate\Http\{JsonResponse, Request, Response};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -73,6 +74,15 @@ class HelperController extends BaseController
                 __('main.params_versions') => get_versions(),
             ],
         ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function sitemap(): JsonResponse
+    {
+        (new SitemapService())->regenerate();
+        return response()->json(true);
     }
 
     /**

@@ -39,6 +39,7 @@ return [
     "attr_value" => "Value",
     "confirmation_delete" => "Do you really want to delete specified objects?",
     "confirmation_logout" => "Do you really want to log out?",
+    "confirmation_sitemap_refresh" => "Do you really want to update sitemap?",
     "confirmation_toggle" => "Do you really want to toggle activity for specified objects?",
     "create_album" => "New photo album",
     "create_image" => "New image",

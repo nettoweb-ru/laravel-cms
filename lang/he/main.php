@@ -39,6 +39,7 @@ return [
     "attr_value" => "עֵרֶך",
     "confirmation_delete" => "האם אתה באמת רוצה למחוק אובייקטים שצוינו?",
     "confirmation_logout" => "האם אתה באמת רוצה להתנתק?",
+    "confirmation_sitemap_refresh" => "האם אתה באמת רוצה לעדכן את מפת האתר?",
     "confirmation_toggle" => "האם אתה באמת רוצה להפעיל מחדש את הפעילות עבור אובייקטים ספציפיים?",
     "create_album" => "אלבום תמונות חדש",
     "create_image" => "תמונה חדשה",

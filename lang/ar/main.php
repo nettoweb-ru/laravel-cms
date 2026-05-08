@@ -39,6 +39,7 @@ return [
     "attr_value" => "قيمة",
     "confirmation_delete" => "هل تريد حقًا حذف الكائنات المحددة؟",
     "confirmation_logout" => "هل تريد حقا تسجيل الخروج؟",
+    "confirmation_sitemap_refresh" => "هل تريد حقاً تحديث خريطة الموقع؟",
     "confirmation_toggle" => "هل تريد حقًا تبديل النشاط للأشياء المحددة؟",
     "create_album" => "ألبوم صور جديد",
     "create_image" => "صورة جديدة",

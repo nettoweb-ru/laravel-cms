@@ -39,6 +39,7 @@ return [
     "attr_value" => "Değer",
     "confirmation_delete" => "Belirtilen nesneleri gerçekten silmek istiyor musunuz?",
     "confirmation_logout" => "Gerçekten çıkış yapmak istiyor musunuz?",
+    "confirmation_sitemap_refresh" => "Site haritasını gerçekten güncellemek istiyor musunuz?",
     "confirmation_toggle" => "Belirtilen nesneler için etkinliği gerçekten değiştirmek istiyor musunuz?",
     "create_album" => "Yeni fotoğraf albümü",
     "create_image" => "Yeni resim",

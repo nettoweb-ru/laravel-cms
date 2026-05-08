@@ -39,6 +39,7 @@ return [
     "attr_value" => "Waarde",
     "confirmation_delete" => "Wilt u de betreffende objecten echt verwijderen?",
     "confirmation_logout" => "Wilt u echt uitloggen?",
+    "confirmation_sitemap_refresh" => "Wil je de sitemap echt bijwerken?",
     "confirmation_toggle" => "Wilt u de activiteit voor bepaalde objecten echt in- of uitschakelen?",
     "create_album" => "Nieuw fotoalbum",
     "create_image" => "Nieuw beeld",

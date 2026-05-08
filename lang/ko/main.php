@@ -39,6 +39,7 @@ return [
     "attr_value" => "값",
     "confirmation_delete" => "지정된 객체를 삭제하시겠습니까?",
     "confirmation_logout" => "정말로 로그아웃하시겠습니까?",
+    "confirmation_sitemap_refresh" => "사이트맵을 정말로 업데이트하시겠습니까?",
     "confirmation_toggle" => "지정된 개체에 대한 활동을 전환하시겠습니까?",
     "create_album" => "새로운 사진 앨범",
     "create_image" => "새로운 이미지",

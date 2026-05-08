@@ -39,6 +39,7 @@ return [
     "attr_value" => "Valor",
     "confirmation_delete" => "¿Realmente desea eliminar objetos específicos?",
     "confirmation_logout" => "¿Realmente quieres cerrar sesión?",
+    "confirmation_sitemap_refresh" => "¿De verdad quieres actualizar el mapa del sitio?",
     "confirmation_toggle" => "¿Realmente desea alternar la actividad de objetos específicos?",
     "create_album" => "Nuevo álbum de fotos",
     "create_image" => "Nueva imagen",

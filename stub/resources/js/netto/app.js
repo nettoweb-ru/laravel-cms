@@ -24,6 +24,7 @@ window.App = {
     url: {
         cookie: '/admin/tools/cookie',
         download: '/admin/tools/download',
+        sitemap: '/admin/tools/sitemap',
         transliterate: '/admin/tools/transliterate',
     },
 
@@ -99,6 +100,7 @@ window.App = {
 
         this.initLinks()
         this.initLogoutLink()
+        this.initSitemapLink()
         this.initLanguageLinks()
     },
 
@@ -226,6 +228,17 @@ window.App = {
 
 
                 $(document).off('click.netto')
+            }
+        })
+    },
+
+    initSitemapLink: function(){
+        $('#js-refresh-sitemap').click(async function() {
+            if (await Overlay.confirmation(window.nettoweb.messages.confirm_sitemap_refresh)) {
+                Overlay.animation()
+                Ajax.get(App.url.sitemap, {}, function() {
+                    window.location.reload()
+                })
             }
         })
     },

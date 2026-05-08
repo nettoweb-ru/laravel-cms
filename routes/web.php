@@ -159,6 +159,7 @@ Route::prefix(config('cms.admin-location'))->name('admin.')->group(function() {
             Route::get('tools/download', [HelperController::class, 'download']);
             Route::get('tools/transliterate', [HelperController::class, 'transliterate']);
             Route::post('tools/cookie', [HelperController::class, 'cookie']);
+            Route::get('tools/sitemap', [HelperController::class, 'sitemap']);
         });
     });
 });

@@ -39,6 +39,7 @@ return [
     "attr_value" => "Valeur",
     "confirmation_delete" => "Voulez-vous vraiment supprimer les objets spécifiés?",
     "confirmation_logout" => "Voulez-vous vraiment vous déconnecter?",
+    "confirmation_sitemap_refresh" => "Voulez-vous vraiment mettre à jour le plan du site?",
     "confirmation_toggle" => "Voulez-vous vraiment activer/désactiver l'activité pour les objets spécifiés?",
     "create_album" => "Nouvel album photos",
     "create_image" => "Nouvelle image",
