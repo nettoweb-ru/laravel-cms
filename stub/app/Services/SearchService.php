@@ -1,18 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use Netto\Services\SearchService as BaseService;
+use Netto\Services\SiteSearchService as BaseService;
 
 class SearchService extends BaseService
 {
-    protected int $perPage = 10;
 
-    /**
-     * @return array
-     */
-    protected function paths(): array
-    {
-        return [];
-    }
 }

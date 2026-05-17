@@ -1,48 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netto\Services;
 
-use Carbon\Carbon;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\{Cache, Log};
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\{Cache, DB, Http, Log};
-use Illuminate\Support\Collection;
-use Netto\Exceptions\NettoException;
 
 abstract class SearchService
 {
-    private const TABLE = 'cms__search';
-    private const MAX_NAME_LENGTH = 2048;
+    protected int $perPage = 10;
 
-    protected int $perPage;
+    abstract protected function getBuilder(): Builder;
 
-    private array $paths = [];
-    private array $deleteId = [];
+    abstract protected function getItems(Builder $builder, string $query): array;
 
-    private bool $force;
+    abstract protected function prepareBuilder(Builder &$builder, string $query): void;
 
-    /**
-     * @param bool $force
-     */
-    public function __construct(bool $force = false)
-    {
-        $this->force = $force;
-    }
-
-    /**
-     * Find entry in search database.
-     *
-     * @param string $query
-     * @param int $page
-     * @return array
-     */
     public function find(string $query, int $page = 1): array
     {
-        $query = urldecode(strip_tags($query));
+        $original = $this->sanitize($query);
+        $min = config('cms.search-min-query-length');
 
-        if (($page < 1) || (mb_strlen($query) < config('cms.search-min-query-length'))) {
+        if (($page < 1) || (mb_strlen($original) < $min)) {
             return [
-                'query' => $query,
+                'query' => $original,
+                'modified' => false,
                 'results' => [
                     'list' => [],
                     'navigation' => [
@@ -53,52 +37,51 @@ abstract class SearchService
             ];
         }
 
-        $locale = app()->getLocale();
-        $items = Cache::remember($locale.'|'.md5($query), config('cms.search-cache-time'), function() use ($query, $locale): array {
-            Log::channel('search')->info("[{$locale}] ".$query);
+        [$items, $modified] = Cache::remember(
+            $this->getCacheKey($original),
+            $this->getCacheTime(),
+            function() use ($original, $min): array {
+                $locale = app()->getLocale();
+                Log::channel($this->getLogChannelId())->info("[{$locale}] ".$original);
+                $modified = $original;
 
-            $collection = DB::table(self::TABLE)
-                ->where('content', 'like', '%'.$query.'%')
-                ->where('lang_id', get_current_language_id())
-                ->orderBy('updated_at', 'desc')
-                ->get();
+                $builder = $this->getBuilder();
+                $this->prepareBuilder($builder, $original);
 
-            $items = [];
-            $length = mb_strlen($query);
-            $cutLength = (int) floor((config('cms.search-max-preview-length') - $length) / 2);
+                if (!$builder->count()) {
+                    $array = explode(' ', preg_replace("/^[a-zA-Zа-яА-ЯёЁ]+$/", '', $original));
 
-            foreach ($collection as $item) {
-                $pos = mb_stripos($item->name, $query);
+                    if (count($array) > 1) {
+                        usort($array, function($a, $b) {
+                            return strlen($a) <=> strlen($b);
+                        });
 
-                if ($pos === false) {
-                    $relevance = self::MAX_NAME_LENGTH;
-                } else {
-                    $relevance = $pos;
+                        foreach (array_reverse($array) as $chunk) {
+                            if (mb_strlen($chunk) < $min) {
+                                continue;
+                            }
+
+                            $builder = $this->getBuilder();
+                            $this->prepareBuilder($builder, $chunk);
+
+                            if ($builder->count()) {
+                                $modified = $chunk;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                $items[$relevance][$item->id] = [
-                    'title' => $item->name,
-                    'link' => $item->url,
-                    'date' => $item->updated_at ? format_date($item->updated_at, \IntlDateFormatter::NONE) : '',
-                    'preview' => $this->preview($query, $length, $cutLength, $item->content),
-                ];
+                return [$this->getItems($builder, $modified), $modified];
             }
-
-            ksort($items);
-
-            $return = [];
-            foreach ($items as $value) {
-                $return = array_merge($return, $value);
-            }
-
-            return $return;
-        });
+        );
 
         $list = array_slice($items, ($page - 1) * $this->perPage, $this->perPage);
         $pagination = new LengthAwarePaginator($list, count($items), $this->perPage, $page);
 
         return [
-            'query' => $query,
+            'query' => $modified,
+            'modified' => !($original == $modified),
             'results' => [
                 'list' => $list,
                 'navigation' => [
@@ -109,195 +92,24 @@ abstract class SearchService
         ];
     }
 
-    /**
-     * Reindex search database.
-     *
-     * @return void
-     */
-    public function reindex(): void
+    protected function getLogChannelId(): string
     {
-        if ($this->force) {
-            DB::statement("TRUNCATE TABLE `".self::TABLE."`");
-        }
-
-        foreach ($this->paths() as $data) {
-            $this->paths[] = $data['path'];
-        }
-
-        $delay = config('cms.search-reindex-delay');
-
-        if (!$this->force) {
-            DB::table(self::TABLE)->select(['id', 'url'])->orderBy('updated_at', 'desc')->chunk(500, function(Collection $collection) use ($delay) {
-                foreach ($collection as $item) {
-                    if (in_array($item->url, $this->paths)) {
-                        unset($this->paths[array_search($item->url, $this->paths)]);
-                    } else {
-                        $this->deleteId[] = $item->id;
-                        continue;
-                    }
-
-                    try {
-                        [$langId, $name, $content, $updatedAt] = $this->parse($item->url);
-                    } catch (\Throwable $throwable) {
-                        Log::error($throwable->getMessage());
-                        continue;
-                    }
-
-                    DB::table(self::TABLE)->where('id', $item->id)->update([
-                        'lang_id' => $langId,
-                        'name' => $name,
-                        'url' => $item->url,
-                        'content' => $content,
-                        'updated_at' => $updatedAt,
-                    ]);
-
-                    usleep($delay);
-                }
-            });
-
-            if ($this->deleteId) {
-                DB::table(self::TABLE)->whereIn('id', $this->deleteId)->delete();
-            }
-        }
-
-        foreach ($this->paths as $path) {
-            try {
-                [$langId, $name, $content, $updatedAt] = $this->parse($path);
-            } catch (\Throwable $throwable) {
-                Log::error($throwable->getMessage());
-                continue;
-            }
-
-            DB::table(self::TABLE)->insert([
-                'lang_id' => $langId,
-                'name' => $name,
-                'url' => $path,
-                'content' => $content,
-                'updated_at' => $updatedAt,
-            ]);
-
-            usleep($delay);
-        }
+        return 'search';
     }
 
-    /**
-     * @return array
-     */
-    abstract protected function paths(): array;
-
-    /**
-     * @param string $content
-     * @return string
-     */
-    private function content(string $content): string
+    protected function getCacheKey(string $query): string
     {
-        $content = str_replace([chr(9), chr(10), chr(13)], ' ', strip_tags($content));
-        return implode(' ', array_filter(array_map('trim', explode(' ', $content))));
+        $locale = app()->getLocale();
+        return $locale.'|search|'.md5($query);
     }
 
-    /**
-     * @param string $url
-     * @return array
-     * @throws NettoException|ConnectionException
-     */
-    private function parse(string $url): array
+    protected function getCacheTime(): int
     {
-        $response = Http::get($url);
-        if ($response->failed()) {
-            throw new NettoException("Request returned status {$response->status()}");
-        }
-
-        $headers = $response->headers();
-        if (empty($headers['Content-Language'][0])) {
-            throw new NettoException("Unable to detect language for url {$url}");
-        }
-
-        $languages = get_language_list();
-        if (!array_key_exists($headers['Content-Language'][0], $languages)) {
-            throw new NettoException("Language {$headers['Content-Language'][0]} is not configured for url {$url}");
-        }
-
-        $body = html_entity_decode($response->body());
-        preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
-
-        $name = $url;
-        if (!empty($matches[2][0])){
-            $name = trim($matches[2][0]);
-        }
-
-        if (mb_strlen($name) > self::MAX_NAME_LENGTH) {
-            $name = mb_substr($name, 0, self::MAX_NAME_LENGTH);
-        }
-
-        $content = preg_replace([
-            "/<netto-skip-reindex>[\s\S]*?<\/netto-skip-reindex>/",
-            "/<head>[\s\S]*?<\/head>/"
-        ], '', $body);
-
-        $updatedAt = null;
-        if (!empty($headers['Last-Modified'][0])) {
-            $date = Carbon::createFromFormat('D, d M Y H:i:s e', $headers['Last-Modified'][0], 'GMT');
-            $date->setTimezone(date_default_timezone_get());
-            $updatedAt = $date->format('Y-m-d H:i:s');
-        }
-
-        return [
-            $languages[$headers['Content-Language'][0]]['id'],
-            $name,
-            $this->content($content),
-            $updatedAt,
-        ];
+        return config('cms.search-cache-time');
     }
 
-    /**
-     * @param string $needle
-     * @param int $length
-     * @param int $cutLength
-     * @param string $content
-     * @return string
-     */
-    private function preview(string $needle, int $length, int $cutLength, string $content): string
+    protected function sanitize(string $string): string
     {
-        $start = mb_stripos($content, $needle);
-        $afterOffset = $start + $length;
-        $max = mb_strlen($content);
-
-        $return = mb_substr($content, $start, $length);
-
-        $beforeOffset = $start - $cutLength;
-        $beforeLength = $cutLength;
-        $afterLength = $cutLength;
-
-        if ($beforeOffset < 0) {
-            $afterLength += ($beforeOffset * -1);
-
-            $beforeOffset = 0;
-            $beforeLength = $start;
-        }
-
-        $check = $afterOffset + $afterLength;
-        if ($check > $max) {
-            $afterLength -= ($check - $max);
-        }
-
-        if ($beforeLength) {
-            $return = mb_substr($content, $beforeOffset, $beforeLength).$return;
-        }
-
-        if ($afterLength) {
-            $return .= mb_substr($content, $afterOffset, $afterLength);
-        }
-
-        $array = explode(' ', $return);
-        array_pop($array);
-        array_shift($array);
-        $return = implode(' ', $array);
-
-        $pos = mb_stripos($return, $needle);
-        if ($pos !== false) {
-            $return = mb_substr($return, 0, $pos).'<span class="'.config('cms.search-highlight-class').'">'.mb_substr($return, $pos, $length).'</span>'.mb_substr($return, ($pos + $length));
-        }
-
-        return "&hellip;{$return}&hellip;";
+        return urldecode(strip_tags($string));
     }
 }

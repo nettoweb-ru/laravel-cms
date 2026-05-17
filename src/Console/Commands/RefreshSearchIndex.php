@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netto\Console\Commands;
 
-use App\Services\SearchService;
+use App\Services\ReindexService;
 use Illuminate\Console\Command;
 
 class RefreshSearchIndex extends Command
 {
-    protected $signature = 'cms:refresh-search {--force=0 : Truncate table before reindexing}';
+    protected $signature = 'cms:refresh-search {--truncate=0 : Truncate table before reindexing}';
     protected $description = 'Reindex search database';
 
     /**
@@ -15,6 +17,12 @@ class RefreshSearchIndex extends Command
      */
     public function handle(): void
     {
-        (new SearchService(!empty($this->option('force'))))->reindex();
+        $service = new ReindexService();
+
+        if (!empty($this->option('truncate'))) {
+            $service->truncate = true;
+        }
+
+        $service->reindex();
     }
 }
