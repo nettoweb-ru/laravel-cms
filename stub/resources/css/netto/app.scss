@@ -48,6 +48,7 @@
                     &.left{
                         width:1%;
                         height: inherit;
+                        text-align: start;
 
                         .menu-desktop{
                             display:none;
@@ -120,6 +121,7 @@
                     &.right{
                         width:99%;
                         white-space: nowrap;
+                        text-align: end;
 
                         @media screen and (min-width:767px) {
                             width: 1%;
@@ -267,7 +269,7 @@
 
     .container{
         width:inherit;
-        text-align:initial;
+        text-align:start;
 
         @media screen and (min-width:1680px) {
             width:1600px;
@@ -691,12 +693,7 @@ body.ltr{
         }
     }
 
-    .layer-main .container{
-        text-align: left;
-    }
-
     .layer-main .block.block-top .table .cell.left{
-        text-align:left;
         padding-left:15px;
 
         @media screen and (min-width:767px) {
@@ -705,7 +702,6 @@ body.ltr{
     }
 
     .layer-main .block.block-top .table .cell.right{
-        text-align:right;
         padding-right:15px;
 
         @media screen and (min-width:767px) {
@@ -758,12 +754,7 @@ body.rtl{
         }
     }
 
-    .layer-main .container{
-        text-align: right;
-    }
-
     .layer-main .block.block-top .table .cell.left{
-        text-align:right;
         padding-right:15px;
 
         @media screen and (min-width:767px) {
@@ -772,7 +763,6 @@ body.rtl{
     }
 
     .layer-main .block.block-top .table .cell.right{
-        text-align:left;
         padding-left:15px;
 
         @media screen and (min-width:767px) {

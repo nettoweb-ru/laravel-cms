@@ -370,6 +370,11 @@
                                                 td.date{
                                                     white-space: nowrap;
                                                 }
+
+                                                th.size,
+                                                td.size{
+                                                    text-align: end;
+                                                }
                                             }
                                         }
 
@@ -553,11 +558,6 @@ body.ltr{
 
     .list .list-block.content .content-layer.results .data-block.found .result.data .general .visible table thead th.sort span:after{
         padding-left: 3px;
-    }
-
-    .list .list-block.content .content-layer.results .data-block.found .result.data .browser table.info th.size,
-    .list .list-block.content .content-layer.results .data-block.found .result.data .browser table.info td.size{
-        text-align: right;
     }
 
     .list .list-block.content .content-layer.results .data-block.found .result.data .logs .logs-table tr.log-header .table-log-head .cell-log-head.right .btn{

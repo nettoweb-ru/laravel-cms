@@ -29,6 +29,7 @@ html{
     min-height:100vh;
     background-color:var(--color-reset);
     color:var(--color-black);
+    scrollbar-gutter: stable;
 }
 
 body{
@@ -37,9 +38,10 @@ body{
     letter-spacing:0;
     font-size:0;
     word-spacing:0;
-    font-family:'Play', sans-serif;
+    font-family:'Play', system-ui;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-gutter: stable;
 
     &.overflow{
         overflow:hidden;
