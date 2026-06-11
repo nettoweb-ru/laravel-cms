@@ -344,6 +344,12 @@
                                         }
 
                                         table.info{
+                                            thead{
+                                                th.size{
+                                                    text-align: end;
+                                                }
+                                            }
+
                                             tbody{
                                                 tr{
                                                     cursor: pointer;
@@ -371,7 +377,6 @@
                                                     white-space: nowrap;
                                                 }
 
-                                                th.size,
                                                 td.size{
                                                     text-align: end;
                                                 }

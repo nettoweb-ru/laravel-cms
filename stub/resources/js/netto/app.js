@@ -130,17 +130,33 @@ window.App = {
     },
 
     initDesktopPositions: function() {
-        let key, pos, scrollW = window.innerWidth - document.documentElement.clientWidth
+        let key, pos, scrollW = this.getScrollBarWidth()
 
         for (key in this.objects.desktop) {
             if (this.objects.desktop[key].reversed) {
                 pos = window.innerWidth - this.objects.desktop[key].trigger.offset().left - this.objects.desktop[key].trigger.width() - scrollW
                 this.objects.desktop[key].menu.css('right', pos)
             } else {
-                pos = this.objects.desktop[key].trigger.offset().left
+                pos = this.objects.desktop[key].trigger.offset().left - scrollW
                 this.objects.desktop[key].menu.css('left', pos)
             }
         }
+    },
+
+    getScrollBarWidth: function() {
+        let outer = document.createElement('div')
+        outer.style.visibility = 'hidden'
+        outer.style.overflow = 'scroll'
+        document.body.appendChild(outer)
+
+        let inner = document.createElement('div')
+        outer.appendChild(inner)
+
+        let scrollbarWidth = outer.offsetWidth - inner.offsetWidth
+
+        outer.parentNode.removeChild(outer)
+
+        return scrollbarWidth
     },
 
     initLanguageLinks: function() {

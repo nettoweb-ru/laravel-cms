@@ -29,7 +29,7 @@ html{
     min-height:100vh;
     background-color:var(--color-reset);
     color:var(--color-black);
-    scrollbar-gutter: stable;
+    scrollbar-gutter: stable both-edges;
 }
 
 body{
@@ -41,7 +41,7 @@ body{
     font-family:'Play', system-ui;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scrollbar-gutter: stable;
+    scrollbar-gutter: stable both-edges;
 
     &.overflow{
         overflow:hidden;
@@ -149,7 +149,11 @@ select.input.disabled{
 
 table{
     border-collapse:collapse;
-    width:100%
+    width:100%;
+
+    th,td{
+        text-align: start;
+    }
 }
 
 .table{
