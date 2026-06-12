@@ -143,22 +143,6 @@ window.App = {
         }
     },
 
-    getScrollBarWidth: function() {
-        let outer = document.createElement('div')
-        outer.style.visibility = 'hidden'
-        outer.style.overflow = 'scroll'
-        document.body.appendChild(outer)
-
-        let inner = document.createElement('div')
-        outer.appendChild(inner)
-
-        let scrollbarWidth = outer.offsetWidth - inner.offsetWidth
-
-        outer.parentNode.removeChild(outer)
-
-        return scrollbarWidth
-    },
-
     initLanguageLinks: function() {
         $('.js-set-language').click(function() {
             Overlay.animation()
@@ -257,6 +241,22 @@ window.App = {
                 })
             }
         })
+    },
+
+    getScrollBarWidth: function() {
+        let outer = document.createElement('div')
+        outer.style.visibility = 'hidden'
+        outer.style.overflow = 'scroll'
+        document.body.appendChild(outer)
+
+        let inner = document.createElement('div')
+        outer.appendChild(inner)
+
+        let scrollbarWidth = outer.offsetWidth - inner.offsetWidth
+
+        outer.parentNode.removeChild(outer)
+
+        return scrollbarWidth
     },
 
     showDesktopMenu: function(id) {
