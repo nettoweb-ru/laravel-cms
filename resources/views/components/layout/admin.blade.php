@@ -125,6 +125,7 @@
     <div class="block block-content">
         <x-cms-navigation />
     </div>
+    <div class="block block-head-dummy"></div>
 </div>
 
 <div class="layer-mobile-dropdown languages" id="js-mobile-languages">
@@ -132,6 +133,7 @@
     <div class="block block-content">
         <x-cms-languages/>
     </div>
+    <div class="block block-head-dummy"></div>
 </div>
 
 <x-cms::session-status :status="session('status')"/>
