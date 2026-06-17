@@ -14,6 +14,8 @@
                 display: none;
 
                 .table.sheet-padding-table{
+                    border-collapse: separate;
+
                     .cell.sheet-padding-cell{
                         vertical-align: top;
                         padding:10px;
@@ -36,20 +38,18 @@
             }
 
             .table{
+                border-collapse:separate;
+
                 .cell{
                     vertical-align: middle;
 
                     &.title{
                         cursor: pointer;
-                        border-style: solid;
-                        border-color:var(--color-light-blue);
-                        border-width: 0 1px 1px;
-                        -webkit-border-bottom-right-radius: 5px;
-                        -webkit-border-bottom-left-radius: 5px;
-                        -moz-border-radius-bottomright: 5px;
-                        -moz-border-radius-bottomleft: 5px;
-                        border-bottom-right-radius: 5px;
-                        border-bottom-left-radius: 5px;
+                        border-radius:0 0 5px 5px;
+                        border-left:1px solid var(--color-light-blue);
+                        border-right:1px solid var(--color-light-blue);
+                        border-bottom:1px solid var(--color-light-blue);
+                        border-top:1px solid var(--color-light-blue);
                         white-space: nowrap;
                         padding:4px 12px 6px;
                         background-color:var(--color-main);
@@ -59,6 +59,7 @@
                             cursor: default;
                             color:var(--color-main);
                             background-color:var(--color-reset);
+                            border-top:1px solid transparent;
                         }
 
                         &.lang{
@@ -304,9 +305,7 @@
                                     background-color:var(--color-light-gray-1);
                                     border:1px solid var(--color-gray);
                                     margin-top:6px;
-                                    -webkit-border-radius: 3px;
-                                    -moz-border-radius: 3px;
-                                    border-radius: 3px;
+                                    border-radius: 5px;
                                     cursor: default;
 
                                     &:not(.disabled):hover{
@@ -319,7 +318,7 @@
                                     .value-item-table{
                                         .value-item-cell{
                                             vertical-align: middle;
-                                            padding: 2px 6px;
+                                            padding: 2px 6px 3px;
                                         }
                                     }
                                 }

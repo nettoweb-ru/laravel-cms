@@ -2,34 +2,35 @@
     width:inherit;
 
     .tab-block{
-        width: inherit;
+        width:inherit;
 
         &.navigation{
             .table{
+                border-collapse:separate;
+
                 .cell{
-                    vertical-align: middle;
+                    vertical-align:middle;
 
                     &.title{
                         background-color:var(--color-main);
                         color:var(--color-reset);
-                        cursor: pointer;
-                        border-style:solid;
-                        border-color:var(--color-main);
-                        border-width:1px 1px 0;
-                        -webkit-border-top-left-radius:5px;
-                        -webkit-border-top-right-radius:5px;
-                        -moz-border-radius-topleft:5px;
-                        -moz-border-radius-topright:5px;
-                        border-top-left-radius:5px;
-                        border-top-right-radius:5px;
-                        white-space: nowrap;
+                        cursor:pointer;
+                        white-space:nowrap;
                         padding:4px 12px 7px;
+                        border-radius:5px 5px 0 0;
+                        border-top:1px solid transparent;
+                        border-left:1px solid transparent;
+                        border-right:1px solid transparent;
+                        border-bottom:1px solid var(--color-dark-blue);
 
                         &.active{
                             color:var(--color-main);
-                            background-color: var(--color-reset);
-                            border-color:var(--color-dark-blue);
-                            cursor: default;
+                            background-color:var(--color-reset);
+                            border-top:1px solid var(--color-dark-blue);
+                            border-bottom:1px solid transparent;
+                            border-left:1px solid var(--color-dark-blue);
+                            border-right:1px solid var(--color-dark-blue);
+                            cursor:default;
                         }
                     }
 
@@ -49,16 +50,18 @@
         &.items{
             .tab{
                 width:inherit;
-                border-style: solid;
-                border-color:var(--color-dark-blue);
-                border-width: 0 1px 1px;
                 display:none;
 
                 .table.tab-item-table{
+                    border-collapse:separate;
+
                     .cell.tab-item-cell{
-                        vertical-align: top;
+                        vertical-align:top;
                         padding:10px;
-                        width: inherit;
+                        width:inherit;
+                        border-style:solid;
+                        border-color:var(--color-dark-blue);
+                        border-width:0 1px 1px;
                     }
                 }
             }
