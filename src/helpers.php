@@ -444,7 +444,7 @@ if (!function_exists('get_text_direction')) {
      */
     function get_text_direction(string $language): string
     {
-        return in_array($language, ['ar', 'fa', 'he']) ? 'rtl' : 'ltr';
+        return in_array($language, ['ar', 'he', 'fa', 'ur', 'yi', 'syr', 'dv']) ? 'rtl' : 'ltr';
     }
 }
 
