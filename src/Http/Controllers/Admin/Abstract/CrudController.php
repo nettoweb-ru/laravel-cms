@@ -181,7 +181,7 @@ abstract class CrudController extends BaseController
         foreach ($items as $item) {
             $string = [];
             foreach ($columns as $column => $columnWidth) {
-                $string[] = $item[$column];
+                $string[] = html_entity_decode($item[$column]);
             }
 
             $list[] = $string;
