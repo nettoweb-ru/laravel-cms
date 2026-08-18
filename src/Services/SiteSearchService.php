@@ -25,15 +25,7 @@ abstract class SiteSearchService extends BaseService
         $cutLength = (int) floor((config('cms.search-max-preview-length') - $length) / 2);
 
         foreach ($builder->get() as $item) {
-            $pos = mb_stripos($item->name, $query);
-
-            if ($pos === false) {
-                $relevance = self::MAX_NAME_LENGTH;
-            } else {
-                $relevance = $pos;
-            }
-
-            $return[$relevance][$item->id] = [
+            $return[$item->id] = [
                 'title' => $item->name,
                 'link' => $item->url,
                 'date' => $item->updated_at ? format_date($item->updated_at, \IntlDateFormatter::NONE) : '',
@@ -41,8 +33,7 @@ abstract class SiteSearchService extends BaseService
             ];
         }
 
-        ksort($return);
-        return array_merge(...$return);
+        return $return;
     }
 
     /**
@@ -99,8 +90,11 @@ abstract class SiteSearchService extends BaseService
 
     protected function prepareBuilder(Builder &$builder, string $query): void
     {
-        $builder->where('content', 'like', '%'.$query.'%')
+        $builder
+            ->selectRaw("id, url, updated_at, name, content, match(name,meta,content) against ('".$query."') as score")
             ->where('lang_id', get_current_language_id())
+            ->whereFullText(['name', 'meta', 'content'], $query)
+            ->orderBy('score', 'desc')
             ->orderBy('updated_at', 'desc');
     }
 }

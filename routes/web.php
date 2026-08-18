@@ -141,7 +141,7 @@ Route::prefix(config('cms.admin-location'))->name('admin.')->group(function() {
                 Route::get('browser/list', [BrowserController::class, 'list'])->name('browser.list');
                 Route::post('browser/upload', [BrowserController::class, 'upload'])->name('browser.upload');
                 Route::put('browser/directory', [BrowserController::class, 'directory'])->name('browser.directory');
-                Route::post('browser/delete', [BrowserController::class, 'delete'])->name('browser.delete');;
+                Route::post('browser/delete', [BrowserController::class, 'delete'])->name('browser.delete');
             });
 
             Route::middleware('permission:admin-logs')->group(function() {

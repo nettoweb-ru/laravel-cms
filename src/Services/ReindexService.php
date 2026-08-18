@@ -44,7 +44,7 @@ abstract class ReindexService
                     }
 
                     try {
-                        [$langId, $name, $content, $updatedAt] = $this->parse($item->url);
+                        [$langId, $name, $content, $meta, $updatedAt] = $this->parse($item->url);
                     } catch (\Throwable $throwable) {
                         Log::error($throwable->getMessage());
                         continue;
@@ -55,6 +55,7 @@ abstract class ReindexService
                         'name' => $name,
                         'url' => $item->url,
                         'content' => $content,
+                        'meta' => $meta,
                         'updated_at' => $updatedAt,
                     ]);
 
@@ -69,7 +70,7 @@ abstract class ReindexService
 
         foreach ($this->paths as $path) {
             try {
-                [$langId, $name, $content, $updatedAt] = $this->parse($path);
+                [$langId, $name, $content, $meta, $updatedAt] = $this->parse($path);
             } catch (\Throwable $throwable) {
                 Log::error($throwable->getMessage());
                 continue;
@@ -80,6 +81,7 @@ abstract class ReindexService
                 'name' => $name,
                 'url' => $path,
                 'content' => $content,
+                'meta' => $meta,
                 'updated_at' => $updatedAt,
             ]);
 
@@ -129,8 +131,9 @@ abstract class ReindexService
         $body = html_entity_decode($response->body());
         preg_match_all("/(.*)<title>(.*)<\/title>(.*)/", $body, $matches);
 
-        $name = $url;
-        if (!empty($matches[2][0])){
+        if (empty($matches[2][0])) {
+            $name = $url;
+        } else {
             $name = trim($matches[2][0]);
         }
 
@@ -139,15 +142,16 @@ abstract class ReindexService
         }
 
         $content = $this->content($body);
+        $meta = '';
 
         preg_match_all("/(.*)<meta name=\"keywords\" content=\"(.*)\">(.*)/", $body, $matches);
         if (!empty($matches[2][0])) {
-            $content .= ' '.trim($matches[2][0]);
+            $meta .= ' '.trim($matches[2][0]);
         }
 
         preg_match_all("/(.*)<meta name=\"description\" content=\"(.*)\">(.*)/", $body, $matches);
         if (!empty($matches[2][0])) {
-            $content .= ' '.trim($matches[2][0]);
+            $meta .= ' '.trim($matches[2][0]);
         }
 
         $updatedAt = null;
@@ -161,6 +165,7 @@ abstract class ReindexService
             $languages[$headers['Content-Language'][0]]['id'],
             $name,
             trim($content),
+            trim($meta),
             $updatedAt,
         ];
     }
