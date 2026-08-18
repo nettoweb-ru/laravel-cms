@@ -4,7 +4,6 @@ return [
     'admin-email' => env('NETTO_ADMIN_EMAIL', ''),
     'admin-locales' => [],
     'admin-location' => 'admin',
-    'admin-role' => 'administrator',
     'album-image-quality' => 91,
     'album-max-height' => null,
     'album-max-height-preview' => 120,

@@ -38,6 +38,8 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        define('NETTO_ADMIN_ROLE', 'administrator');
+
         date_default_timezone_set(config('app.timezone', 'UTC'));
 
         if ($this->app->runningInConsole()) {
@@ -186,7 +188,7 @@ class CmsServiceProvider extends ServiceProvider
         }
 
         foreach ([
-            'admin' => ['web', 'redirect', 'admin.auth', 'role:'.get_admin_role(), 'locale.admin'],
+            'admin' => ['web', 'redirect', 'admin.auth', 'role:'.NETTO_ADMIN_ROLE, 'locale.admin'],
             'admin.guest' => ['web', 'redirect', 'admin.check', 'locale.guest'],
          ] as $key => $value) {
             $router->middlewareGroup($key, $value);

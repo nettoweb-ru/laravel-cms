@@ -127,8 +127,7 @@ abstract class User extends BaseUser implements MustVerifyEmail
      */
     public function isAdministrator(): bool
     {
-        $role = get_admin_role();
-        return $this->hasRole($role);
+        return $this->hasRole(NETTO_ADMIN_ROLE);
     }
 
     /**

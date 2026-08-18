@@ -174,18 +174,6 @@ if (!function_exists('get_admin_locales')) {
     }
 }
 
-if (!function_exists('get_admin_role')) {
-    /**
-     * Return the slug of administrative role from configuration setting.
-     *
-     * @return string
-     */
-    function get_admin_role(): string
-    {
-        return config('cms.admin-role');
-    }
-}
-
 if (!function_exists('get_current_language_id')) {
     /**
      * Return ID of current public language. Should be called on public pages only.
