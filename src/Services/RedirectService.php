@@ -18,7 +18,7 @@ abstract class RedirectService
             $return .= 'www.';
         }
 
-        return $return . self::getBaseDomain($request->getHttpHost());
+        return mb_strtolower($return . self::getBaseDomain($request->getHttpHost()));
     }
 
     public static function getCanonicalUrl(Request $request): string
@@ -40,7 +40,7 @@ abstract class RedirectService
             $path .= "?{$query}";
         }
 
-        return self::getCanonicalDomain($request) . $path;
+        return self::getCanonicalDomain($request) . mb_strtolower($path);
     }
 
     public static function getRequestedDomain(Request $request): string
