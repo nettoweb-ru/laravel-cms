@@ -23,7 +23,7 @@ abstract class RedirectService
 
     public static function getCanonicalUrl(Request $request): string
     {
-        $path = $request->path();
+        $path = mb_strtolower($request->path());
         $query = $request->getQueryString();
 
         if ($path == '/') {
@@ -40,7 +40,7 @@ abstract class RedirectService
             $path .= "?{$query}";
         }
 
-        return self::getCanonicalDomain($request) . mb_strtolower($path);
+        return self::getCanonicalDomain($request) . $path;
     }
 
     public static function getRequestedDomain(Request $request): string
